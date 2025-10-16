@@ -1,11 +1,10 @@
-// The corrected api/server.js file
-import Stripe from 'stripe'; // <-- NEW LINE (replaces the old 'require' line)
+// The final, corrected api/server.js file
+import Stripe from 'stripe';
 
-// This line now uses the imported Stripe and your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); 
 
 export default async function handler(req, res) {
-  // Allow requests from any origin
+  // Allow requests from any origin (CORS)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
         payment_method_types: ['card'],
         line_items: items,
         mode: 'payment',
-        
         shipping_address_collection: {
           allowed_countries: ['US', 'CA', 'GB', 'AU', 'DO'], 
         },
@@ -34,7 +32,6 @@ export default async function handler(req, res) {
           promotions: 'auto',
         },
         customer_creation: 'always',
-
         success_url: `https://YOUR_GOOGLE_SITE_URL/success-page`, // Remember to replace these later
         cancel_url: `https://YOUR_GOOGLE_SITE_URL/cancel-page`,
       });
