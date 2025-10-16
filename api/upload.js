@@ -1,15 +1,14 @@
-// api/upload.js
+// The corrected api/upload.js file
 import { put } from '@vercel/blob';
 
-// The 'config' object that caused the error has been REMOVED.
-
 export default async function handler(request) {
-  const { searchParams } = new URL(request.url);
+  // --- THIS IS THE FIX ---
+  // We construct the full URL by combining the host from the request headers with the path.
+  const { searchParams } = new URL(request.url, `https://${request.headers.get('host')}`);
+  // --- END OF FIX ---
+  
   const filename = searchParams.get('filename');
 
-  // Add protection to your upload endpoint to prevent abuse in a real production app.
-  // See https://vercel.com/docs/blob/security/securing-your-blob-store
-  
   if (!filename || !request.body) {
      return new Response(JSON.stringify({ message: 'No filename provided.' }), { status: 400 });
   }
