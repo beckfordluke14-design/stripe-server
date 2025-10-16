@@ -25,11 +25,15 @@
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'YOUR_PIXEL_ID'); // <-- REPLACE 'YOUR_PIXEL_ID'
+      // ==============================================================================
+      // == PASTE YOUR FACEBOOK PIXEL ID HERE ==
+      // ==============================================================================
+      fbq('init', 'YOUR_FACEBOOK_PIXEL_ID'); 
+      // ==============================================================================
       fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
+      src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"
     /></noscript>
     
     <script>
@@ -51,14 +55,12 @@
 
         /* Simplified Theme Logic */
         body[data-theme="light"], body { 
-            /* background-color is set by JS now */
             --color-urgent: #ef4444; /* red-500 */
             --color-accent: #4f46e5; /* indigo-600 */
             --color-accent-hover: #4338ca; /* indigo-700 */
             --color-accent-border: #4f46e5;
         }
         body[data-theme="dark"] {
-            /* background-color is set by JS now */
             --color-urgent: #d946ef; /* fuchsia-500 */
             --color-accent: #ec4899; /* pink-500 */
             --color-accent-hover: #db2777; /* pink-600 */
@@ -159,7 +161,6 @@
             transform: translateY(20px);
             transition: opacity 0.5s, transform 0.5s;
         }
-
         #social-proof-popup.show {
             display: block;
             opacity: 1;
@@ -175,9 +176,54 @@
             opacity: 1;
             transform: scale(1);
         }
+
+        /* Floating Cart Icon Styles */
+        #public-cart-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--color-accent);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+        #public-cart-button:hover {
+            transform: scale(1.1);
+        }
+        #public-cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--color-urgent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body data-theme="dark">
+
+    <div id="public-cart-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span id="public-cart-badge">0</span>
+    </div>
 
     <div id="social-proof-popup"></div>
     <div id="cart-overlay"></div>
@@ -214,10 +260,6 @@
                 <div>
                     <button id="add-product-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm">Add New Product</button>
                 </div>
-                 <button id="cart-button" class="relative">
-                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                     <span id="cart-count-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                 </button>
                 <button id="hide-admin-btn" class="ml-2 text-sm text-gray-400 hover:text-white">Hide</button>
                 <button id="logout-btn" class="ml-2 text-sm text-gray-400 hover:text-white">Logout</button>
             </div>
@@ -370,8 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // == PASTE YOUR KEYS AND URLS HERE ==
     // ==============================================================================
     
-    const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj'; 
-    const CHECKOUT_SESSION_URL = 'https://stripe-server-roan.vercel.app/api/server';
+    const STRIPE_PUBLISHABLE_KEY = 'YOUR_PUBLISHABLE_KEY_HERE'; 
+    const CHECKOUT_SESSION_URL = 'YOUR_VERCEL_URL_HERE';
     
     // ==============================================================================
     // ==============================================================================
@@ -520,9 +562,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CART & POPUP ELEMENTS ---
     const cartPanel = document.getElementById('cart-panel');
     const cartOverlay = document.getElementById('cart-overlay');
-    const cartButton = document.getElementById('cart-button');
+    const publicCartButton = document.getElementById('public-cart-button'); // NEW
+    const publicCartBadge = document.getElementById('public-cart-badge'); // NEW
     const closeCartBtn = document.getElementById('close-cart-btn');
-    const cartCountBadge = document.getElementById('cart-count-badge');
     const cartItemsContainer = document.getElementById('cart-items-container');
     const cartSubtotalEl = document.getElementById('cart-subtotal');
     const checkoutBtn = document.getElementById('checkout-btn');
@@ -549,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CART FUNCTIONS ---
     function updateCartIcon() {
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCountBadge.textContent = totalItems;
+        publicCartBadge.textContent = totalItems;
     }
 
     function renderCart() {
@@ -580,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="flex items-center space-x-2">
                     <input type="number" min="1" value="${item.quantity}" class="quantity-input w-12 text-center border rounded">
-                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold">&times;</button>
+                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2">&times;</button>
                 </div>
             `;
             cartItemsContainer.appendChild(itemEl);
@@ -592,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function addToCart() {
         const product = products[currentProductKey];
+        let price = parseFloat(product.price.replace('$', ''));
 
         if (product.bundle) {
             const selectedDesigns = Array.from(interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
@@ -607,12 +650,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const bundlePrices = ['$29.95', '$24.95', '$14.95'];
 
             selectedDesigns.forEach((design, index) => {
-                const price = bundlePrices[index] || bundlePrices[2];
+                const bundlePrice = bundlePrices[index] || bundlePrices[2];
                 cart.push({
                     productId: currentProductKey,
                     variantId: `${currentProductKey}|${design.name}|${Date.now()}`,
                     name: product.name,
-                    price: price,
+                    price: bundlePrice,
                     image: design.image,
                     variantText: design.name,
                     quantity: 1
@@ -650,7 +693,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     quantity: 1
                 });
             }
+            price = parseFloat(basePrice.replace('$', ''));
             showItemAddedPopup(product, `<strong>${product.name}</strong> added to cart!`);
+        }
+
+        // Fire Facebook Pixel AddToCart event
+        if (typeof fbq === 'function') {
+            fbq('track', 'AddToCart', {
+                content_name: product.name,
+                content_ids: [currentProductKey],
+                content_type: 'product',
+                value: price,
+                currency: 'USD'
+            });
         }
 
         saveState();
@@ -1216,13 +1271,15 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(popupTimeout);
         addToCartPopup.style.display = 'none';
     });
-
-    cartButton.addEventListener('click', () => {
+    
+    const openCart = () => {
         cartPanel.classList.add('open');
         cartOverlay.classList.add('open');
         startCartTimer();
-    });
-    
+    };
+
+    publicCartButton.addEventListener('click', openCart);
+
     const closeCart = () => {
         cartPanel.classList.remove('open');
         cartOverlay.classList.remove('open');
@@ -1231,6 +1288,20 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCartBtn.addEventListener('click', closeCart);
     cartOverlay.addEventListener('click', closeCart);
 
+    // NEW: Add event listener for deleting items from cart
+    cartItemsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-item-btn')) {
+            const itemElement = e.target.closest('[data-variant-id]');
+            const variantIdToRemove = itemElement.dataset.variantId;
+            
+            // Filter the cart array to remove the item
+            cart = cart.filter(item => item.variantId !== variantIdToRemove);
+            
+            saveState(); // Save the new cart state
+            renderCart(); // Re-render the cart UI
+        }
+    });
+
     checkoutBtn.addEventListener('click', async () => {
         if (cart.length === 0) {
             checkoutBtn.textContent = 'Your cart is empty!';
@@ -1238,19 +1309,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        checkoutBtn.textContent = 'Redirecting to payment...';
+        checkoutBtn.textContent = 'Connecting to checkout...';
         checkoutBtn.disabled = true;
 
-        // ==============================================================================
-        // == FIX FOR MOBILE POP-UP BLOCKERS ==
-        // ==============================================================================
+        // Fire Facebook Pixel InitiateCheckout event
+        if (typeof fbq === 'function') {
+            const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price.replace('$', '')) * item.quantity), 0);
+            fbq('track', 'InitiateCheckout', {
+                value: subtotal.toFixed(2),
+                currency: 'USD',
+                num_items: cart.reduce((sum, item) => sum + item.quantity, 0)
+            });
+        }
         
-        // 1. Immediately open a new, blank tab. This is allowed because it's a direct result of the user's click.
+        // FIX FOR MOBILE POP-UP BLOCKERS
         const newTab = window.open('', '_blank');
         newTab.document.body.innerHTML = "Connecting to secure checkout...";
         
-        // ==============================================================================
-
         const line_items = cart.map(item => {
             return {
                 price_data: {
@@ -1266,7 +1341,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
-            // 2. Fetch the Stripe URL from the server.
             const response = await fetch(CHECKOUT_SESSION_URL, {
                 method: 'POST',
                 headers: {
@@ -1282,17 +1356,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const { url } = await response.json();
 
             if (url) {
-                // 3. Redirect the already-open tab to the Stripe URL.
                 newTab.location.href = url;
             } else {
-                newTab.close(); // Close the blank tab if we didn't get a URL
+                newTab.close();
                 throw new Error('Could not get checkout URL from server response.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            if (newTab) newTab.close(); // Close the blank tab on error
+            if (newTab) newTab.close();
         } finally {
-            // This ensures the button is always re-enabled, even if an error occurs.
             checkoutBtn.textContent = 'Pay with Card';
             checkoutBtn.disabled = false;
         }
