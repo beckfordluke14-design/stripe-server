@@ -143,13 +143,10 @@
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
         .close-modal:hover, .close-modal:focus { color: black; text-decoration: none; cursor: pointer; }
 
-        #theme-wrapper {
-            position: relative;
-        }
-
+        /* Social Proof Pop-up */
         #social-proof-popup {
             display: none;
-            position: absolute;
+            position: fixed;
             bottom: 20px;
             left: 20px;
             background-color: white;
@@ -162,6 +159,7 @@
             transform: translateY(20px);
             transition: opacity 0.5s, transform 0.5s;
         }
+
         #social-proof-popup.show {
             display: block;
             opacity: 1;
@@ -177,7 +175,6 @@
             opacity: 1;
             transform: scale(1);
         }
-
     </style>
 </head>
 <body data-theme="dark">
@@ -358,8 +355,8 @@
         <div class="flex justify-center items-center space-x-4 text-sm text-gray-500">
             <p>&copy; 2025 All These Flows. All Rights Reserved.</p>
             <span>|</span>
-            <a href="?admin=true" target="_top" id="admin-login-link" class="hover:text-gray-300">Terms</a>
-            </div>
+            <a href="#" id="admin-login-link" class="hover:text-gray-300">Terms</a>
+        </div>
     </div></footer>
 
 <script>
@@ -1244,6 +1241,16 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutBtn.textContent = 'Redirecting to payment...';
         checkoutBtn.disabled = true;
 
+        // ==============================================================================
+        // == FIX FOR MOBILE POP-UP BLOCKERS ==
+        // ==============================================================================
+        
+        // 1. Immediately open a new, blank tab. This is allowed because it's a direct result of the user's click.
+        const newTab = window.open('', '_blank');
+        newTab.document.body.innerHTML = "Connecting to secure checkout...";
+        
+        // ==============================================================================
+
         const line_items = cart.map(item => {
             return {
                 price_data: {
@@ -1259,6 +1266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         try {
+            // 2. Fetch the Stripe URL from the server.
             const response = await fetch(CHECKOUT_SESSION_URL, {
                 method: 'POST',
                 headers: {
@@ -1274,19 +1282,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const { url } = await response.json();
 
             if (url) {
-                // *** THIS IS THE KEY FIX ***
-                // Open the Stripe URL in a new tab, which is allowed by the Google Sites sandbox.
-                window.open(url, '_blank');
+                // 3. Redirect the already-open tab to the Stripe URL.
+                newTab.location.href = url;
             } else {
+                newTab.close(); // Close the blank tab if we didn't get a URL
                 throw new Error('Could not get checkout URL from server response.');
             }
         } catch (error) {
             console.error('Checkout error:', error);
-            // Since alerts are blocked by the sandbox, we can't show a popup.
-            // The console log is the best way to see what went wrong.
+            if (newTab) newTab.close(); // Close the blank tab on error
         } finally {
-            // This 'finally' block ensures the button is always re-enabled and reset,
-            // even if an error occurs. This prevents it from getting stuck.
+            // This ensures the button is always re-enabled, even if an error occurs.
             checkoutBtn.textContent = 'Pay with Card';
             checkoutBtn.disabled = false;
         }
