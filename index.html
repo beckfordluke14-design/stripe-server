@@ -108,7 +108,7 @@
           const savedSettings = localStorage.getItem(settingsStateKey); settings = savedSettings ? JSON.parse(savedSettings) : { showSidebar: false, timerMode: 'refresh', defaultProduct: null };
         }
         
-        // --- UI & CORE FUNCTIONS ---
+        // --- ALL OTHER JS FUNCTIONS ---
         function showItemAddedPopup(product, message) { /* ... */ }
         function updateCartIcon() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); dom.publicCartBadge.textContent = totalItems; }
         function renderCart() { /* ... */ }
@@ -128,8 +128,9 @@
         const addVariationInputGroup = (name = '', options = []) => { /* ... */ };
         
         // ==============================================================================
-        // == Full, unabbreviated functions start here ==
+        // == This is the full, final JavaScript. It includes all fixes. ==
         // ==============================================================================
+        
         showItemAddedPopup = function(product, message) { clearTimeout(dom.popupTimeout); dom.popupProductImage.src = product.mediaType === 'image' ? product.mediaUrl : (product.imageUrl || 'https://placehold.co/128x128'); dom.popupMessage.innerHTML = message; dom.addToCartPopup.style.display = 'block'; dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000); }
         renderCart = function() {
             dom.cartItemsContainer.innerHTML = ''; let subtotal = 0; const bundleGroups = {};
@@ -195,108 +196,123 @@
             }
             renderReviews(productKey); updateSectionVisibility(); renderProductSidebar();
         }
-    startCountdown = function() { 
-        clearInterval(countdownInterval);
-        const updateTimer = (duration) => { if (duration <= 0) { dom.countdownTimer.textContent = "00:00:00"; return; } const h = String(Math.floor(duration/3600)).padStart(2,'0'); const m = String(Math.floor((duration%3600)/60)).padStart(2,'0'); const s = String(duration%60).padStart(2,'0'); dom.countdownTimer.textContent = `${h}:${m}:${s}`; };
-        if (settings.timerMode === 'actual' && settings.actualEndDate) {
-            const endDate = new Date(settings.actualEndDate).getTime(); updateTimer(Math.floor((endDate - new Date().getTime()) / 1000));
-            countdownInterval = setInterval(() => { const now = new Date().getTime(); const remaining = Math.floor((endDate - now) / 1000); if (remaining <= 0) { clearInterval(countdownInterval); } updateTimer(remaining); }, 1000);
-        } else {
-            let duration = 120; updateTimer(duration);
-            countdownInterval = setInterval(() => { duration--; if (duration <= 0) { clearInterval(countdownInterval); } updateTimer(duration); }, 1000);
-        }
-    }
-    manageArtificialStock = function() { let stock = 12; dom.stockCount.textContent = stock; const stockTimer = setInterval(() => { if (stock > 2) { stock--; dom.stockCount.textContent = stock; } else { clearInterval(stockTimer); } }, 20000); }
-    startSocialProof = function() { const locations = ["Miami, FL", "Tampa, FL", "Los Angeles, CA", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL"]; const popup = dom.socialProofPopup; setInterval(() => { if (!currentProductKey) return; const loc = locations[Math.floor(Math.random() * locations.length)]; const prod = products[currentProductKey]; const name = prod.name.split(' ').slice(0, 2).join(' '); popup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`; popup.classList.add('show'); setTimeout(() => { popup.classList.remove('show'); }, 5000); }, 15000); }
-    addVariationInputGroup = (name = '', options = []) => { const groupWrapper = document.createElement('div'); groupWrapper.className = 'variation-group border p-3 rounded-md'; const variationId = `var-group-${Date.now()}`; groupWrapper.innerHTML = `<div class="grid grid-cols-12 gap-2 items-center"><input type="text" value="${name}" placeholder="Variation Name (e.g., Size)" class="variation-name col-span-11 border p-2 rounded"><button type="button" class="remove-variation-group-btn col-span-1 text-red-500 font-bold">X</button></div><div id="${variationId}" class="options-container mt-2 space-y-2"></div><button type="button" class="add-option-btn mt-2 text-sm text-indigo-600 font-semibold">+ Add Option</button>`; dom.productFormVariationsContainer.appendChild(groupWrapper); const optionsContainer = document.getElementById(variationId); if (options.length > 0) { options.forEach(opt => addVariationOptionInput(optionsContainer, opt)); } else { addVariationOptionInput(optionsContainer); } };
-    
-    // --- INITIALIZATION ---
-    async function initializeApp() {
-        setupModal(dom.productModal, dom.addProductBtn, '.close-product-modal');
-        setupModal(dom.addToCartPopup, null, '.close-modal');
-        setupModal(dom.adminPasswordModal, null, '.close-modal');
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('admin') === 'true') { dom.adminPasswordModal.style.display = 'block'; dom.adminPasswordInput.focus(); }
-        await loadState();
-        populateProductSwitcher();
-        const defaultProduct = settings.defaultProduct || Object.keys(products)[0];
-        if (products[defaultProduct]) { dom.productSwitcher.value = defaultProduct; renderProduct(defaultProduct); }
-        renderCart(); startCountdown(); manageArtificialStock(); startSocialProof();
-    }
-    
-    // --- EVENT LISTENERS ---
-    dom.adminLoginLink.addEventListener('click', (e) => { e.preventDefault(); const url = new URL(window.location.href); url.searchParams.set('admin', 'true'); window.location.href = url.href; });
-    dom.adminPasswordSubmit.addEventListener('click', () => { if (dom.adminPasswordInput.value === 'e55c3p') { document.body.dataset.isAdmin = 'true'; dom.adminPasswordModal.style.display = 'none'; dom.adminPanel.style.display = 'block'; } else { dom.adminPasswordError.style.display = 'block'; dom.adminPasswordInput.value = ''; } });
-    dom.adminPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') dom.adminPasswordSubmit.click(); });
-    dom.hideAdminBtn.addEventListener('click', () => { dom.adminPanel.style.display = 'none'; });
-    dom.logoutBtn.addEventListener('click', () => { document.body.dataset.isAdmin = 'false'; dom.adminPanel.style.display = 'none'; });
-    dom.saveSettingsBtn.addEventListener('click', () => { settings = { showSidebar: dom.toggleSidebar.checked, timerMode: dom.timerModeSelect.value, actualEndDate: dom.timerActualDate.value, defaultProduct: settings.defaultProduct }; saveSettings(); updateSectionVisibility(); startCountdown(); alert('Settings saved!'); });
-    dom.setDefaultBtn.addEventListener('click', () => { settings.defaultProduct = dom.productSwitcher.value; saveSettings(); alert('Default product set!'); });
-    dom.timerModeSelect.addEventListener('change', (e) => { dom.timerActualDate.style.display = e.target.value === 'actual' ? 'block' : 'none'; });
-    dom.addToCartButton.addEventListener('click', addToCart);
-    dom.productSwitcher.addEventListener('change', (e) => renderProduct(e.target.value));
-    dom.popupContinueShopping.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
-    dom.popupViewCart.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; openCart(); });
-    dom.closePopupBtn.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
-    const openCart = () => { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); startCartTimer(); };
-    dom.publicCartButton.addEventListener('click', openCart);
-    const closeCart = () => { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); clearInterval(cartTimerInterval); };
-    dom.closeCartBtn.addEventListener('click', closeCart);
-    dom.cartOverlay.addEventListener('click', closeCart);
-    dom.cartItemsContainer.addEventListener('click', (e) => { if (e.target.classList.contains('remove-item-btn')) { const itemEl = e.target.closest('[data-variant-id]'); cart = cart.filter(item => item.variantId !== itemEl.dataset.variantId); saveState(); renderCart(); } });
-    dom.checkoutBtn.addEventListener('click', async () => {
-        if (cart.length === 0) { dom.checkoutBtn.textContent = 'Your cart is empty!'; setTimeout(() => { dom.checkoutBtn.textContent = 'Pay with Card'; }, 2000); return; }
-        dom.checkoutBtn.textContent = 'Connecting...'; dom.checkoutBtn.disabled = true;
-        if (typeof fbq === 'function') { const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price.replace('$', '')) * item.quantity), 0); fbq('track', 'InitiateCheckout', { value: subtotal.toFixed(2), currency: 'USD', num_items: cart.reduce((sum, item) => sum + item.quantity, 0) }); }
-        const newTab = window.open('', '_blank'); newTab.document.body.innerHTML = "Connecting to secure checkout...";
-        const line_items = cart.map(item => ({ price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100), }, quantity: item.quantity, }));
-        try {
-            const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }), });
-            if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
-            const { url } = await response.json();
-            if (url) { newTab.location.href = url; } else { newTab.close(); throw new Error('Could not get checkout URL.'); }
-        } catch (error) { console.error('Checkout error:', error); if (newTab) newTab.close(); } finally { dom.checkoutBtn.textContent = 'Pay with Card'; dom.checkoutBtn.disabled = false; }
-    });
-    dom.productForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitButton = dom.productFormSubmit; submitButton.disabled = true; submitButton.textContent = 'Uploading...';
-        const uploadFile = async (fileInput) => {
-            if (!fileInput || !fileInput.files[0]) return null;
-            const file = fileInput.files[0];
-            const response = await fetch(UPLOAD_API_URL, { method: 'POST', headers: { 'x-filename': file.name }, body: file });
-            if (!response.ok) { const errorText = await response.text(); throw new Error(`Upload failed: ${errorText}`); }
-            const newBlob = await response.json(); return newBlob.url;
-        };
-        try {
-            let mainMediaUrl = dom.productFormMediaUrl.value; if (dom.productFormMediaType.value === 'image' && dom.productFormMediaFile.files[0]) { mainMediaUrl = await uploadFile(dom.productFormMediaFile); }
-            const isBundle = dom.productFormBundle.checked;
-            const productData = { name: dom.productFormName.value, description: dom.productFormDescription.value, price: dom.productFormPrice.value, originalPrice: dom.productFormOriginalPrice.value, theme: dom.productFormTheme.value, bundle: isBundle, ctaHeadline: isBundle ? dom.productFormCtaHeadline.value : '', ctaSubheadline: isBundle ? dom.productFormCtaSubheadline.value : '', bundlePrices: isBundle ? [dom.productFormBundlePrice1.value, dom.productFormBundlePrice2.value, dom.productFormBundlePrice3.value] : [], mediaType: dom.productFormMediaType.value, mediaUrl: mainMediaUrl, images: [], variations: {} };
-            const variationGroups = Array.from(dom.productFormVariationsContainer.querySelectorAll('.variation-group'));
-            for (const group of variationGroups) {
-                const name = group.querySelector('.variation-name').value.trim();
-                if (name) {
-                    const options = [];
-                    const optionGroups = Array.from(group.querySelectorAll('.variation-option-group'));
-                    for (const optGroup of optionGroups) {
-                        const fileInput = optGroup.querySelector('.variation-option-image-file');
-                        const urlInput = optGroup.querySelector('.variation-option-image-url');
-                        let imageUrl = optGroup.querySelector('.variation-image-preview').src;
-                        if (fileInput.files[0]) { imageUrl = await uploadFile(fileInput); } else if (urlInput.value && urlInput.value !== imageUrl) { imageUrl = urlInput.value; }
-                        options.push({ option: optGroup.querySelector('.variation-option-name').value.trim(), price: optGroup.querySelector('.variation-option-price').value.trim() || null, image: imageUrl });
-                    }
-                    productData.variations[name] = options.filter(opt => opt.option);
-                }
+        startCountdown = function() { 
+            clearInterval(countdownInterval);
+            const updateTimer = (duration) => { if (duration <= 0) { dom.countdownTimer.textContent = "00:00:00"; return; } const h = String(Math.floor(duration/3600)).padStart(2,'0'); const m = String(Math.floor((duration%3600)/60)).padStart(2,'0'); const s = String(duration%60).padStart(2,'0'); dom.countdownTimer.textContent = `${h}:${m}:${s}`; };
+            if (settings.timerMode === 'actual' && settings.actualEndDate) {
+                const endDate = new Date(settings.actualEndDate).getTime(); updateTimer(Math.floor((endDate - new Date().getTime()) / 1000));
+                countdownInterval = setInterval(() => { const now = new Date().getTime(); const remaining = Math.floor((endDate - now) / 1000); if (remaining <= 0) { clearInterval(countdownInterval); } updateTimer(remaining); }, 1000);
+            } else {
+                let duration = 120; // 2 minutes
+                updateTimer(duration);
+                countdownInterval = setInterval(() => { duration--; if (duration <= 0) { clearInterval(countdownInterval); } updateTimer(duration); }, 1000);
             }
-            const keyToSelect = dom.editProductKey.value || `product${Date.now()}`;
-            products[keyToSelect] = productData;
-            submitButton.textContent = 'Saving...';
-            await saveState();
-            populateProductSwitcher(); dom.productSwitcher.value = keyToSelect; renderProduct(keyToSelect); dom.productModal.style.display = 'none';
-        } catch (error) { console.error("Failed to save product:", error); alert("Error saving product. Check console."); } finally { submitButton.disabled = false; submitButton.textContent = 'Save Product'; }
+        }
+        manageArtificialStock = function() { let stock = 12; dom.stockCount.textContent = stock; const stockTimer = setInterval(() => { if (stock > 2) { stock--; dom.stockCount.textContent = stock; } else { clearInterval(stockTimer); } }, 20000); }
+        startSocialProof = function() { const locations = ["Miami, FL", "Tampa, FL", "Los Angeles, CA", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL"]; const popup = dom.socialProofPopup; setInterval(() => { if (!currentProductKey) return; const loc = locations[Math.floor(Math.random() * locations.length)]; const prod = products[currentProductKey]; const name = prod.name.split(' ').slice(0, 2).join(' '); popup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`; popup.classList.add('show'); setTimeout(() => { popup.classList.remove('show'); }, 5000); }, 15000); }
+        addVariationOptionInput = function(container, option = {}) { const wrapper = document.createElement('div'); wrapper.className = 'variation-option-group grid grid-cols-12 gap-2 items-start border-t pt-2 mt-2'; wrapper.innerHTML = `<div class="col-span-3"><label class="block text-sm font-medium text-gray-700">Option Name</label><input type="text" value="${option.option||''}" placeholder="e.g., Red" class="variation-option-name w-full border p-2 rounded"></div><div class="col-span-3"><label class="block text-sm font-medium text-gray-700">Price (Optional)</label><input type="text" value="${option.price||''}" placeholder="$35.00" class="variation-option-price w-full border p-2 rounded"></div><div class="col-span-5"> <label class="block text-sm font-medium text-gray-700">Image</label> <input type="file" class="variation-option-image-file block w-full text-sm mb-1"> <div class="flex"><input type="text" placeholder="Or paste URL..." value="${option.image||''}" class="variation-option-image-url w-full border p-1 rounded-l text-sm"><button type="button" class="update-variation-image-btn bg-gray-200 px-2 rounded-r text-xs">Preview</button></div></div><div class="col-span-1 flex flex-col items-center"><img src="${option.image || 'https://placehold.co/100x100/eee/ccc?text=Img'}" class="variation-image-preview h-12 w-12 object-cover rounded mb-2"><button type="button" class="remove-variation-btn text-red-500 font-bold text-lg">X</button></div>`; container.appendChild(wrapper); };
+        addVariationInputGroup = function(name = '', options = []) { const groupWrapper = document.createElement('div'); groupWrapper.className = 'variation-group border p-3 rounded-md'; const variationId = `var-group-${Date.now()}`; groupWrapper.innerHTML = `<div class="grid grid-cols-12 gap-2 items-center"><input type="text" value="${name}" placeholder="Variation Name (e.g., Size)" class="variation-name col-span-11 border p-2 rounded"><button type="button" class="remove-variation-group-btn col-span-1 text-red-500 font-bold">X</button></div><div id="${variationId}" class="options-container mt-2 space-y-2"></div><button type="button" class="add-option-btn mt-2 text-sm text-indigo-600 font-semibold">+ Add Option</button>`; dom.productFormVariationsContainer.appendChild(groupWrapper); const optionsContainer = document.getElementById(variationId); if (options.length > 0) { options.forEach(opt => addVariationOptionInput(optionsContainer, opt)); } else { addVariationOptionInput(optionsContainer); } };
+        updateSectionVisibility = function() { dom.productSidebar.classList.toggle('show', settings.showSidebar); dom.toggleSidebar.checked = settings.showSidebar; dom.timerModeSelect.value = settings.timerMode || 'refresh'; dom.timerActualDate.value = settings.actualEndDate || ''; dom.timerModeSelect.dispatchEvent(new Event('change')); }
+
+        async function initializeApp() {
+            setupModal(dom.productModal, dom.addProductBtn, '.close-product-modal');
+            setupModal(dom.addToCartPopup, null, '.close-modal');
+            setupModal(dom.adminPasswordModal, null, '.close-modal');
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin') === 'true') { dom.adminPasswordModal.style.display = 'block'; dom.adminPasswordInput.focus(); }
+            await loadState();
+            populateProductSwitcher();
+            const defaultProduct = settings.defaultProduct || Object.keys(products)[0];
+            if (products[defaultProduct]) { dom.productSwitcher.value = defaultProduct; renderProduct(defaultProduct); }
+            renderCart(); startCountdown(); manageArtificialStock(); startSocialProof();
+        }
+        
+        // --- EVENT LISTENERS ---
+        dom.adminLoginLink.addEventListener('click', (e) => { e.preventDefault(); const url = new URL(window.location.href); url.searchParams.set('admin', 'true'); window.location.href = url.href; });
+        dom.adminPasswordSubmit.addEventListener('click', () => { if (dom.adminPasswordInput.value === 'e55c3p') { document.body.dataset.isAdmin = 'true'; dom.adminPasswordModal.style.display = 'none'; dom.adminPanel.style.display = 'block'; } else { dom.adminPasswordError.style.display = 'block'; dom.adminPasswordInput.value = ''; } });
+        dom.adminPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') dom.adminPasswordSubmit.click(); });
+        dom.hideAdminBtn.addEventListener('click', () => { dom.adminPanel.style.display = 'none'; });
+        dom.logoutBtn.addEventListener('click', () => { document.body.dataset.isAdmin = 'false'; dom.adminPanel.style.display = 'none'; });
+        dom.saveSettingsBtn.addEventListener('click', () => { settings = { showSidebar: dom.toggleSidebar.checked, timerMode: dom.timerModeSelect.value, actualEndDate: dom.timerActualDate.value, defaultProduct: settings.defaultProduct }; saveSettings(); updateSectionVisibility(); startCountdown(); alert('Settings saved!'); });
+        dom.setDefaultBtn.addEventListener('click', () => { settings.defaultProduct = dom.productSwitcher.value; saveSettings(); alert('Default product set!'); });
+        dom.timerModeSelect.addEventListener('change', (e) => { dom.timerActualDate.style.display = e.target.value === 'actual' ? 'block' : 'none'; });
+        dom.addToCartButton.addEventListener('click', addToCart);
+        dom.productSwitcher.addEventListener('change', (e) => renderProduct(e.target.value));
+        dom.popupContinueShopping.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
+        dom.popupViewCart.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; openCart(); });
+        dom.closePopupBtn.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
+        const openCart = () => { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); startCartTimer(); };
+        dom.publicCartButton.addEventListener('click', openCart);
+        const closeCart = () => { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); clearInterval(cartTimerInterval); };
+        dom.closeCartBtn.addEventListener('click', closeCart);
+        dom.cartOverlay.addEventListener('click', closeCart);
+        dom.cartItemsContainer.addEventListener('click', (e) => { if (e.target.classList.contains('remove-item-btn')) { const itemEl = e.target.closest('[data-variant-id]'); cart = cart.filter(item => item.variantId !== itemEl.dataset.variantId); saveState(); renderCart(); } });
+        dom.checkoutBtn.addEventListener('click', async () => {
+            if (cart.length === 0) { dom.checkoutBtn.textContent = 'Your cart is empty!'; setTimeout(() => { dom.checkoutBtn.textContent = 'Pay with Card'; }, 2000); return; }
+            dom.checkoutBtn.textContent = 'Connecting...'; dom.checkoutBtn.disabled = true;
+            if (typeof fbq === 'function') { const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price.replace('$', '')) * item.quantity), 0); fbq('track', 'InitiateCheckout', { value: subtotal.toFixed(2), currency: 'USD', num_items: cart.reduce((sum, item) => sum + item.quantity, 0) }); }
+            const newTab = window.open('', '_blank'); newTab.document.body.innerHTML = "Connecting to secure checkout...";
+            const line_items = cart.map(item => ({ price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100), }, quantity: item.quantity, }));
+            try {
+                const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }), });
+                if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+                const { url } = await response.json();
+                if (url) { newTab.location.href = url; } else { newTab.close(); throw new Error('Could not get checkout URL.'); }
+            } catch (error) { console.error('Checkout error:', error); if (newTab) newTab.close(); } finally { dom.checkoutBtn.textContent = 'Pay with Card'; dom.checkoutBtn.disabled = false; }
+        });
+        dom.addVariationBtn.addEventListener('click', () => addVariationInputGroup());
+        dom.productFormVariationsContainer.addEventListener('click', (e) => { if (e.target.classList.contains('remove-variation-btn')) e.target.closest('.variation-option-group').remove(); if (e.target.classList.contains('add-option-btn')) addVariationOptionInput(e.target.previousElementSibling); if (e.target.classList.contains('remove-variation-group-btn')) e.target.closest('.variation-group').remove(); if (e.target.classList.contains('update-variation-image-btn')) { const group = e.target.closest('.variation-option-group'); const urlInput = group.querySelector('.variation-option-image-url'); const previewImg = group.querySelector('.variation-image-preview'); if (urlInput.value) previewImg.src = urlInput.value; } });
+        dom.editProductBtn.addEventListener('click', () => {
+            const selectedKey = dom.productSwitcher.value; if (!selectedKey) return; const product = products[selectedKey];
+            dom.productModalTitle.textContent = 'Edit Product'; dom.productForm.reset(); dom.productFormVariationsContainer.innerHTML = ''; dom.editProductKey.value = selectedKey; dom.productFormName.value = product.name; dom.productFormDescription.value = product.description; dom.productFormPrice.value = product.price; dom.productFormOriginalPrice.value = product.originalPrice; dom.productFormTheme.value = product.theme || 'light';
+            const isBundle = product.bundle || false; dom.productFormBundle.checked = isBundle; dom.bundleOptionsContainer.style.display = isBundle ? 'block' : 'none';
+            if (isBundle) { dom.productFormBundlePrice1.value = product.bundlePrices?.[0] || ''; dom.productFormBundlePrice2.value = product.bundlePrices?.[1] || ''; dom.productFormBundlePrice3.value = product.bundlePrices?.[2] || ''; dom.productFormCtaHeadline.value = product.ctaHeadline || ''; dom.productFormCtaSubheadline.value = product.ctaSubheadline || ''; }
+            dom.productFormMediaType.value = product.mediaType || 'image'; dom.productFormMediaType.dispatchEvent(new Event('change'));
+            if(product.mediaType === 'video') dom.productFormMediaUrl.value = product.mediaUrl || '';
+            if (product.variations) { for (const name in product.variations) { addVariationInputGroup(name, product.variations[name]); } }
+            dom.productModal.style.display = 'block'; if (dom.adminPanel.style.display === 'block') dom.adminPanel.style.display = 'none';
+        });
+        dom.addProductBtn.addEventListener('click', () => { dom.productModalTitle.textContent = 'Add New Product'; dom.productForm.reset(); dom.productFormVariationsContainer.innerHTML = ''; dom.editProductKey.value = ''; dom.bundleOptionsContainer.style.display = 'none'; });
+        dom.productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = dom.productFormSubmit; submitButton.disabled = true; submitButton.textContent = 'Uploading...';
+            const uploadFile = async (fileInput) => {
+                if (!fileInput || !fileInput.files[0]) return null;
+                const file = fileInput.files[0];
+                const response = await fetch(`${UPLOAD_API_URL}?filename=${file.name}`, { method: 'POST', headers: { 'x-filename': file.name }, body: file });
+                if (!response.ok) { const errorText = await response.text(); throw new Error(`Upload failed: ${errorText}`); }
+                const newBlob = await response.json(); return newBlob.url;
+            };
+            try {
+                let mainMediaUrl = dom.productFormMediaUrl.value; if (dom.productFormMediaType.value === 'image' && dom.productFormMediaFile.files[0]) { mainMediaUrl = await uploadFile(dom.productFormMediaFile); }
+                const isBundle = dom.productFormBundle.checked;
+                const productData = { name: dom.productFormName.value, description: dom.productFormDescription.value, price: dom.productFormPrice.value, originalPrice: dom.productFormOriginalPrice.value, theme: dom.productFormTheme.value, bundle: isBundle, ctaHeadline: isBundle ? dom.productFormCtaHeadline.value : '', ctaSubheadline: isBundle ? dom.productFormCtaSubheadline.value : '', bundlePrices: isBundle ? [dom.productFormBundlePrice1.value, dom.productFormBundlePrice2.value, dom.productFormBundlePrice3.value] : [], mediaType: dom.productFormMediaType.value, mediaUrl: mainMediaUrl, images: [], variations: {} };
+                const variationGroups = Array.from(dom.productFormVariationsContainer.querySelectorAll('.variation-group'));
+                for (const group of variationGroups) {
+                    const name = group.querySelector('.variation-name').value.trim();
+                    if (name) {
+                        const options = [];
+                        const optionGroups = Array.from(group.querySelectorAll('.variation-option-group'));
+                        for (const optGroup of optionGroups) {
+                            const fileInput = optGroup.querySelector('.variation-option-image-file');
+                            const urlInput = optGroup.querySelector('.variation-option-image-url');
+                            let imageUrl = optGroup.querySelector('.variation-image-preview').src;
+                            if (fileInput.files[0]) { imageUrl = await uploadFile(fileInput); } else if (urlInput.value && urlInput.value !== imageUrl) { imageUrl = urlInput.value; }
+                            options.push({ option: optGroup.querySelector('.variation-option-name').value.trim(), price: optGroup.querySelector('.variation-option-price').value.trim() || null, image: imageUrl });
+                        }
+                        productData.variations[name] = options.filter(opt => opt.option);
+                    }
+                }
+                const keyToSelect = dom.editProductKey.value || `product${Date.now()}`;
+                products[keyToSelect] = productData;
+                submitButton.textContent = 'Saving...';
+                await saveState();
+                populateProductSwitcher(); dom.productSwitcher.value = keyToSelect; renderProduct(keyToSelect); dom.productModal.style.display = 'none';
+            } catch (error) { console.error("Failed to save product:", error); alert("Error saving product. Check console."); } finally { submitButton.disabled = false; submitButton.textContent = 'Save Product'; }
+        });
+        
+        initializeApp();
     });
-    
-    initializeApp();
-});
 </script>
 
 </body>
