@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limited Time Offer!</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- TRACKING PIXELS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'YOUR_FACEBOOK_PIXEL_ID'); 
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
+        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
+        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
+        .timer-box { background-color: var(--color-urgent); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
+        .add-to-cart-button:hover { background-color: var(--color-accent-hover); }
+        .text-highlight { color: var(--color-accent); }
+        #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
+        #cart-panel.open { right: 0; }
+        #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
+        #cart-overlay.open { display: block; }
+        .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fefefe; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
+        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+        #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
+        #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
+        #public-cart-button:hover { transform: scale(1.1); }
+        #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .bundle-image-option input:checked + label { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent); }
+        .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div id="public-cart-button"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg><span id="public-cart-badge">0</span></div>
+    <div id="social-proof-popup"></div>
+    <div id="cart-overlay"></div>
+    <div id="admin-panel" class="bg-gray-800 text-white p-4 fixed top-0 left-0 w-full z-50 shadow-lg" style="display: none;"><div class="container mx-auto flex flex-wrap justify-between items-center gap-y-2"><div class="flex items-center gap-x-4"><img id="admin-logo-white" src="https://i.imgur.com/7B5NkbX.png" alt="Brand Logo" class="h-8"></div><div class="flex flex-wrap items-center gap-x-4 gap-y-2"><button id="edit-offer-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-sm">Edit Offer</button><button id="hide-admin-btn" class="ml-2 text-sm text-gray-400 hover:text-white">Hide</button><button id="logout-btn" class="ml-2 text-sm text-gray-400 hover:text-white">Logout</button></div></div></div>
+    <div id="cart-panel"><div class="flex justify-between items-center p-4 border-b"><h2 class="text-xl font-bold">Your Cart</h2><button id="close-cart-btn" class="text-2xl">&times;</button></div><div class="p-4 bg-yellow-100 text-center"><p class="font-semibold text-yellow-800">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p></div><div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div><div class="p-4 border-t space-y-4"><div class="flex justify-between font-bold text-lg"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div><p class="text-sm text-gray-500 text-center">Free Shipping on all orders!</p><button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button></div></div>
+    <div id="theme-wrapper"><div id="page-container" class=""><header class="py-4 absolute top-0 left-0 w-full z-10"><div class="container mx-auto px-4 flex justify-center"><img id="header-logo" alt="Brand Logo" class="h-10"></div></header><div class="container mx-auto p-4 max-w-5xl pt-20"><div class="bg-red-600 text-white text-center p-3 rounded-lg shadow-lg timer-box mb-6"><h1 class="text-2xl font-bold">FLASH SALE! Ends In:</h1><div id="countdown-timer" class="text-4xl font-mono tracking-widest mt-2">00:00:00</div></div><div id="urgent-cta" class="text-center mb-6"><h3 id="cta-headline" class="text-2xl font-bold text-highlight animate-pulse">Build Your Bundle & Save Big!</h3><p id="cta-subheadline" class="text-gray-500">Select up to 3 masks to unlock massive discounts!</p></div><div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex"><div id="media-container" class="md:w-1/2 p-4"><div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div><img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image"><div id="thumbnail-container" class="grid grid-cols-4 gap-2 mt-4"></div></div><div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between"><div><div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div><h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2><p id="product-description" class="mt-4 text-gray-600"></p><div class="mt-6 flex items-baseline gap-4"><div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div><div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through"></span></div></div><div id="interactive-bundle-selector" class="mt-6 space-y-3"></div><div id="bundle-summary" class="mt-4 space-y-2" style="display: none;"><h4 class="font-bold text-lg text-gray-800">Your Bundle:</h4><div id="bundle-summary-items" class="text-gray-600"></div></div><div id="stock-indicator" class="mt-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md stock-alert"><p class="font-bold">Hurry! Only <span id="stock-count">1</span> left in stock!</p></div><div class="mt-2 text-sm text-gray-500"><p><strong class="text-green-600">+15</strong> people have this in their cart right now!</p></div></div><div class="mt-8"><button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button><div class="flex justify-center items-center mt-4 space-x-4"><p class="text-sm text-gray-500">Secure Payments:</p><svg class="h-8" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 17.8h2.3l2.3-10.4h.1l2.3 10.4h2.2l3.6-14.8h-2.5l-2.4 10.2h-.1L19.2 3h-2.4l-3.2 12.3-1.1-5.1h-.1l-1.1 5.1-3.2-12.3H5.8l3.6 14.8h2.1zm21.3 0h3.2l-3.2-14.8h-3.2zm-.1-1.6l1.1-5.1h.1l1.1 5.1zm11.3 1.6h2.2l3.6-14.8h-2.4l-2.4 10.2h-.1l-2.3-10.2h-2.4l3.6 14.8h.1zm12 0h3.3c3.2 0 4.9-1.5 4.9-4.2 0-1.8-1-3-2.6-3.6l2.3-7h-2.6l-2 6.3h-1.6v-6.3h-2.2v14.8zm3.2-6.5h1.3c1.4 0 2 .5 2 2 0 1.2-.6 1.8-2 1.8h-1.3v-3.8zm11.4 6.5h2.1l2.1-10.3h.1l2.1 10.3h2.1l3.5-14.8h-2.3l-2.3 10.2h-.1L73 3h-2.3l-3.2 12.3-1.1-5.1h-.1l-1.1 5.1-3.2-12.3H59l3.5 14.8h2.1zm19.1-15.1c-2.3 0-4.3 2-4.3 4.9s2 4.8 4.3 4.8 4.3-2 4.3-4.8-2-4.9-4.3-4.9zm0 8c-1.3 0-2.1-.9-2.1-3.1s.8-3.1 2.1-3.1 2.1.9 2.1 3.1-.8 3.1-2.1 3.1zm6.3-8h-1.6v10.1h1.6zm4.6 0v10.1h1.6V4.6c.7-.3 1.2-.8 1.2-1.6s-.5-1.3-1.2-1.6V0h-1.6v1.1c-.7.3-1.2.8-1.2 1.6s.5 1.3 1.2 1.6zm6.8-1.1c-1.2 0-2 .6-2 1.6v.3h3.9v-.3c0-1-.8-1.6-2-1.6zm-.1 11.2h1.6v-8.6h-1.6zm-2.1-8.6H98v-1.6h3.9v1.6zM0 0h120v48H0z" fill="#000"/></svg><svg class="h-8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></div></div></div></div></div></div></div>
+    <div id="add-to-cart-popup" class="modal"><div class="modal-content text-center max-w-md"><span class="close-modal" id="close-popup-btn">&times;</span><h3 class="text-2xl font-bold text-green-600 mb-4">Successfully Added!</h3><img id="popup-product-image" src="" alt="Product Image" class="w-32 h-32 object-cover mx-auto rounded-lg mb-4"><p id="popup-message" class="text-gray-700 mb-6"></p><div class="space-y-3"><button id="popup-view-cart" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg">View Cart & Checkout</button><button id="popup-continue-shopping" class="w-full text-gray-600 hover:text-indigo-600 font-semibold py-2">Continue Shopping</button></div></div></div>
+    <div id="admin-password-modal" class="modal"><div class="modal-content max-w-sm text-center"><h2 class="text-xl font-bold mb-4">Admin Access</h2><p class="text-gray-600 mb-4">Please enter the password to access admin controls.</p><input type="password" id="admin-password-input" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 mb-4"><p id="admin-password-error" class="text-red-500 text-sm mb-4" style="display: none;">Incorrect password. Please try again.</p><button id="admin-password-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Login</button></div></div>
+    <div id="product-modal" class="modal"><div class="modal-content"><span class="close-modal close-product-modal">&times;</span><h2 id="product-modal-title" class="text-2xl font-bold mb-6 text-gray-800"></h2><form id="product-form"><div class="space-y-6"><div><label for="product-form-name" class="block text-sm font-medium text-gray-700">Product Name</label><input type="text" id="product-form-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" required></div><div><label for="product-form-description" class="block text-sm font-medium text-gray-700">Description</label><textarea id="product-form-description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" required></textarea></div><div><label for="product-form-media-url" class="block text-sm font-medium text-gray-700">YouTube URL (Optional)</label><input type="text" id="product-form-media-url" placeholder="https://..." class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div><div><label for="product-form-image-url" class="block text-sm font-medium text-gray-700">Main Product Image URL</label><input type="text" id="product-form-image-url" placeholder="https://..." class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div><div><label for="product-form-cta-headline" class="block text-sm font-medium text-gray-700">CTA Headline</label><input type="text" id="product-form-cta-headline" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div><div><label for="product-form-cta-subheadline" class="block text-sm font-medium text-gray-700">CTA Subheadline</label><input type="text" id="product-form-cta-subheadline" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"></div>
+        <div id="variation-images-container" class="space-y-2 border-t pt-4"></div>
+    <div class="border-t pt-4 mt-4"><button id="product-form-submit" type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-lg shadow-lg">Save Offer</button></div></div></form></div></div>
+    <footer class="bg-gray-800 text-white mt-12 py-8"><div class="container mx-auto text-center space-y-4"><img id="footer-logo-white" src="https://i.imgur.com/7B5NkbX.png" alt="Brand Logo" class="h-12 mx-auto"><div class="flex justify-center items-center space-x-4 text-sm text-gray-500"><p>&copy; 2025 All These Flows. All Rights Reserved.</p><span>|</span><a href="?admin=true" id="admin-login-link" class="hover:text-gray-300">Terms</a></div></div></footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- CONFIG ---
+    const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
+    const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
+    const STRIPE_PUBLISHABLE_KEY = 'YOUR_PUBLISHABLE_KEY_HERE'; 
+    const CHECKOUT_SESSION_URL = 'YOUR_VERCEL_URL_HERE';
+    
+    // --- STATE ---
+    let offerProduct = {}, cart = [], currentProductKey = 'offerProduct', cartTimerInterval = null;
+    const offerStateKey = 'offerModeState_v3';
+    
+    // --- DOM ELEMENTS ---
+    const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
+
+    // --- INITIAL DATA (Hardcoded Fallback) ---
+    const initialOfferProduct = {
+        offerProduct: {
+            name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
+            description: 'The original ATF V1 "TakeOver" design. This is the final production run. It\'s more than an accessory, it\'s a statement.',
+            ctaHeadline: 'It\'s Time For a TakeOver.', ctaSubheadline: 'Pristine, never-before-seen designs built to make you stand out.',
+            price: '$35.00', originalPrice: '$45.00', theme: 'dark', mediaUrl: '', imageUrl: 'https://i.imgur.com/ghpj3Nm.png', bundle: true,
+            bundlePrices: ['$29.95', '$24.95', '$14.95'],
+            variations: { 
+                'Design': [ 
+                    { option: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png' }, 
+                    { option: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png' }, 
+                    { option: 'V1 - Skull', image: 'https://i.imgur.com/HzPdK4m.png' } 
+                ] 
+            }
+        }
+    };
+
+    // --- DATA & STATE FUNCTIONS ---
+    function saveState() { localStorage.setItem(offerStateKey, JSON.stringify({ offerProduct, cart })); }
+    function loadState() {
+        const savedState = localStorage.getItem(offerStateKey);
+        if (savedState) {
+            const parsed = JSON.parse(savedState);
+            offerProduct = parsed.offerProduct || initialOfferProduct;
+            cart = parsed.cart || [];
+        } else {
+            offerProduct = initialOfferProduct;
+            cart = [];
+        }
+    }
+    
+    // --- UI & CORE FUNCTIONS ---
+    function showItemAddedPopup(product, message) { /*...*/ }
+    function updateCartIcon() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); dom.publicCartBadge.textContent = totalItems; }
+    function renderCart() { /* ... */ }
+    function addToCart() { /* ... */ }
+    function startCartTimer() { /* ... */ }
+    function updateBundleSummary() { /* ... */ }
+    function renderProduct() { /* ... */ }
+    let countdownInterval = null;
+    function startCountdown() { /* ... */ }
+    function manageArtificialStock() { /* ... */ }
+    function startSocialProof() { /* ... */ }
+    function setupModal(modal, openBtn, closeBtnSelector) { if (!modal) return; const closeBtn = modal.querySelector(closeBtnSelector); if (openBtn) openBtn.addEventListener('click', () => { modal.style.display = 'block'; }); if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; }); window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } }); }
+    
+    // --- FULL SCRIPT CONTENT (REPLACED FOR ACCURACY) ---
+    showItemAddedPopup = function(product, message) { clearTimeout(dom.popupTimeout); dom.popupProductImage.src = product.imageUrl || 'https://placehold.co/128x128'; dom.popupMessage.innerHTML = message; dom.addToCartPopup.style.display = 'block'; dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000); }
+    renderCart = function() {
+        dom.cartItemsContainer.innerHTML = ''; let subtotal = 0; const bundleItems = cart.filter(item => item.productId === 'offerProduct');
+        bundleItems.forEach((item, index) => { const bundlePrices = offerProduct.offerProduct.bundlePrices.map(p => parseFloat(p.replace('$', ''))); let price; if (index === 0) price = bundlePrices[0]; else if (index === 1) price = bundlePrices[1]; else if (index === 2) price = bundlePrices[2]; else price = bundlePrices[1]; item.price = `$${price.toFixed(2)}`; });
+        if (cart.length === 0) { dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`; } else { cart.forEach(item => { const itemEl = document.createElement('div'); itemEl.className = 'flex items-center space-x-4 py-3 border-b'; itemEl.dataset.variantId = item.variantId; const price = parseFloat(item.price.replace('$', '')); subtotal += price * item.quantity; itemEl.innerHTML = `<img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md"><div class="flex-grow"><p class="font-semibold">${item.name}</p><p class="text-sm text-gray-500">${item.variantText}</p><p class="font-bold text-sm">${item.price}</p></div><div class="flex items-center space-x-2"><button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2">&times;</button></div>`; dom.cartItemsContainer.appendChild(itemEl); }); }
+        dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`; updateCartIcon();
+    }
+    addToCart = function() {
+        const product = offerProduct.offerProduct;
+        const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({ name: input.value, image: input.dataset.image }));
+        if (selectedDesigns.length === 0) { alert("Please select at least one design."); return; }
+        selectedDesigns.forEach((design) => { cart.push({ productId: currentProductKey, variantId: `${currentProductKey}|${design.name}|${Date.now()}`, name: product.name, price: product.bundlePrices[0], image: design.image, variantText: design.name, quantity: 1 }); });
+        showItemAddedPopup({ ...product, imageUrl: selectedDesigns[0].image }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
+        if (typeof fbq === 'function') { fbq('track', 'AddToCart'); }
+        saveState(); renderCart();
+    }
+    startCartTimer = function() { clearInterval(cartTimerInterval); let duration = 600; const timerEl = dom.cartTimer; cartTimerInterval = setInterval(() => { let minutes = parseInt(duration / 60, 10); let seconds = parseInt(duration % 60, 10); minutes = minutes < 10 ? "0" + minutes : minutes; seconds = seconds < 10 ? "0" + seconds : seconds; timerEl.textContent = `${minutes}:${seconds}`; if (--duration < 0) { clearInterval(cartTimerInterval); timerEl.textContent = "Expired!"; } }, 1000); }
+    updateBundleSummary = function() {
+        const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')); const product = offerProduct.offerProduct; if (!product || !product.bundlePrices) return; const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', ''))); let total = 0; let originalTotal = 0; dom.bundleSummaryItems.innerHTML = '';
+        if (selectedInputs.length > 0) { dom.bundleSummary.style.display = 'block'; selectedInputs.forEach((input, index) => { let price; if (index === 0) price = bundlePrices[0]; else if (index === 1) price = bundlePrices[1]; else if (index === 2) price = bundlePrices[2]; else price = bundlePrices[1]; total += price; originalTotal += parseFloat(product.originalPrice.replace('$', '')); const itemEl = document.createElement('div'); itemEl.className = 'flex justify-between items-center text-sm'; itemEl.innerHTML = `<span>Item ${index + 1}: ${input.value}</span><span class="font-bold">$${price.toFixed(2)}</span>`; dom.bundleSummaryItems.appendChild(itemEl); }); } else { dom.bundleSummary.style.display = 'none'; }
+        dom.productPrice.textContent = `$${total.toFixed(2)}`; dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
+    }
+    renderProduct = function() {
+        const product = offerProduct.offerProduct; if (!product) return; document.body.dataset.theme = product.theme || 'light';
+        if (product.theme === 'light') { dom.headerLogo.src = LOGO_URL_BLACK; } else { dom.headerLogo.src = LOGO_URL_WHITE; }
+        dom.productName.textContent = product.name; dom.productDescription.textContent = product.description; dom.mainProductVideoContainer.innerHTML = '';
+        dom.ctaHeadline.textContent = product.ctaHeadline || 'Build Your Bundle & Save Big!'; dom.ctaSubheadline.textContent = product.ctaSubheadline || 'Select items to unlock massive discounts!';
+        dom.thumbnailContainer.innerHTML = '';
+        if (product.mediaUrl) {
+            dom.mainProductImage.style.display = 'none'; dom.mainProductVideoContainer.style.display = 'block'; const videoId = (product.mediaUrl.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/) || [])[1]; if (videoId) dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+            if (product.imageUrl) { const thumb = document.createElement('img'); thumb.src = product.imageUrl; thumb.className = 'cursor-pointer h-20 w-full object-cover rounded-md'; thumb.addEventListener('click', () => { dom.mainProductVideoContainer.style.display = 'none'; dom.mainProductImage.style.display = 'block'; dom.mainProductImage.src = product.imageUrl; }); dom.thumbnailContainer.appendChild(thumb); }
+        } else { dom.mainProductImage.style.display = 'block'; dom.mainProductVideoContainer.style.display = 'none'; dom.mainProductImage.src = product.imageUrl || 'https://placehold.co/600x600/ccc/ffffff?text=No+Image'; }
+        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>'; const gridContainer = dom.interactiveBundleSelector.querySelector('.grid'); const designKey = Object.keys(product.variations)[0];
+        if (designKey) {
+            product.variations[designKey].forEach(variation => { const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`; const optionEl = document.createElement('div'); optionEl.className = 'bundle-image-option'; optionEl.innerHTML = `<input type="checkbox" id="${optionId}" value="${variation.option}" data-image="${variation.image}" class="sr-only"><label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1"><img src="${variation.image}" class="w-full h-24 object-cover rounded-md"><p class="text-center text-sm font-semibold mt-1">${variation.option}</p><div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75"><svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg></div></label>`; gridContainer.appendChild(optionEl); optionEl.querySelector('label').addEventListener('click', () => { dom.mainProductImage.style.display = 'block'; dom.mainProductVideoContainer.style.display = 'none'; dom.mainProductImage.src = variation.image; }); });
+        } const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]'); if (firstBundleOption) firstBundleOption.checked = true; updateBundleSummary();
+    }
+    startCountdown = function() { let duration = 120; const timer = setInterval(() => { if (duration <= 0) { clearInterval(timer); dom.countdownTimer.textContent = "00:00:00"; return; } duration--; const m = String(Math.floor(duration/60)).padStart(2,'0'); const s = String(duration%60).padStart(2,'0'); dom.countdownTimer.textContent = `00:${m}:${s}`; }, 1000); }
+    manageArtificialStock = function() { let stock = 12; dom.stockCount.textContent = stock; const stockTimer = setInterval(() => { if (stock > 2) { stock--; dom.stockCount.textContent = stock; } else { clearInterval(stockTimer); } }, 20000); }
+    startSocialProof = function() { const locations = ["Miami, FL", "Tampa, FL", "Los Angeles, CA", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL"]; const popup = dom.socialProofPopup; setInterval(() => { const loc = locations[Math.floor(Math.random() * locations.length)]; const name = offerProduct.offerProduct.name.split(' ').slice(0, 2).join(' '); popup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`; popup.classList.add('show'); setTimeout(() => { popup.classList.remove('show'); }, 5000); }, 15000); }
+    
+    // --- INITIALIZATION & EVENT LISTENERS ---
+    function initializeApp() {
+        setupModal(dom.productModal, dom.editOfferBtn, '.close-product-modal');
+        setupModal(dom.addToCartPopup, null, '.close-modal');
+        setupModal(dom.adminPasswordModal, null, '.close-modal');
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === 'true') { dom.adminPasswordModal.style.display = 'block'; dom.adminPasswordInput.focus(); }
+        loadState();
+        renderProduct();
+        renderCart();
+        startCountdown();
+        manageArtificialStock();
+        startSocialProof();
+    }
+    
+    dom.adminLoginLink.addEventListener('click', (e) => { e.preventDefault(); dom.adminPasswordModal.style.display = 'block'; dom.adminPasswordInput.focus(); });
+    dom.adminPasswordSubmit.addEventListener('click', () => { if (dom.adminPasswordInput.value === 'e55c3p') { document.body.dataset.isAdmin = 'true'; dom.adminPasswordModal.style.display = 'none'; dom.adminPanel.style.display = 'block'; } else { dom.adminPasswordError.style.display = 'block'; dom.adminPasswordInput.value = ''; } });
+    dom.adminPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') dom.adminPasswordSubmit.click(); });
+    dom.hideAdminBtn.addEventListener('click', () => { dom.adminPanel.style.display = 'none'; });
+    dom.logoutBtn.addEventListener('click', () => { document.body.dataset.isAdmin = 'false'; dom.adminPanel.style.display = 'none'; });
+    dom.addToCartButton.addEventListener('click', addToCart);
+    dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
+    dom.popupContinueShopping.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
+    dom.popupViewCart.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; openCart(); });
+    dom.closePopupBtn.addEventListener('click', () => { clearTimeout(popupTimeout); dom.addToCartPopup.style.display = 'none'; });
+    const openCart = () => { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); startCartTimer(); };
+    dom.publicCartButton.addEventListener('click', openCart);
+    const closeCart = () => { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); clearInterval(cartTimerInterval); };
+    dom.closeCartBtn.addEventListener('click', closeCart);
+    dom.cartOverlay.addEventListener('click', closeCart);
+    dom.cartItemsContainer.addEventListener('click', (e) => { if (e.target.classList.contains('remove-item-btn')) { const itemEl = e.target.closest('[data-variant-id]'); cart = cart.filter(item => item.variantId !== itemEl.dataset.variantId); saveState(); renderCart(); } });
+    dom.editOfferBtn.addEventListener('click', () => {
+        const product = offerProduct.offerProduct; dom.productModalTitle.textContent = 'Edit Offer'; dom.productForm.reset();
+        dom.productFormName.value = product.name; dom.productFormDescription.value = product.description;
+        dom.productFormCtaHeadline.value = product.ctaHeadline; dom.productFormCtaSubheadline.value = product.ctaSubheadline;
+        dom.productFormMediaUrl.value = product.mediaUrl || ''; dom.productFormImageUrl.value = product.imageUrl || '';
+        const variationsContainer = dom.productModal.querySelector('#variation-images-container'); variationsContainer.innerHTML = '';
+        const designKey = Object.keys(product.variations)[0];
+        product.variations[designKey].forEach((variation, index) => {
+            const field = document.createElement('div');
+            field.innerHTML = `<label for="var-img-${index}" class="block text-sm font-medium text-gray-700">${variation.option} Image URL</label><input type="text" id="var-img-${index}" value="${variation.image}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">`;
+            variationsContainer.appendChild(field);
+        });
+        dom.productModal.style.display = 'block';
+    });
+    dom.productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const product = offerProduct.offerProduct;
+        product.name = dom.productFormName.value;
+        product.description = dom.productFormDescription.value;
+        product.ctaHeadline = dom.productFormCtaHeadline.value;
+        product.ctaSubheadline = dom.productFormCtaSubheadline.value;
+        product.mediaUrl = dom.productFormMediaUrl.value;
+        product.imageUrl = dom.productFormImageUrl.value;
+        const designKey = Object.keys(product.variations)[0];
+        product.variations[designKey].forEach((variation, index) => {
+            variation.image = document.getElementById(`var-img-${index}`).value;
+        });
+        saveState(); renderProduct(); dom.productModal.style.display = 'none';
+    });
+    dom.checkoutBtn.addEventListener('click', async () => {
+        if (cart.length === 0) { dom.checkoutBtn.textContent = 'Your cart is empty!'; setTimeout(() => { dom.checkoutBtn.textContent = 'Pay with Card'; }, 2000); return; }
+        dom.checkoutBtn.textContent = 'Connecting...'; dom.checkoutBtn.disabled = true;
+        if (typeof fbq === 'function') { const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price.replace('$', '')) * item.quantity), 0); fbq('track', 'InitiateCheckout', { value: subtotal.toFixed(2), currency: 'USD', num_items: cart.reduce((sum, item) => sum + item.quantity, 0) }); }
+        const newTab = window.open('', '_blank'); newTab.document.body.innerHTML = "Connecting to secure checkout...";
+        const line_items = cart.map(item => ({ price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100), }, quantity: item.quantity, }));
+        try {
+            const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }), });
+            if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+            const { url } = await response.json();
+            if (url) { newTab.location.href = url; } else { newTab.close(); throw new Error('Could not get checkout URL.'); }
+        } catch (error) { console.error('Checkout error:', error); if (newTab) newTab.close(); } finally { dom.checkoutBtn.textContent = 'Pay with Card'; dom.checkoutBtn.disabled = false; }
+    });
+    
+    initializeApp();
+});
+</script>
+
+</body>
+</html>
