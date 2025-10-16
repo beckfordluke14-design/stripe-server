@@ -1,10 +1,10 @@
-// The corrected api/upload.js file
+// The final, corrected api/upload.js file
 import { put } from '@vercel/blob';
 
 export default async function handler(request) {
   // --- THIS IS THE FIX ---
-  // We construct the full URL by combining the host from the request headers with the path.
-  const { searchParams } = new URL(request.url, `https://${request.headers.get('host')}`);
+  // We now use `request.headers.host` instead of `request.headers.get('host')`
+  const { searchParams } = new URL(request.url, `https://${request.headers.host}`);
   // --- END OF FIX ---
   
   const filename = searchParams.get('filename');
