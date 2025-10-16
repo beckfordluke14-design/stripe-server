@@ -1,32 +1,20 @@
-// The final, corrected api/upload.js file for direct uploads
-import { handleUpload } from '@vercel/blob/client';
+// The final, corrected api/upload.js file
+import { put } from '@vercel/blob';
 
 export default async function handler(request) {
-  const body = await request.json();
+  // Vercel automatically provides query parameters in `request.query`.
+  const filename = request.query.filename;
 
-  try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (pathname /*, clientPayload */) => {
-        // Generate a client token for the browser to upload the file
-        // See https://vercel.com/docs/blob/security/client-uploads
-        return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif'],
-          tokenPayload: JSON.stringify({
-            // Optional: You can add any metadata here if needed
-          }),
-        };
-      },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // This runs after the upload is finished
-        // You could add logic here to update a database, etc.
-        console.log('Blob upload completed', blob, tokenPayload);
-      },
-    });
-
-    return new Response(JSON.stringify(jsonResponse), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+  // The request body contains the raw file data.
+  if (!filename || !request.body) {
+     return new Response(JSON.stringify({ message: 'No filename or body provided.' }), { status: 400 });
   }
+
+  // Upload the file body to Vercel Blob
+  const blob = await put(filename, request.body, {
+    access: 'public',
+  });
+
+  // Respond with the blob's data, including the URL
+  return new Response(JSON.stringify(blob), { status: 200 });
 }
