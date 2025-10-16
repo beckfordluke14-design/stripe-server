@@ -1,5 +1,5 @@
-// You DO NOT need to install anything for this file. Vercel does it automatically.
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Securely gets your key from Vercel
+// Complete and updated api/server.js file
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   // Allow requests from any origin (for Google Sites)
@@ -20,7 +20,34 @@ export default async function handler(req, res) {
         payment_method_types: ['card'],
         line_items: items,
         mode: 'payment',
-        // IMPORTANT: You will replace these placeholder URLs later.
+        
+        // --- START: UPDATED SECTION ---
+
+        // Collects Shipping Address
+        shipping_address_collection: {
+          // Added 'DO' for Dominican Republic
+          allowed_countries: ['US', 'CA', 'GB', 'AU', 'DO'], 
+        },
+
+        // Collects Phone Number
+        phone_number_collection: {
+          enabled: true,
+        },
+        
+        // Requires Billing Address
+        billing_address_collection: 'required',
+
+        // Ask for permission to send promo emails
+        consent_collection: {
+          promotions: 'auto',
+        },
+        
+        // Ensures an email is always collected
+        customer_creation: 'always',
+
+        // --- END: UPDATED SECTION ---
+
+        // IMPORTANT: Replace these with your actual success and cancel URLs
         success_url: `https://YOUR_GOOGLE_SITE_URL/success-page`,
         cancel_url: `https://YOUR_GOOGLE_SITE_URL/cancel-page`,
       });
