@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Stripe server for e-commerce page",
   "main": "api/server.js",
+  "type": "module",
   "scripts": {
     "start": "node api/server.js"
   },
   "dependencies": {
-    "stripe": "^15.8.0"
+    "stripe": "^15.8.0",
+    "@vercel/kv": "^1.0.1"
   }
 }
