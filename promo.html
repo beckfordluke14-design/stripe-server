@@ -74,12 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIG ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-    const STRIPE_PUBLISHABLE_KEY = 'YOUR_PUBLISHABLE_KEY_HERE'; 
-    const CHECKOUT_SESSION_URL = 'YOUR_VERCEL_URL_HERE';
+    const CHECKOUT_SESSION_URL = '/api/create-checkout-session';
     
     // --- STATE ---
     let offerProduct = {}, cart = [], currentProductKey = 'offerProduct', cartTimerInterval = null, popupTimeout = null;
     const offerStateKey = 'offerModeState_v3'; // This only stores the cart now
+    let countdownInterval = null;
     
     // --- DOM ELEMENTS ---
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
@@ -92,17 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadOfferFromServer() {
         try {
-            // Fetch the product data from our api.php file
-            const response = await fetch('api.php');
-            if (!response.ok) throw new Error('Failed to fetch offer from server');
+            // Fetch the product data from our Vercel Serverless Function
+            const response = await fetch('/api/offer');
+            if (!response.ok) throw new Error(`Server responded with ${response.status}`);
             
             const serverOffer = await response.json();
-            offerProduct = serverOffer;
-            console.log("Successfully loaded offer from server.");
-
+            // Check if the data is valid before assigning
+            if (serverOffer && serverOffer.offerProduct) {
+                offerProduct = serverOffer;
+                console.log("Successfully loaded offer from server.");
+            } else {
+                throw new Error("Received invalid offer data from server.");
+            }
         } catch (error) {
             console.error("Could not load from server.", error);
-            alert("Error: Could not load product information from the server.");
+            document.body.innerHTML = `<div style="text-align: center; padding: 50px; font-family: sans-serif;"><h1>Error</h1><p>Could not load product information from the server. Please try again later.</p><p><i>${error.message}</i></p></div>`;
         }
 
         // The cart is still loaded from the user's local storage
@@ -114,12 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let showItemAddedPopup = (product, message) => { clearTimeout(popupTimeout); dom.popupProductImage.src = product.imageUrl || 'https://placehold.co/128x128'; dom.popupMessage.innerHTML = message; dom.addToCartPopup.style.display = 'block'; popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000); }
     let updateCartIcon = () => { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); dom.publicCartBadge.textContent = totalItems; }
     let renderCart = () => {
+        if (!offerProduct.offerProduct) return; // Safety check
         dom.cartItemsContainer.innerHTML = ''; let subtotal = 0; const bundleItems = cart.filter(item => item.productId === 'offerProduct');
         bundleItems.forEach((item, index) => { const bundlePrices = offerProduct.offerProduct.bundlePrices.map(p => parseFloat(p.replace('$', ''))); let price; if (index === 0) price = bundlePrices[0]; else if (index === 1) price = bundlePrices[1]; else if (index === 2) price = bundlePrices[2]; else price = bundlePrices[1]; item.price = `$${price.toFixed(2)}`; });
         if (cart.length === 0) { dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`; } else { cart.forEach(item => { const itemEl = document.createElement('div'); itemEl.className = 'flex items-center space-x-4 py-3 border-b'; itemEl.dataset.variantId = item.variantId; const price = parseFloat(item.price.replace('$', '')); subtotal += price * item.quantity; itemEl.innerHTML = `<img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md"><div class="flex-grow"><p class="font-semibold">${item.name}</p><p class="text-sm text-gray-500">${item.variantText}</p><p class="font-bold text-sm">${item.price}</p></div><div class="flex items-center space-x-2"><button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2">&times;</button></div>`; dom.cartItemsContainer.appendChild(itemEl); }); }
         dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`; updateCartIcon();
     }
     let addToCart = () => {
+        if (!offerProduct.offerProduct) return; // Safety check
         const product = offerProduct.offerProduct;
         const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({ name: input.value, image: input.dataset.image }));
         if (selectedDesigns.length === 0) { alert("Please select at least one design."); return; }
@@ -130,12 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     let startCartTimer = () => { clearInterval(cartTimerInterval); let duration = 600; const timerEl = dom.cartTimer; cartTimerInterval = setInterval(() => { let minutes = parseInt(duration / 60, 10); let seconds = parseInt(duration % 60, 10); minutes = minutes < 10 ? "0" + minutes : minutes; seconds = seconds < 10 ? "0" + seconds : seconds; timerEl.textContent = `${minutes}:${seconds}`; if (--duration < 0) { clearInterval(cartTimerInterval); timerEl.textContent = "Expired!"; } }, 1000); }
     let updateBundleSummary = () => {
+        if (!offerProduct.offerProduct) return; // Safety check
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')); const product = offerProduct.offerProduct; if (!product || !product.bundlePrices) return; const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', ''))); let total = 0; let originalTotal = 0; dom.bundleSummaryItems.innerHTML = '';
         if (selectedInputs.length > 0) { dom.bundleSummary.style.display = 'block'; selectedInputs.forEach((input, index) => { let price; if (index === 0) price = bundlePrices[0]; else if (index === 1) price = bundlePrices[1]; else if (index === 2) price = bundlePrices[2]; else price = bundlePrices[1]; total += price; originalTotal += parseFloat(product.originalPrice.replace('$', '')); const itemEl = document.createElement('div'); itemEl.className = 'flex justify-between items-center text-sm'; itemEl.innerHTML = `<span>Item ${index + 1}: ${input.value}</span><span class="font-bold">$${price.toFixed(2)}</span>`; dom.bundleSummaryItems.appendChild(itemEl); }); } else { dom.bundleSummary.style.display = 'none'; }
         dom.productPrice.textContent = `$${total.toFixed(2)}`; dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
     }
     let renderProduct = () => {
-        const product = offerProduct.offerProduct; if (!product) return; document.body.dataset.theme = product.theme || 'light';
+        if (!offerProduct.offerProduct) return; // Safety check
+        const product = offerProduct.offerProduct; document.body.dataset.theme = product.theme || 'light';
         if (product.theme === 'light') { dom.headerLogo.src = LOGO_URL_BLACK; } else { dom.headerLogo.src = LOGO_URL_WHITE; }
         dom.productName.textContent = product.name; dom.productDescription.textContent = product.description; dom.mainProductVideoContainer.innerHTML = '';
         dom.ctaHeadline.textContent = product.ctaHeadline || 'Build Your Bundle & Save Big!'; dom.ctaSubheadline.textContent = product.ctaSubheadline || 'Select items to unlock massive discounts!';
@@ -151,7 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     let startCountdown = () => { clearInterval(countdownInterval); let duration = 120; const timer = setInterval(() => { if (duration <= 0) { clearInterval(timer); dom.countdownTimer.textContent = "00:00:00"; return; } duration--; const m = String(Math.floor(duration/60)).padStart(2,'0'); const s = String(duration%60).padStart(2,'0'); dom.countdownTimer.textContent = `00:${m}:${s}`; }, 1000); }
     let manageArtificialStock = () => { let stock = 12; dom.stockCount.textContent = stock; const stockTimer = setInterval(() => { if (stock > 2) { stock--; dom.stockCount.textContent = stock; } else { clearInterval(stockTimer); } }, 20000); }
-    let startSocialProof = () => { const locations = ["Miami, FL", "Tampa, FL", "Los Angeles, CA", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL"]; const popup = dom.socialProofPopup; setInterval(() => { const loc = locations[Math.floor(Math.random() * locations.length)]; const name = offerProduct.offerProduct.name.split(' ').slice(0, 2).join(' '); popup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`; popup.classList.add('show'); setTimeout(() => { popup.classList.remove('show'); }, 5000); }, 15000); }
+    let startSocialProof = () => {
+        if (!offerProduct.offerProduct) return; // Safety check
+        const locations = ["Miami, FL", "Tampa, FL", "Los Angeles, CA", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL"]; const popup = dom.socialProofPopup; setInterval(() => { const loc = locations[Math.floor(Math.random() * locations.length)]; const name = offerProduct.offerProduct.name.split(' ').slice(0, 2).join(' '); popup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`; popup.classList.add('show'); setTimeout(() => { popup.classList.remove('show'); }, 5000); }, 15000); 
+    }
     let setupModal = (modal, openBtn, closeBtnSelector) => { if (!modal) return; const closeBtn = modal.querySelector(closeBtnSelector); if (openBtn) openBtn.addEventListener('click', () => { modal.style.display = 'block'; }); if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; }); window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } }); }
     
     // --- INITIALIZATION & EVENT LISTENERS ---
@@ -164,11 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         await loadOfferFromServer(); 
         
-        renderProduct();
-        renderCart();
-        startCountdown();
-        manageArtificialStock();
-        startSocialProof();
+        // Only run these if data loading was successful
+        if (offerProduct.offerProduct) {
+            renderProduct();
+            renderCart();
+            startCountdown();
+            manageArtificialStock();
+            startSocialProof();
+        }
     }
     
     dom.adminLoginLink.addEventListener('click', (e) => { e.preventDefault(); dom.adminPasswordModal.style.display = 'block'; dom.adminPasswordInput.focus(); });
@@ -227,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             variation.image = document.getElementById(`var-img-${index}`).value;
         });
         try {
-            const response = await fetch('api.php', {
+            const response = await fetch('/api/offer', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -250,14 +264,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.length === 0) { dom.checkoutBtn.textContent = 'Your cart is empty!'; setTimeout(() => { dom.checkoutBtn.textContent = 'Pay with Card'; }, 2000); return; }
         dom.checkoutBtn.textContent = 'Connecting...'; dom.checkoutBtn.disabled = true;
         if (typeof fbq === 'function') { const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price.replace('$', '')) * item.quantity), 0); fbq('track', 'InitiateCheckout', { value: subtotal.toFixed(2), currency: 'USD', num_items: cart.reduce((sum, item) => sum + item.quantity, 0) }); }
-        const newTab = window.open('', '_blank'); newTab.document.body.innerHTML = "Connecting to secure checkout...";
+        
         const line_items = cart.map(item => ({ price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100), }, quantity: item.quantity, }));
         try {
             const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }), });
             if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
             const { url } = await response.json();
-            if (url) { newTab.location.href = url; } else { newTab.close(); throw new Error('Could not get checkout URL.'); }
-        } catch (error) { console.error('Checkout error:', error); if (newTab) newTab.close(); } finally { dom.checkoutBtn.textContent = 'Pay with Card'; dom.checkoutBtn.disabled = false; }
+            if (url) { window.location.href = url; } else { throw new Error('Could not get checkout URL.'); }
+        } catch (error) { console.error('Checkout error:', error); } finally { dom.checkoutBtn.textContent = 'Pay with Card'; dom.checkoutBtn.disabled = false; }
     });
     
     initializeApp();
