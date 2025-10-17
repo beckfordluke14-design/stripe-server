@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         },
         customer_creation: 'always',
         success_url: `https://YOUR_GOOGLE_SITE_URL/success-page`, // Remember to replace these later
-        cancel_url: `https://YOUR_GOOGLE_SITE_URL/cancel-page`,
+        cancel_url: `https://alltheseflows.vercel.app/`,
       });
 
       return res.status(200).json({ url: session.url });
