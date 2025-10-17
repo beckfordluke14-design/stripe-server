@@ -1,38 +1,39 @@
-// api/offer.js
 import { kv } from '@vercel/kv';
 
-const OFFER_KEY = 'offerProduct'; // The key we'll use in the database
+// This function handles getting and saving your offer data.
+export default async function handler(request, response) {
 
-export default async function handler(req, res) {
-  // Allow requests from any origin (CORS)
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  // GET: Runs when a visitor loads the page
-  if (req.method === 'GET') {
+  // This part runs when the page loads (GET request)
+  if (request.method === 'GET') {
     try {
-      const offerProduct = await kv.get(OFFER_KEY);
-      return res.status(200).json(offerProduct || {});
+      const offerData = await kv.get('offerData');
+      if (!offerData) {
+        return response.status(404).json({ message: 'Offer data not yet saved.' });
+      }
+      return response.status(200).json(offerData);
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to fetch offer.' });
+      return response.status(500).json({ message: 'Error fetching data from KV store.' });
     }
   }
 
-  // POST: Runs when you click "Save Offer" in the admin panel
-  if (req.method === 'POST') {
+  // This part runs when you save from the admin panel (POST request)
+  if (request.method === 'POST') {
+    // Security check for the admin password
+    const adminPassword = request.headers['x-admin-password'];
+    if (adminPassword !== 'e55c3p') {
+      return response.status(403).json({ message: 'Authentication failed.' });
+    }
+
     try {
-      const { offerProduct } = req.body;
-      await kv.set(OFFER_KEY, offerProduct);
-      return res.status(200).json({ message: 'Offer saved successfully.' });
+      const newOfferData = request.body;
+      await kv.set('offerData', newOfferData); // Save the new data to the database
+      return response.status(200).json({ message: 'Offer updated successfully!' });
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to save offer.' });
+      return response.status(500).json({ message: 'Error saving data to KV store.' });
     }
   }
 
-  return res.status(405).end('Method Not Allowed');
+  // If it's not GET or POST, it's not allowed
+  response.setHeader('Allow', ['GET', 'POST']);
+  return response.status(405).end('Method Not Allowed');
 }
