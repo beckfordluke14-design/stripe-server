@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj'; 
-    const CHECKOUT_SESSION_URL = 'https://alltheseflows.vercel.app//api/server';
+    const CHECKOUT_SESSION_URL = 'https://stripe-server-roan.vercel.app/api/server';
     
     // --- STATE MANAGEMENT ---
     let product = {};
@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
                 if (!response.ok) throw new Error('Server error');
                 const { url } = await response.json();
-                if (url) window.open(url, '_blank');
+                if (url) window.location.href = url;
             } catch (error) {
                 console.error('Checkout error:', error);
             } finally {
@@ -497,6 +497,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
 
