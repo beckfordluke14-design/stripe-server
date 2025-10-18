@@ -6,11 +6,12 @@
     <title>All These Flows - Home</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Links Updated -->
+    <!-- Font Links -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     
+    <!-- Analytics and Pixels -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -33,24 +34,22 @@
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
 
     <style>
-        /* Font Family, Background, and Text Color Updated */
         body { 
             font-family: "Bebas Neue", sans-serif;
             background-color: #F5009B;
-            color: #000000; /* Default text color to black */
+            color: #000000;
         }
         
-        /* Updated Accent Colors for Buttons */
         body[data-theme="light"], body { 
             --color-urgent: #ef4444; 
-            --color-accent: #000000; /* Black for accent */
-            --color-accent-hover: #333333; /* Dark grey for hover */
+            --color-accent: #000000; 
+            --color-accent-hover: #333333;
             --color-accent-border: #000000;
         }
         body[data-theme="dark"] { 
             --color-urgent: #d946ef; 
-            --color-accent: #000000; /* Black for accent */
-            --color-accent-hover: #333333; /* Dark grey for hover */
+            --color-accent: #000000; 
+            --color-accent-hover: #333333;
             --color-accent-border: #000000;
         }
 
@@ -65,7 +64,7 @@
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
         
-        /* New Sale Popup Styles */
+        /* Restored Sale Popup Styles */
         #sale-popup { 
             display: none; 
             position: fixed; 
@@ -79,7 +78,7 @@
             opacity: 0; 
             transform: translateY(20px); 
             transition: opacity 0.5s, transform 0.5s;
-            max-width: 280px;
+            max-width: 320px;
         }
         #sale-popup.show { 
             display: block; 
@@ -145,19 +144,33 @@
     <!-- Main Page Content -->
     <div class="container mx-auto p-4 max-w-7xl">
         <header class="py-6 flex justify-center">
-            <img src="https://i.imgur.com/7B5NkbX.png" alt="Brand Logo" class="h-12">
+            <a href="/home.html"><img id="header-logo" alt="Brand Logo" class="h-12" src="https://i.imgur.com/7B5NkbX.png"></a>
         </header>
 
-        <!-- Main Carousel (Video remains muted) -->
-        <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-center mb-12 shadow-lg overflow-hidden">
+        <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-center mb-6 shadow-lg overflow-hidden">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <div class="text-center mb-12">
+            <h3 class="text-white text-2xl tracking-wider">💳 Pay in 4 with Klarna & Afterpay</h3>
         </div>
 
         <h2 class="text-3xl font-bold text-center mb-8 text-white">Shop The Collection</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
             
-            <!-- **** HOODIE PRODUCTS MOVED TO THE TOP **** -->
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                <a href="/index.html">
+                    <img src="https://i.imgur.com/lLIgQjD.png" alt="V1 - Burnout Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                </a>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">V1 - Burnout Edition</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
+                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                        View Product
+                    </a>
+                </div>
+            </div>
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
                 <a href="/hoodies.html">
                     <img src="https://i.imgur.com/TZw6FIE.png" alt="ATFV12 HOODIE - ICE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
@@ -166,6 +179,18 @@
                     <h3 class="text-xl font-bold">ATFV12 HOODIE - ICE</h3>
                     <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
                     <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                        View Product
+                    </a>
+                </div>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                <a href="/index.html">
+                    <img src="https://i.imgur.com/ghpj3Nm.png" alt="V1 - Turbo Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                </a>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">V1 - Turbo Edition</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
+                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
                 </div>
@@ -183,32 +208,6 @@
                 </div>
             </div>
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/tUMU6TR.png" alt="ATFV12 HOODIE - PREE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">ATFV12 HOODIE - PREE</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-
-            <!-- **** BALACLAVA PRODUCTS MOVED TO THE BOTTOM **** -->
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/index.html">
-                    <img src="https://i.imgur.com/ghpj3Nm.png" alt="V1 - Turbo Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">V1 - Turbo Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
-                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
                 <a href="/index.html">
                     <img src="https://i.imgur.com/9QcKSwf.png" alt="V1 - Burble Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
                 </a>
@@ -221,24 +220,23 @@
                 </div>
             </div>
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/index.html">
-                    <img src="https://i.imgur.com/lLIgQjD.png" alt="V1 - Burnout Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                <a href="/hoodies.html">
+                    <img src="https://i.imgur.com/tUMU6TR.png" alt="ATFV12 HOODIE - PREE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
                 </a>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold">V1 - Burnout Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
-                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                    <h3 class="text-xl font-bold">ATFV12 HOODIE - PREE</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
+                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
     
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
+    const CHECKOUT_SESSION_URL = '/api/server'; 
     let cart = [];
     const appStateKey = 'singleProductPageState_v2'; 
     let cartTimerInterval = null;
@@ -363,17 +361,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // --- New Sale Popup Logic ---
+        // --- Logic for the Floating Pop-up ---
         const salePopup = dom.salePopup;
         const closeSalePopup = dom.closeSalePopup;
 
         if (salePopup && closeSalePopup) {
-            // Show popup after 3 seconds
             setTimeout(() => {
                 salePopup.classList.add('show');
             }, 3000);
 
-            // Hide popup when close button is clicked
             closeSalePopup.addEventListener('click', () => {
                 salePopup.classList.remove('show');
             });
