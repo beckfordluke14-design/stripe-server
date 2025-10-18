@@ -407,22 +407,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- URGENCY & TIMERS ---
-    function startCountdown() {
-        let duration = 20 * 60; // 20 minutes
-        clearInterval(cartTimerInterval);
-        cartTimerInterval = setInterval(() => {
-            if (duration <= 0) {
-                clearInterval(cartTimerInterval);
-                dom.countdownTimer.textContent = "00:00:00";
-                return;
-            }
-            duration--;
-            const h = String(Math.floor(duration / 3600)).padStart(2, '0');
-            const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
-            const s = String(duration % 60).padStart(2, '0');
-            dom.countdownTimer.textContent = `${h}:${m}:${s}`;
-        }, 1000);
-    }
+    function startCountdown() {
+        let duration = 20 * 60; // 20 minutes
+        clearInterval(cartTimerInterval);
+        cartTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(cartTimerInterval);
+                dom.cartTimer.textContent = "00:00"; // <-- FIXED
+                return;
+            }
+            duration--;
+            // No hours needed for a 20-minute timer
+            const m = String(Math.floor(duration / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            dom.cartTimer.textContent = `${m}:${s}`; // <-- FIXED
+        }, 1000);
+    }
     
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL", "Toronto, CA", "Sydney, AU", "Berlin, DE"];
@@ -497,5 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
 
