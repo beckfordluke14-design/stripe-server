@@ -6,9 +6,11 @@
     <title>All These Flows - Home</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- Font Links Updated -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     
-    <!-- Analytics and Pixels (Same as other pages) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -31,11 +33,30 @@
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
-        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
+        /* Font Family, Background, and Text Color Updated */
+        body { 
+            font-family: "Bebas Neue", sans-serif;
+            background-color: #F5009B;
+            color: #000000; /* Default text color to black */
+        }
+        
+        /* Updated Accent Colors for Buttons */
+        body[data-theme="light"], body { 
+            --color-urgent: #ef4444; 
+            --color-accent: #000000; /* Black for accent */
+            --color-accent-hover: #333333; /* Dark grey for hover */
+            --color-accent-border: #000000;
+        }
+        body[data-theme="dark"] { 
+            --color-urgent: #d946ef; 
+            --color-accent: #000000; /* Black for accent */
+            --color-accent-hover: #333333; /* Dark grey for hover */
+            --color-accent-border: #000000;
+        }
+
         .product-card-button { background-color: var(--color-accent); transition: background-color 0.3s; }
         .product-card-button:hover { background-color: var(--color-accent-hover); }
+
         #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; color: #333; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
         #cart-panel.open { right: 0; }
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
@@ -45,7 +66,8 @@
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     </style>
 </head>
-<body class="bg-gray-900 text-white" data-theme="dark">
+<!-- Body classes updated -->
+<body data-theme="dark">
 
     <!-- Floating Cart (Loads from cart.js) -->
     <div id="public-cart-button">
@@ -87,9 +109,10 @@
         </div>
 
         <!-- Product Grid -->
-        <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--color-accent);">Shop The Collection</h2>
+        <h2 class="text-3xl font-bold text-center mb-8 text-white">Shop The Collection</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Product card text color updated to white -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
             
             <!-- Balaclava Products -->
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
@@ -98,7 +121,7 @@
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">V1 - Turbo Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
                     <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
@@ -110,7 +133,7 @@
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">V1 - Burble Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
                     <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
@@ -122,21 +145,21 @@
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">V1 - Burnout Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$29.95</p>
                     <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
                 </div>
             </div>
 
-            <!-- Hoodie Products (with updated images) -->
+            <!-- Hoodie Products -->
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
                 <a href="/hoodies.html">
                     <img src="https://i.imgur.com/TZw6FIE.png" alt="ATFV12 HOODIE - ICE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">ATFV12 HOODIE - ICE</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
                     <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
@@ -148,7 +171,7 @@
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">ATFV12 HOODIE - OOTER</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
                     <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
@@ -160,7 +183,7 @@
                 </a>
                 <div class="p-6">
                     <h3 class="text-xl font-bold">ATFV12 HOODIE - PREE</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
                     <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
                         View Product
                     </a>
@@ -170,7 +193,6 @@
     </div>
     
 <script>
-// This script ensures the cart icon and panel are functional on the homepage.
 document.addEventListener('DOMContentLoaded', () => {
     const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
     let cart = [];
@@ -303,3 +325,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
