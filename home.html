@@ -64,26 +64,71 @@
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        
+        /* New Sale Popup Styles */
+        #sale-popup { 
+            display: none; 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background-color: white; 
+            color: #333; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            z-index: 200; 
+            opacity: 0; 
+            transform: translateY(20px); 
+            transition: opacity 0.5s, transform 0.5s;
+            max-width: 280px;
+        }
+        #sale-popup.show { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        #sale-popup .close-btn {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #sale-popup .close-btn:hover {
+            color: #333;
+        }
     </style>
 </head>
-<!-- Body classes updated -->
 <body data-theme="dark">
 
-    <!-- Floating Cart (Loads from cart.js) -->
+    <!-- Floating UI Elements -->
     <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
     </div>
     <div id="cart-overlay"></div>
+    <div id="sale-popup">
+        <span class="close-btn" id="close-sale-popup">&times;</span>
+        <div class="flex p-4">
+            <img src="https://i.imgur.com/ghpj3Nm.png" alt="Balaclava" class="w-20 h-20 object-cover rounded-md mr-4">
+            <div>
+                <h4 class="font-bold text-lg leading-tight">FLASH SALE!</h4>
+                <p class="text-sm text-gray-600 mb-2" style="font-family: sans-serif;">Balaclava Bundles are on sale now. Limited time only!</p>
+                <a href="/index.html" class="text-sm font-bold text-white bg-pink-500 hover:bg-pink-600 px-3 py-1 rounded-md inline-block no-underline">Shop Now</a>
+            </div>
+        </div>
+    </div>
 
-    <!-- Slide-out Cart Panel (Loads from cart.js) -->
+
+    <!-- Slide-out Cart Panel -->
     <div id="cart-panel">
         <div class="flex justify-between items-center p-4 border-b">
             <h2 class="text-xl font-bold">Your Cart</h2>
             <button id="close-cart-btn" class="text-2xl">&times;</button>
         </div>
         <div class="p-4 bg-yellow-100 text-center">
-            <p class="font-semibold text-yellow-800">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
+            <p class="font-semibold text-yellow-800" style="font-family: sans-serif;">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
         </div>
         <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
         <div class="p-4 border-t space-y-4">
@@ -91,7 +136,7 @@
                 <span>Subtotal</span>
                 <span id="cart-subtotal">$0.00</span>
             </div>
-            <p class="text-sm text-gray-500 text-center">Free Shipping on all orders!</p>
+            <p class="text-sm text-gray-500 text-center" style="font-family: sans-serif;">Free Shipping on all orders!</p>
             <button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button>
         </div>
     </div>
@@ -103,18 +148,54 @@
             <img src="https://i.imgur.com/7B5NkbX.png" alt="Brand Logo" class="h-12">
         </header>
 
-        <!-- Main Carousel -->
+        <!-- Main Carousel (Video remains muted) -->
         <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-center mb-12 shadow-lg overflow-hidden">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
-        <!-- Product Grid -->
         <h2 class="text-3xl font-bold text-center mb-8 text-white">Shop The Collection</h2>
 
-        <!-- Product card text color updated to white -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
             
-            <!-- Balaclava Products -->
+            <!-- **** HOODIE PRODUCTS MOVED TO THE TOP **** -->
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                <a href="/hoodies.html">
+                    <img src="https://i.imgur.com/TZw6FIE.png" alt="ATFV12 HOODIE - ICE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                </a>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">ATFV12 HOODIE - ICE</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
+                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                        View Product
+                    </a>
+                </div>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                <a href="/hoodies.html">
+                    <img src="https://i.imgur.com/eaGeEEL.png" alt="ATFV12 HOODIE - OOTER" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                </a>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">ATFV12 HOODIE - OOTER</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
+                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                        View Product
+                    </a>
+                </div>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                <a href="/hoodies.html">
+                    <img src="https://i.imgur.com/tUMU6TR.png" alt="ATFV12 HOODIE - PREE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                </a>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">ATFV12 HOODIE - PREE</h3>
+                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
+                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                        View Product
+                    </a>
+                </div>
+            </div>
+
+            <!-- **** BALACLAVA PRODUCTS MOVED TO THE BOTTOM **** -->
             <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
                 <a href="/index.html">
                     <img src="https://i.imgur.com/ghpj3Nm.png" alt="V1 - Turbo Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
@@ -152,43 +233,6 @@
                 </div>
             </div>
 
-            <!-- Hoodie Products -->
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/TZw6FIE.png" alt="ATFV12 HOODIE - ICE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">ATFV12 HOODIE - ICE</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/eaGeEEL.png" alt="ATFV12 HOODIE - OOTER" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">ATFV12 HOODIE - OOTER</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/tUMU6TR.png" alt="ATFV12 HOODIE - PREE" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">ATFV12 HOODIE - PREE</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-urgent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -316,6 +360,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     dom.checkoutBtn.textContent = 'Pay with Card';
                     dom.checkoutBtn.disabled = false;
                 }
+            });
+        }
+        
+        // --- New Sale Popup Logic ---
+        const salePopup = dom.salePopup;
+        const closeSalePopup = dom.closeSalePopup;
+
+        if (salePopup && closeSalePopup) {
+            // Show popup after 3 seconds
+            setTimeout(() => {
+                salePopup.classList.add('show');
+            }, 3000);
+
+            // Hide popup when close button is clicked
+            closeSalePopup.addEventListener('click', () => {
+                salePopup.classList.remove('show');
             });
         }
     }
