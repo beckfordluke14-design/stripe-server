@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All These Flows - Home</title>
-    <script src="https://js.stripe.com/v3/"></script>
+    <title>All These Flows - Home</title> <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
     <script>
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -17,28 +23,34 @@
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https.connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'YOUR_FACEBOOK_PIXEL_ID'); 
+      fbq('init', '757946737591863'); 
       fbq('track', 'PageView');
     </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+    
     <style>
-        /* Re-using styles from your other pages for consistency */
-        body { font-family: 'Inter', sans-serif; }
+        /* Styles from index.html for cart consistency */
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
         body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
         body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
+        
         .product-card-button { background-color: var(--color-accent); transition: background-color 0.3s; }
         .product-card-button:hover { background-color: var(--color-accent-hover); }
+
         #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
         #cart-panel.open { right: 0; }
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
         #cart-overlay.open { display: block; }
+        .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fefefe; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
+        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     </style>
 </head>
-<body class="bg-gray-900 text-white" data-theme="dark">
-
-    <div id="public-cart-button">
+<body data-theme="dark" class="bg-gray-900 text-white"> <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
     </div>
@@ -62,99 +74,290 @@
             <button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button>
         </div>
     </div>
-
-
-    <div class="container mx-auto p-4 max-w-7xl">
-        <header class="py-6 flex justify-center">
-            <img src="https://i.imgur.com/7B5NkbX.png" alt="Brand Logo" class="h-12"> </header>
-
-        <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-center mb-12 shadow-lg">
-            <iframe class="w-full h-full rounded-lg" src="https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    
+    <div id="add-to-cart-popup" class="modal">
+        <div class="modal-content text-center max-w-md">
+            <span class="close-modal" id="close-popup-btn">&times;</span>
+            <h3 class="text-2xl font-bold text-green-600 mb-4">Successfully Added!</h3>
+            <img id="popup-product-image" src="" alt="Product Image" class="w-32 h-32 object-cover mx-auto rounded-lg mb-4">
+            <p id="popup-message" class="text-gray-700 mb-6"></p>
+            <div class="space-y-3">
+                <button id="popup-view-cart" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg">View Cart & Checkout</button>
+                <button id="popup-continue-shopping" class="w-full text-gray-600 hover:text-indigo-600 font-semibold py-2">Continue Shopping</button>
+            </div>
         </div>
+    </div>
 
-        <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--color-accent);">Shop The Collection</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div id="theme-wrapper">
+        <div id="page-container" class="container mx-auto p-4 max-w-7xl">
+            <header class="py-6 flex justify-center">
+                <img id="header-logo" alt="Brand Logo" class="h-12" src="https://i.imgur.com/7B5NkbX.png"> </header>
+
+            <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-center mb-12 shadow-lg overflow-hidden">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--color-accent);">Shop The Collection</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/index.html"> <img src="https://i.imgur.com/ghpj3Nm.png" alt="V1 - Turbo Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">V1 - Turbo Edition</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                        <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/index.html">
+                        <img src="https://i.imgur.com/9QcKSwf.png" alt="V1 - Burble Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">V1 - Burble Edition</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                        <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/index.html">
+                        <img src="https://i.imgur.com/lLIgQjD.png" alt="V1 - Burnout Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">V1 - Burnout Edition</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
+                        <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/hoodies.html"> <img src="https://i.imgur.com/v17yX27l.png" alt="Signature Hoodie - Black" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">Signature Hoodie - Black</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                        <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/hoodies.html">
+                        <img src="https://i.imgur.com/R3pE5aAl.png" alt="Signature Hoodie - Grey" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">Signature Hoodie - Grey</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                        <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
+                    <a href="/hoodies.html">
+                        <img src="https://i.imgur.com/g0tS48sl.png" alt="Signature Hoodie - Blue" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
+                    </a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold">Signature Hoodie - Blue</h3>
+                        <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
+                        <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+
+            </div> </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- CONFIGURATION ---
+    const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
+    const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
+    const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj'; 
+    
+    const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
+    
+    // --- STATE MANAGEMENT ---
+    let cart = [];
+    // **** THIS KEY MUST BE THE SAME ON ALL PAGES ****
+    const appStateKey = 'singleProductPageState_v2'; 
+    let cartTimerInterval = null;
+
+    // --- All product-specific info removed ---
+
+    // **** ALL CART FUNCTIONS (loadState, saveState, renderCart, updateCartIcon) ****
+    // **** ARE IDENTICAL TO index.html TO ENSURE SYNCING ****
+
+    function saveState() {
+        localStorage.setItem(appStateKey, JSON.stringify({ cart }));
+    }
+
+    function loadState() {
+        // Only loads cart, no product info
+        const savedState = localStorage.getItem(appStateKey);
+        cart = savedState ? JSON.parse(savedState).cart || [] : [];
+    }
+
+    // --- DOM ELEMENTS CACHE ---
+    const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
+
+    // --- UI & CART LOGIC ---
+    function updateCartIcon() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        dom.publicCartBadge.textContent = totalItems;
+    }
+    
+    function renderCart() {
+        dom.cartItemsContainer.innerHTML = '';
+        let subtotal = 0;
+        
+        // This universal pricing logic is needed on all pages
+        const productPrices = {}; 
+        productPrices['mainProduct'] = ['$29.95', '$24.95', '$14.95']; // Balaclava
+        productPrices['hoodieProduct'] = ['$59.95']; // Hoodie
+
+        const bundleGroups = {};
+        cart.forEach(item => {
+            const productId = item.productId || 'mainProduct'; 
+            if (!bundleGroups[productId]) bundleGroups[productId] = [];
+            bundleGroups[productId].push(item);
+        });
+
+        for (const productId in bundleGroups) {
+            const items = bundleGroups[productId];
+            const prices = productPrices[productId] || ['$99.99'];
+            const bundlePrices = prices.map(p => parseFloat(p.replace('$', '')));
             
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/index.html"> <img src="https://i.imgur.com/ghpj3Nm.png" alt="V1 - Turbo Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">V1 - Turbo Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
-                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
+            items.forEach((item, index) => {
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+                item.price = `$${price.toFixed(2)}`;
+            });
+        }
+        
+        if (cart.length === 0) {
+            dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
+        } else {
+            cart.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center space-x-4 py-3 border-b';
+                itemEl.dataset.variantId = item.variantId;
+                const price = parseFloat(item.price.replace('$', ''));
+                subtotal += price * item.quantity;
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-sm text-gray-500">${item.variantText}</p>
+                        <p class="font-bold text-sm">${item.price}</p>
+                    </div>
+                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2" data-variant-id="${item.variantId}">&times;</button>
+                `;
+                dom.cartItemsContainer.appendChild(itemEl);
+            });
+        }
+        dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        updateCartIcon();
+    }
 
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/index.html">
-                    <img src="https://i.imgur.com/9QcKSwf.png" alt="V1 - Burble Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">V1 - Burble Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
-                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
+    // addToCart function REMOVED
+    // showItemAddedPopup function REMOVED (but listeners kept)
+    // updateBundleSummary function REMOVED
+    // renderProduct function REMOVED
+    // renderReviews function REMOVED
+    // startFlashSaleTimer function REMOVED
 
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/index.html">
-                    <img src="https://i.imgur.com/lLIgQjD.png" alt="V1 - Burnout Edition" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">V1 - Burnout Edition</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$29.95</p>
-                    <a href="/index.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html"> <img src="https://i.imgur.com/v17yX27l.png" alt="Signature Hoodie - Black" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">Signature Hoodie - Black</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/R3pE5aAl.png" alt="Signature Hoodie - Grey" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">Signature Hoodie - Grey</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden group">
-                <a href="/hoodies.html">
-                    <img src="https://i.imgur.com/g0tS48sl.png" alt="Signature Hoodie - Blue" class="w-full h-80 object-cover group-hover:opacity-80 transition-opacity">
-                </a>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold">Signature Hoodie - Blue</h3>
-                    <p class="text-lg font-semibold mt-2" style="color: var(--color-accent);">$59.95</p>
-                    <a href="/hoodies.html" class="block w-full text-center text-white font-bold py-3 px-6 rounded-lg mt-4 product-card-button">
-                        View Product
-                    </a>
-                </div>
-            </div>
-
-        </div> </div>
+    function startCartTimer() {
+        let duration = 10 * 60; // 10 minutes
+        clearInterval(cartTimerInterval); 
+        cartTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(cartTimerInterval);
+                dom.cartTimer.textContent = "00:00";
+                return;
+            }
+            duration--;
+            const m = String(Math.floor(duration / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            dom.cartTimer.textContent = `${m}:${s}`;
+        }, 1000);
+    }
     
-    <script src="cart.js" defer></script>
-    
-    </body>
+    // startSocialProof function REMOVED
+
+    // --- INITIALIZATION ---
+    function initializeApp() {
+        loadState();
+        renderCart(); // Load and show the cart from other pages
+        
+        // Set header logo based on theme
+        dom.headerLogo.src = (document.body.dataset.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
+        
+        // NO product logic to run
+
+        // **** All these cart listeners are identical to index.html ****
+        const openCart = () => { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); };
+        dom.publicCartButton.addEventListener('click', openCart);
+        
+        const closeCart = () => { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); };
+        dom.closeCartBtn.addEventListener('click', closeCart);
+        dom.cartOverlay.addEventListener('click', closeCart);
+
+        dom.cartItemsContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.remove-item-btn')) {
+                const variantIdToRemove = e.target.dataset.variantId;
+                cart = cart.filter(item => item.variantId !== variantIdToRemove);
+                saveState();
+                renderCart();
+            }
+        });
+
+        // Popup listeners still needed in case cart.js tries to call them
+        dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+        dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
+        dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+
+        dom.checkoutBtn.addEventListener('click', async () => {
+            if (cart.length === 0) return;
+            dom.checkoutBtn.textContent = 'Connecting...';
+            dom.checkoutBtn.disabled = true;
+            
+            // FB Pixel Track
+            fbq('track', 'InitiateCheckout');
+            
+            const line_items = cart.map(item => ({
+                price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
+                quantity: item.quantity,
+            }));
+
+            try {
+                const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
+                if (!response.ok) throw new Error('Server error');
+                const { url } = await response.json();
+                if (url) window.location.href = url;
+            } catch (error) {
+                console.error('Checkout error:', error);
+            } finally {
+                dom.checkoutBtn.textContent = 'Pay with Card';
+                dom.checkoutBtn.disabled = false;
+            }
+        });
+    }
+
+    initializeApp();
+});
+</script>
+</body>
 </html>
