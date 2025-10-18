@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Analytics and Pixels (Replace with your IDs) --><script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -59,20 +59,20 @@
 </head>
 <body data-theme="dark">
 
-    <!-- Floating UI Elements --><div id="public-cart-button">
+    <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
     </div>
     <div id="social-proof-popup"></div>
     <div id="cart-overlay"></div>
 
-    <!-- Slide-out Cart Panel --><div id="cart-panel">
+    <div id="cart-panel">
         <div class="flex justify-between items-center p-4 border-b">
             <h2 class="text-xl font-bold">Your Cart</h2>
             <button id="close-cart-btn" class="text-2xl">&times;</button>
         </div>
         <div class="p-4 bg-yellow-100 text-center">
-            <p class="font-semibold text-yellow-800">Your items are reserved for <span id="cart-timer" class="font-bold">20:00</span>!</p>
+            <p class="font-semibold text-yellow-800">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
         </div>
         <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
         <div class="p-4 border-t space-y-4">
@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <!-- Main Page Content --><div id="theme-wrapper">
+    <div id="theme-wrapper">
         <div id="page-container">
             <header class="py-4 absolute top-0 left-0 w-full z-10">
                 <div class="container mx-auto px-4 flex justify-center">
@@ -93,15 +93,15 @@
                 </div>
             </header>
             <div class="container mx-auto p-4 max-w-5xl pt-20">
-                <!-- Countdown Timer --><div class="bg-red-600 text-white text-center p-3 rounded-lg shadow-lg timer-box mb-6">
+                <div class="bg-red-600 text-white text-center p-3 rounded-lg shadow-lg timer-box mb-6">
                     <h1 class="text-2xl font-bold">FLASH SALE! Ends In:</h1>
                     <div id="countdown-timer" class="text-4xl font-mono tracking-widest mt-2">00:00:00</div>
                 </div>
-                <!-- Call to Action --><div id="urgent-cta" class="text-center mb-6">
+                <div id="urgent-cta" class="text-center mb-6">
                     <h3 id="cta-headline" class="text-2xl font-bold text-highlight animate-pulse"></h3>
                     <p id="cta-subheadline" class="text-gray-500"></p>
                 </div>
-                <!-- Product Details --><div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex">
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex">
                     <div id="media-container" class="md:w-1/2 p-4">
                         <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
                         <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Additional Sections --><div class="mt-12 space-y-8">
+                <div class="mt-12 space-y-8">
                     <div id="shipping-section" class="bg-white p-8 rounded-lg shadow-md">
                         <h3 class="text-2xl font-bold mb-4">Shipping Information</h3>
                         <p class="text-gray-700">We offer FREE worldwide express shipping on all orders! Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
@@ -143,7 +143,7 @@
         </div>
     </div>
     
-    <!-- "Added to Cart" Popup --><div id="add-to-cart-popup" class="modal">
+    <div id="add-to-cart-popup" class="modal">
         <div class="modal-content text-center max-w-md">
             <span class="close-modal" id="close-popup-btn">&times;</span>
             <h3 class="text-2xl font-bold text-green-600 mb-4">Successfully Added!</h3>
@@ -162,14 +162,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj'; 
-    const CHECKOUT_SESSION_URL = 'https://alltheseflows.vercel.app/api/server';
+    
+    // **** JS FIX #1: Corrected Checkout URL ****
+    const CHECKOUT_SESSION_URL = '/api/server'; 
     
     // --- STATE MANAGEMENT ---
     let product = {};
     let reviews = [];
     let cart = [];
     const appStateKey = 'singleProductPageState_v2';
+    
+    // **** JS FIX #2: Added separate interval variable for the flash sale ****
     let cartTimerInterval = null;
+    let flashSaleTimerInterval = null;
 
     // ===============================================================================================
     // ===============================================================================================
@@ -197,13 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===============================================================================================
     // ===============================================================================================
     //  == EDIT YOUR PRODUCT REVIEWS HERE ==
-    //
-    //  Instructions:
-    //  1.  'rating': Change the number of stars (1 to 5).
-    //  2.  'title': The bold headline for the review.
-    //  3.  'text': The main content of the customer review.
-    //  4.  'author': The name of the person leaving the review.
-    //  You can add or remove review blocks as needed.
     // ===============================================================================================
     const initialReviews = [
         { rating: 5, title: "Essential for the TakeOver!", text: "This is the new standard for meetups. So many people asked where I got it at the last event. The quality is next level.", author: "Chris G." },
@@ -306,6 +304,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
         renderCart();
         showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
+        
+        // **** JS FIX #5: Start the 10-minute cart timer ****
+        startCartTimer(); 
     }
     
     function showItemAddedPopup(popupProduct, message) {
@@ -407,22 +408,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- URGENCY & TIMERS ---
-    function startCountdown() {
-        let duration = 20 * 60; // 20 minutes
-        clearInterval(cartTimerInterval);
-        cartTimerInterval = setInterval(() => {
-            if (duration <= 0) {
-                clearInterval(cartTimerInterval);
-                dom.cartTimer.textContent = "00:00"; // <-- FIXED
-                return;
-            }
-            duration--;
-            // No hours needed for a 20-minute timer
-            const m = String(Math.floor(duration / 60)).padStart(2, '0');
-            const s = String(duration % 60).padStart(2, '0');
-            dom.cartTimer.textContent = `${m}:${s}`; // <-- FIXED
-        }, 1000);
-    }
+    
+    // **** JS FIX #3: Renamed to startFlashSaleTimer, 20 mins, updates #countdown-timer ****
+    function startFlashSaleTimer() {
+        let duration = 20 * 60; // 20 minutes
+        clearInterval(flashSaleTimerInterval);
+        flashSaleTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(flashSaleTimerInterval);
+                dom.countdownTimer.textContent = "00:00:00";
+                return;
+            }
+            duration--;
+            const h = String(Math.floor(duration / 3600)).padStart(2, '0');
+            const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            dom.countdownTimer.textContent = `${h}:${m}:${s}`;
+        }, 1000);
+    }
+    
+    // **** JS FIX #4: Created new 10-min timer for the cart, updates #cart-timer ****
+    function startCartTimer() {
+        let duration = 10 * 60; // 10 minutes
+        clearInterval(cartTimerInterval); // Clear any existing cart timer
+        cartTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(cartTimerInterval);
+                dom.cartTimer.textContent = "00:00";
+                return;
+            }
+            duration--;
+            const m = String(Math.floor(duration / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            dom.cartTimer.textContent = `${m}:${s}`;
+        }, 1000);
+    }
     
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX", "New York, NY", "Phoenix, AZ", "Chicago, IL", "Toronto, CA", "Sydney, AU", "Berlin, DE"];
@@ -441,7 +461,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProduct();
         renderReviews();
         renderCart();
-        startCountdown();
+        
+        // **** JS FIX #6: Call the correct timer on page load ****
+        startFlashSaleTimer(); 
         startSocialProof();
 
         // Event Listeners
@@ -497,6 +519,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
-
