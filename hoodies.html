@@ -64,11 +64,31 @@
             color: white;
             border-color: var(--color-accent);
         }
+        
+        .related-product-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .related-product-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .related-product-card img {
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            width: 100%;
+        }
+        .related-product-card-info {
+            padding: 0.75rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body data-theme="dark">
 
-    <!-- Cart HTML (Identical to index.html for syncing) -->
+    <!-- Cart HTML -->
     <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
@@ -108,36 +128,42 @@
                     <h3 id="cta-headline" class="text-2xl font-bold text-highlight"></h3>
                     <p id="cta-subheadline" class="text-gray-500"></p>
                 </div>
-                <div class="bg-white rounded-xl shadow-2xl overflow-hidden md:flex">
-                    <div id="media-container" class="md:w-1/2 p-4">
-                        <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
-                        <div id="image-thumb-nav" class="image-thumb-nav"></div>
-                    </div>
-                    <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
-                        <div>
-                            <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
-                            <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2>
-                            <div class="mt-6 flex items-baseline gap-4">
-                                <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
-                                <span id="product-original-price" class="hidden"></span>
-                            </div>
-
-                            <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
-                            <div id="size-selector" class="mt-6"></div>
-                            <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
-                                <h4 class="font-bold text-lg text-gray-800">Your Selection:</h4>
-                                <div id="bundle-summary-items" class="text-gray-600"></div>
-                            </div>
-                            <!-- STOCK INDICATOR REMOVED -->
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+                    <div class="md:flex">
+                        <div id="media-container" class="md:w-1/2 p-4">
+                            <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
+                            <div id="image-thumb-nav" class="image-thumb-nav"></div>
                         </div>
-                        <div class="mt-8">
-                            <button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button>
+                        <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
+                            <div>
+                                <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
+                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2>
+                                <div class="mt-6 flex items-baseline gap-4">
+                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
+                                    <span id="product-original-price" class="hidden"></span>
+                                </div>
+
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
+                                <div id="size-selector" class="mt-6"></div>
+                                <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
+                                    <h4 class="font-bold text-lg text-gray-800">Your Selection:</h4>
+                                    <div id="bundle-summary-items" class="text-gray-600"></div>
+                                </div>
+                            </div>
+                            <div class="mt-8">
+                                <button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="related-products-section" class="p-8 border-t border-gray-200">
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
+                        <div id="related-products-grid" class="grid grid-cols-3 gap-4">
                         </div>
                     </div>
                 </div>
                 <div class="mt-12 space-y-8">
                     <div id="shipping-section" class="bg-white p-8 rounded-lg shadow-md">
-                        <h3 class="text-2xl font-bold mb-4">Shipping Information</h3>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
                         <p class="text-gray-700">We offer FREE worldwide express shipping on all orders! Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
                     </div>
                 </div>
@@ -160,20 +186,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- CONFIGURATION ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
     const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
     
-    // --- STATE MANAGEMENT ---
     let product = {};
     let cart = [];
     const appStateKey = 'singleProductPageState_v2'; 
     let cartTimerInterval = null;
 
-    // ===============================================================================================
-    //  == HOODIE PRODUCT DETAILS ==
-    // ===============================================================================================
     const initialProduct = {
         name: 'ATFV12 HOODIE',
         ctaHeadline: 'The New Standard.',
@@ -182,34 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
         bundlePrices: ['$59.95'], 
         variations: {
             'Design': [
-                { 
-                    option: 'ICE', 
-                    images: { 
-                        front: 'https://i.imgur.com/TZw6FIE.png', 
-                        back: 'https://i.imgur.com/CIpigzw.png' 
-                    } 
-                }, 
-                { 
-                    option: 'OOTER', 
-                    images: { 
-                        front: 'https://i.imgur.com/eaGeEEL.png', 
-                        back: 'https://i.imgur.com/lwbTzZP.png' 
-                    } 
-                },  
-                { 
-                    option: 'PREE', 
-                    images: { 
-                        front: 'https://i.imgur.com/tUMU6TR.png', 
-                        back: 'https://i.imgur.com/d5rcFj6.png' 
-                    } 
-                }  
+                { option: 'ICE', images: { front: 'https://i.imgur.com/TZw6FIE.png', back: 'https://i.imgur.com/CIpigzw.png' } }, 
+                { option: 'OOTER', images: { front: 'https://i.imgur.com/eaGeEEL.png', back: 'https://i.imgur.com/lwbTzZP.png' } },  
+                { option: 'PREE', images: { front: 'https://i.imgur.com/tUMU6TR.png', back: 'https://i.imgur.com/d5rcFj6.png' } }  
             ],
             'Size': [
                 { option: 'S' }, { option: 'M' }, { option: 'L' }, { option: 'XL' }, { option: '2XL' }
             ]
         }
     };
-    // ===============================================================================================
+    const relatedProductsData = [
+        { name: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png', url: '/index.html' },
+        { name: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png', url: '/index.html' },
+        { name: 'V1 - Burnout Edition', image: 'https://i.imgur.com/lLIgQjD.png', url: '/index.html' }
+    ];
 
     function saveState() {
         localStorage.setItem(appStateKey, JSON.stringify({ cart }));
@@ -313,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
         thumbNav.appendChild(backThumb);
     }
 
-
     function addToCart() {
         const selectedDesignInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
         const selectedSizeInput = document.querySelector('#size-selector input[name="sizeSelection"]:checked');
@@ -398,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateImages(product.variations['Design'][0]);
         }
 
-        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Choose Your Design(s):</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
+        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Choose Your Design:</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
         const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
         const designKey = 'Design';
 
@@ -408,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const optionEl = document.createElement('div');
                 optionEl.className = 'bundle-image-option';
                 optionEl.innerHTML = `
-                    <input type="checkbox" id="${optionId}" data-name="${variation.option}" class="sr-only">
+                    <input type="radio" name="designSelection" id="${optionId}" data-name="${variation.option}" class="sr-only">
                     <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
                         <img src="${variation.images.front}" class="w-full h-24 object-cover rounded-md">
                         <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
@@ -419,18 +425,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 gridContainer.appendChild(optionEl);
                 
-                optionEl.querySelector('label').addEventListener('click', (e) => {
-                    let currentInput = document.getElementById(optionId);
-                    if(!e.shiftKey && !e.ctrlKey) { 
-                       dom.interactiveBundleSelector.querySelectorAll('input:checked').forEach(input => {
-                           if(input !== currentInput) input.checked = false;
-                       });
-                    }
+                optionEl.querySelector('label').addEventListener('click', () => {
                    updateImages(variation);
                 });
             });
             
-            const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]');
+            const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="radio"]');
             if (firstBundleOption) firstBundleOption.checked = true;
         }
 
@@ -466,6 +466,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBundleSummary();
     }
     
+    function renderRelatedProducts() {
+        const grid = dom.relatedProductsGrid;
+        if (!grid) return;
+
+        grid.innerHTML = relatedProductsData.map(product => `
+            <a href="${product.url}" class="related-product-card text-gray-900 no-underline">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="related-product-card-info">
+                    <h4 class="text-sm font-semibold">${product.name}</h4>
+                </div>
+            </a>
+        `).join('');
+    }
+
     function startCartTimer() {
         let duration = 10 * 60;
         clearInterval(cartTimerInterval); 
@@ -499,10 +513,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadState();
         renderProduct();
         renderCart(); 
+        renderRelatedProducts();
         startSocialProof();
+        // Floating popup call removed
 
         dom.addToCartButton.addEventListener('click', addToCart);
-        dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
+        dom.interactiveBundleSelector.addEventListener('click', updateBundleSummary);
         
         const openCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); }};
         if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
