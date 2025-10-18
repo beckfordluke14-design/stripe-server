@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limited Time Offer!</title>
-    <script src="https://js.stripe.com/v3/"></script>
+    <title>Limited Time Offer! - Balaclava</title> <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
@@ -27,9 +26,7 @@
       fbq('init', '757946737591863'); 
       fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
-    
-    <style>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript> <style>
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
         body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
         body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
@@ -38,17 +35,16 @@
         .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
         .add-to-cart-button:hover { background-color: var(--color-accent-hover); }
         .text-highlight { color: var(--color-accent); }
-        #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
+        #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; color: #333; /* Ensure text is readable */ box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
         #cart-panel.open { right: 0; }
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
         #cart-overlay.open { display: block; }
         .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
+        .modal-content { background-color: #fefefe; color: #333; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
         #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
         #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
         
-        /* Floating Cart Button Styles */
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
@@ -163,22 +159,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj'; 
     
-    // **** JS FIX #1: Corrected Checkout URL ****
     const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
     
     // --- STATE MANAGEMENT ---
     let product = {};
     let reviews = [];
     let cart = [];
-    const appStateKey = 'singleProductPageState_v2';
+    // **** THIS KEY MUST BE THE SAME ON ALL PAGES ****
+    const appStateKey = 'singleProductPageState_v2'; 
     
-    // **** JS FIX #2: Added separate interval variable for the flash sale ****
     let cartTimerInterval = null;
     let flashSaleTimerInterval = null;
 
     // ===============================================================================================
-    // ===============================================================================================
-    //  == EDIT YOUR SINGLE PRODUCT DETAILS HERE ==
+    //  == BALACLAVA PRODUCT DETAILS ==
     // ===============================================================================================
     const initialProduct = {
         name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
@@ -200,15 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ===============================================================================================
-    // ===============================================================================================
-    //  == EDIT YOUR PRODUCT REVIEWS HERE ==
+    //  == BALACLAVA REVIEWS ==
     // ===============================================================================================
     const initialReviews = [
         { rating: 5, title: "Essential for the TakeOver!", text: "This is the new standard for meetups. So many people asked where I got it at the last event. The quality is next level.", author: "Chris G." },
         { rating: 5, title: "Finally, a design that GETS IT.", text: "Pristine quality, and a design that actually stands out. If you want to break necks, this is it.", author: "Jayden R." },
         { rating: 5, title: "The Burble Edition is insane", text: "Looks even better in person. This is the perfect final touch for my fit when I take my car out.", author: "Leo S." }
     ];
-    // ===============================================================================================
     // ===============================================================================================
 
 
@@ -232,21 +224,28 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.publicCartBadge.textContent = totalItems;
     }
     
+    // **** UPDATED renderCart function ****
     function renderCart() {
         dom.cartItemsContainer.innerHTML = '';
         let subtotal = 0;
-        const bundleGroups = {};
+        
+        // Universal pricing logic
+        const productPrices = {}; 
+        productPrices['mainProduct'] = ['$29.95', '$24.95', '$14.95']; // Balaclava
+        productPrices['hoodieProduct'] = ['$59.95']; // Hoodie
 
-        // Group bundle items together to apply tiered pricing
+        const bundleGroups = {};
         cart.forEach(item => {
-            if (!bundleGroups[item.productId]) bundleGroups[item.productId] = [];
-            bundleGroups[item.productId].push(item);
+            const productId = item.productId || 'mainProduct'; 
+            if (!bundleGroups[productId]) bundleGroups[productId] = [];
+            bundleGroups[productId].push(item);
         });
 
-        // Apply tiered pricing logic
         for (const productId in bundleGroups) {
             const items = bundleGroups[productId];
-            const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
+            const prices = productPrices[productId] || ['$99.99']; // Fallback
+            const bundlePrices = prices.map(p => parseFloat(p.replace('$', '')));
+            
             items.forEach((item, index) => {
                 let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
                 item.price = `$${price.toFixed(2)}`;
@@ -277,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
         updateCartIcon();
     }
+    // **** END of updated renderCart ****
 
     function addToCart() {
         const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
@@ -291,10 +291,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectedDesigns.forEach(design => {
             cart.push({
-                productId: 'mainProduct',
+                productId: 'mainProduct', // This is the Balaclava
                 variantId: `${design.name}|${Date.now()}`,
                 name: product.name,
-                price: product.bundlePrices[0], // Temporary price, corrected in renderCart
+                price: product.bundlePrices[0], // Temporary price
                 image: design.image,
                 variantText: design.name,
                 quantity: 1
@@ -305,8 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
         showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
         
-        // **** JS FIX #5: Start the 10-minute cart timer ****
         startCartTimer(); 
+        
+        // **** FB Pixel AddToCart ****
+        fbq('track', 'AddToCart'); 
     }
     
     function showItemAddedPopup(popupProduct, message) {
@@ -409,7 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- URGENCY & TIMERS ---
     
-    // **** JS FIX #3: Renamed to startFlashSaleTimer, 20 mins, updates #countdown-timer ****
     function startFlashSaleTimer() {
         let duration = 20 * 60; // 20 minutes
         clearInterval(flashSaleTimerInterval);
@@ -427,10 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // **** JS FIX #4: Created new 10-min timer for the cart, updates #cart-timer ****
     function startCartTimer() {
         let duration = 10 * 60; // 10 minutes
-        clearInterval(cartTimerInterval); // Clear any existing cart timer
+        clearInterval(cartTimerInterval); 
         cartTimerInterval = setInterval(() => {
             if (duration <= 0) {
                 clearInterval(cartTimerInterval);
@@ -460,9 +460,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadState();
         renderProduct();
         renderReviews();
-        renderCart();
+        renderCart(); // Call renderCart on load
         
-        // **** JS FIX #6: Call the correct timer on page load ****
         startFlashSaleTimer(); 
         startSocialProof();
 
@@ -470,6 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.addToCartButton.addEventListener('click', addToCart);
         dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
         
+        // Identical cart listeners
         const openCart = () => { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); };
         dom.publicCartButton.addEventListener('click', openCart);
         
@@ -495,6 +495,9 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.checkoutBtn.textContent = 'Connecting...';
             dom.checkoutBtn.disabled = true;
             
+            // **** FB Pixel InitiateCheckout ****
+            fbq('track', 'InitiateCheckout'); 
+            
             const line_items = cart.map(item => ({
                 price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
                 quantity: item.quantity,
@@ -519,5 +522,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
