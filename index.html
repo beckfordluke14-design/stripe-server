@@ -6,7 +6,6 @@
     <title>Limited Time Offer! - Balaclava</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Links Updated -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -33,7 +32,6 @@
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
     
     <style>
-        /* Font Family Updated */
         body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
         body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
         body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
@@ -122,12 +120,6 @@
                                     <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
                                     <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through"></span></div>
                                 </div>
-                                <div class="mt-2 text-sm text-green-600 font-semibold flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                    <span>+ Free Shipping</span>
-                                </div>
                                 
                                 <div id="payment-method-messaging" class="mt-4" style="font-family: sans-serif;"></div>
 
@@ -180,15 +172,18 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- STRIPE INITIALIZATION ---
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj';
     const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
     const elements = stripe.elements();
     let paymentMessage = null;
 
+    // --- CONFIGURATION ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
     const CHECKOUT_SESSION_URL = '/api/server'; 
     
+    // --- STATE MANAGEMENT ---
     let product = {};
     let reviews = [];
     let cart = [];
@@ -197,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cartTimerInterval = null;
     let flashSaleTimerInterval = null;
 
+    // --- DATA ---
     const initialProduct = {
         name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
         description: 'The original ATF V1 "TakeOver" design. This is the final production run of this iconic piece. One size fits all. It\'s more than an accessory, it\'s a statement.',
@@ -226,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'ATFV12 HOODIE - PREE', image: 'https://i.imgur.com/tUMU6TR.png', url: '/hoodies.html' }
     ];
 
+    // --- CORE FUNCTIONS ---
     function saveState() {
         localStorage.setItem(appStateKey, JSON.stringify({ cart }));
     }
