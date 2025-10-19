@@ -232,6 +232,18 @@
                 </div>
             </div>
         </div>
+
+        <footer class="text-center py-8 mt-12 border-t border-gray-700 text-white">
+            <div class="container mx-auto px-4">
+                <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                <p class="text-gray-300" style="font-family: sans-serif;">
+                    Email: <a href="mailto:ATFSTORAGEXX@GMAIL.COM" class="hover:text-white">ATFSTORAGEXX@GMAIL.COM</a>
+                </p>
+                <p class="text-gray-300" style="font-family: sans-serif;">
+                    Phone: <a href="tel:+13106940695" class="hover:text-white">(310) 694-0695</a>
+                </p>
+            </div>
+        </footer>
     </div>
     
 <script>
@@ -353,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (url) window.location.href = url;
                 } catch (error) {
                     console.error('Checkout error:', error);
-                     alert('Could not connect to checkout. Please try again.');
+                        alert('Could not connect to checkout. Please try again.');
                 } finally {
                     dom.checkoutBtn.textContent = 'Pay with Card';
                     dom.checkoutBtn.disabled = false;
@@ -381,4 +393,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
