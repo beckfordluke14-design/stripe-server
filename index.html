@@ -104,13 +104,13 @@
                 <div id="urgent-cta" class="text-center mb-6">
                     <h3 id="cta-headline" class="text-2xl font-bold text-highlight animate-pulse"></h3>
                     <p id="cta-subheadline" class="text-gray-500" style="font-family: sans-serif;"></p>
-Â               </div>
+                </div>
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
                     <div class="md:flex">
                         <div id="media-container" class="md:w-1/2 p-4">
                             <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
                             <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
-Â                       </div>
+                        </div>
                         <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
                             <div>
                                 <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
@@ -130,17 +130,17 @@
                                 </div>
                                 <div id="stock-indicator" class="mt-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
                                     <p class="font-bold">Hurry! Only <span id="stock-count">12</span> left in stock!</p>
-                              _ </div>
+                                </div>
                             </div>
-Â                           <div class="mt-8">
+                            <div class="mt-8">
                                 <button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button>
                             </div>
                         </div>
-Â                   </div>
+                    </div>
                     <div id="related-products-section" class="p-8 border-t border-gray-200">
                         <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
                         <div id="related-products-grid" class="grid grid-cols-3 gap-4">
-                Â         </div>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-12 space-y-8">
@@ -148,12 +148,11 @@
                         <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
                         <p class="text-gray-700" style="font-family: sans-serif;">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
                     </div>
-                                    </div>
-                
-                                <footer class="text-center py-8 mt-12">
-                    <p class="text-gray-500" style="font-family: sans-serif;">Contact us: <a href="mailto:atfstoragexx@gmail.com" class="hover:underline">atfstoragexx@gmail.com</a></p>
-Â               </footer>
-                
+                    <div id="reviews-section" class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-900">What Our Customers Say</h3>
+                        <div id="review-container" class="space-y-6"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -183,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const CHECKOUT_SESSION_URL = '/api/server'; 
     
     let product = {};
+    let reviews = [];
     let cart = [];
     const appStateKey = 'singleProductPageState_v2'; 
     
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaType: 'video',
         mediaUrl: 'https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0',
         bundlePrices: ['$29.95', '$24.95', '$14.95'],
-  _       variations: {
+        variations: {
             'Design': [
                 { option: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png' },
                 { option: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png' },
@@ -207,7 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         }
     };
-    // REVIEWS DATA REMOVED
+    const initialReviews = [
+        { rating: 5, title: "Essential for the TakeOver!", text: "This is the new standard for meetups. So many people asked where I got it at the last event. The quality is next level.", author: "Chris G." },
+        { rating: 5, title: "Finally, a design that GETS IT.", text: "Pristine quality, and a design that actually stands out. If you want to break necks, this is it.", author: "Jayden R." },
+        { rating: 5, title: "The Burble Edition is insane", text: "Looks even better in person. This is the perfect final touch for my fit when I take my car out.", author: "Leo S." }
+    ];
     const relatedProductsData = [
         { name: 'ATFV12 HOODIE - ICE', image: 'https://i.imgur.com/TZw6FIE.png', url: '/hoodies.html' },
         { name: 'ATFV12 HOODIE - OOTER', image: 'https://i.imgur.com/eaGeEEL.png', url: '/hoodies.html' },
@@ -220,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadState() {
         product = initialProduct;
-        // reviews = initialReviews; // <-- REMOVED
+        reviews = initialReviews;
         const savedState = localStorage.getItem(appStateKey);
         cart = savedState ? JSON.parse(savedState).cart || [] : [];
     }
@@ -273,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
                     <div class="flex-grow">
                         <p class="font-semibold">${item.name}</p>
-Â                       <p class="text-sm text-gray-500">${item.variantText}</p> 
+                        <p class="text-sm text-gray-500">${item.variantText}</p> 
                         <p class="font-bold text-sm">${item.price}</p>
                     </div>
                     <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2" data-variant-id="${item.variantId}">&times;</button>
@@ -296,36 +300,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- New variables for tracking ---
-        let itemsForGtag = [];
-        let totalValue = 0;
-        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
-        // --- End new variables ---
-
-        selectedDesigns.forEach((design, index) => {
-            const variantId = `${design.name}|${Date.now()}`;
-            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
-            
+        selectedDesigns.forEach(design => {
             cart.push({
                 productId: 'mainProduct',
-                variantId: variantId,
+                variantId: `${design.name}|${Date.now()}`,
                 name: product.name,
-                price: `$${price.toFixed(2)}`, // Use calculated price
+                price: product.bundlePrices[0],
                 image: design.image,
                 variantText: design.name,
                 quantity: 1
             });
-
-            // --- Build the item for Google Analytics ---
-            itemsForGtag.push({
-                item_id: variantId,
-                item_name: product.name,
-                item_variant: design.name,
-                price: price,
-                quantity: 1
-            });
-            totalValue += price;
-            // --- End gtag item build ---
         });
 
         saveState();
@@ -333,25 +317,17 @@ document.addEventListener('DOMContentLoaded', () => {
         showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
         
         startCartTimer(); 
-        
-        // --- PIXEL TRACKING ---
         fbq('track', 'AddToCart'); 
-        
-        gtag('event', 'add_to_cart', {
-            currency: 'USD',
-            value: totalValue,
-            items: itemsForGtag
-        });
     }
     
     function showItemAddedPopup(popupProduct, message) {
-Read     if (!dom.addToCartPopup) return;
+        if (!dom.addToCartPopup) return;
         clearTimeout(dom.popupTimeout);
         dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
         dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
         dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
-D   }
+    }
 
     function updateBundleSummary() {
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
@@ -403,7 +379,7 @@ D   }
         }
 
         dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
-A       const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
+        const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
         const designKey = Object.keys(product.variations)[0];
 
         if (designKey) {
@@ -427,17 +403,23 @@ A       const gridContainer = dom.interactiveBundleSelector.querySelector('.g
                     dom.mainProductVideoContainer.style.display = 'none';
                     dom.mainProductImage.src = variation.image;
                 });
-          t });
+            });
             
             const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]');
-s           if (firstBundleOption) {
+            if (firstBundleOption) {
                 firstBundleOption.checked = true;
             }
         }
         updateBundleSummary();
     }
     
-    // FUNCTION renderReviews() REMOVED
+    function renderReviews() {
+        if (!dom.reviewContainer) return;
+        dom.reviewContainer.innerHTML = reviews.map(review => {
+            const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+            return `<div class="border-b pb-4 last:border-b-0"><div class="flex items-center mb-2"><span class="text-yellow-500">${stars}</span><strong class="ml-2 text-gray-800">${review.title}</strong></div><p class="text-gray-700" style="font-family: sans-serif;">"${review.text}"</p><p class="text-sm text-gray-500 mt-2">- ${review.author}</p></div>`;
+        }).join('');
+    }
     
     function renderRelatedProducts() {
         const grid = dom.relatedProductsGrid;
@@ -448,7 +430,7 @@ s           if (firstBundleOption) {
                 <img src="${product.image}" alt="${product.name}">
                 <div class="related-product-card-info">
                     <h4 class="text-sm font-semibold">${product.name}</h4>
-Â               </div>
+                </div>
             </a>
         `).join('');
     }
@@ -457,43 +439,43 @@ s           if (firstBundleOption) {
         let duration = 20 * 60;
         clearInterval(flashSaleTimerInterval);
         flashSaleTimerInterval = setInterval(() => {
-    Â       if (duration <= 0) {
+            if (duration <= 0) {
                 clearInterval(flashSaleTimerInterval);
                 dom.countdownTimer.textContent = "00:00:00";
                 return;
             }
             duration--;
             const h = String(Math.floor(duration / 3600)).padStart(2, '0');
-D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
+            const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
             const s = String(duration % 60).padStart(2, '0');
             dom.countdownTimer.textContent = `${h}:${m}:${s}`;
         }, 1000);
     }
     
     function startCartTimer() {
-      s   let duration = 10 * 60;
+        let duration = 10 * 60;
         clearInterval(cartTimerInterval); 
         cartTimerInterval = setInterval(() => {
             if (duration <= 0) {
                 clearInterval(cartTimerInterval);
                 if(dom.cartTimer) dom.cartTimer.textContent = "00:00";
                 return;
-    Â       }
+            }
             duration--;
             const m = String(Math.floor(duration / 60)).padStart(2, '0');
-Â           const s = String(duration % 60).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
             if(dom.cartTimer) dom.cartTimer.textContent = `${m}:${s}`;
         }, 1000);
     }
     
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-Â       setInterval(() => {
+        setInterval(() => {
             const name = product.name.split(' ').slice(0, 2).join(' ');
             const loc = locations[Math.floor(Math.random() * locations.length)];
             if (dom.socialProofPopup) {
                 dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
-Â nbsp;             dom.socialProofPopup.classList.add('show');
+                dom.socialProofPopup.classList.add('show');
                 setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
             }
         }, 15000);
@@ -507,7 +489,7 @@ D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2
 
         const options = {
             amount: initialPriceInCents,
-Â           currency: 'USD',
+            currency: 'USD',
         };
 
         try {
@@ -515,7 +497,7 @@ D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2
         } catch (e) {
             console.error("Error creating payment message element:", e);
             return;
-    What   }
+        }
 
         const mountPoint = dom.paymentMethodMessaging;
         if (mountPoint) {
@@ -526,7 +508,7 @@ D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2
     function initializeApp() {
         loadState();
         renderProduct(); 
-        // renderReviews(); // <-- REMOVED
+        renderReviews();
         renderCart(); 
         renderRelatedProducts();
         initializePaymentMessage(); 
@@ -537,10 +519,10 @@ D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2
         dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
         
         const openCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); }};
-A       if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
+        if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
         
         const closeCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); }};
-What     if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', closeCart);
+        if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', closeCart);
         if(dom.cartOverlay) dom.cartOverlay.addEventListener('click', closeCart);
 
         if(dom.cartItemsContainer) {
@@ -555,16 +537,16 @@ What     if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', close
         }
 
         if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-Methods     if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
+        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
         if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
 
         if(dom.checkoutBtn) {
             dom.checkoutBtn.addEventListener('click', async () => {
                 if (cart.length === 0) return;
-  t             dom.checkoutBtn.textContent = 'Connecting...';
+                dom.checkoutBtn.textContent = 'Connecting...';
                 dom.checkoutBtn.disabled = true;
                 
-                fbq('track', 'InitiateCheckout');Two
+                fbq('track', 'InitiateCheckout'); 
                 
                 const line_items = cart.map(item => ({
                     price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
@@ -573,14 +555,14 @@ Methods     if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', 
 
                 try {
                     const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
-Methods               if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+                    if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
                     const { url } = await response.json();
                     if (url) window.location.href = url;
-What             } catch (error) {
+                } catch (error) {
                     console.error('Checkout error:', error);
                      alert('Could not connect to checkout. Please try again.');
                 } finally {
-            t       dom.checkoutBtn.textContent = 'Pay with Card';
+                    dom.checkoutBtn.textContent = 'Pay with Card';
                     dom.checkoutBtn.disabled = false;
                 }
             });
@@ -592,3 +574,4 @@ What             } catch (error) {
 </script>
 </body>
 </html>
+
