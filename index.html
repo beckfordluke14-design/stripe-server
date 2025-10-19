@@ -28,7 +28,7 @@
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '757946737591863');
-      fbq('track', 'PageView');
+      fbq('track', 'PageView'); // Tracks page view on load
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
     <style>
@@ -76,7 +76,7 @@
         body[data-theme="dark"] .bundle-image-option label { border-color: #4b5563; }
         body[data-theme="dark"] .bundle-image-option p { color: #e5e7eb; }
         body[data-theme="dark"] #stock-indicator { background-color: #3730a3; border-color: #4f46e5; color: #c7d2fe;}
-        body[data-theme="dark"] #shipping-section p, body[data-theme="dark"] #reviews-section p { color: #9ca3af; font-family: sans-serif; } /* Added sans-serif */
+        body[data-theme="dark"] #shipping-section p, body[data-theme="dark"] #reviews-section p { color: #9ca3af; font-family: sans-serif; }
         body[data-theme="dark"] #review-container strong { color: #e5e7eb; }
         body[data-theme="dark"] #review-container .text-sm { color: #6b7280; }
         body[data-theme="dark"] #review-container .border-b { border-color: #374151; }
@@ -199,7 +199,7 @@
     let paymentMessage = null;
     let flashSaleTimerInterval = null;
     let socialProofIntervalId = null;
-    let stripe = null; // Declare stripe and elements globally within this script scope
+    let stripe = null;
     let elements = null;
 
 
@@ -234,8 +234,9 @@
 
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
+    // --- !!! REVERTED addToCart Function for Mask Page !!! ---
     function addToCart() {
-        if (!dom.interactiveBundleSelector || typeof window.cart === 'undefined') { // Check global cart
+        if (!dom.interactiveBundleSelector || typeof window.cart === 'undefined') {
              console.error("Missing elements or cart.js failed to load.");
              alert("Error: Cannot add to cart right now. Please refresh.");
              return;
@@ -251,8 +252,6 @@
             return;
         }
 
-        let pixel_content_ids = [];
-        let pixel_value = 0;
         const bundlePrices = (product.bundlePrices || []).map(p => parseFloat(String(p).replace('$', '')));
 
         selectedDesigns.forEach((design, index) => {
@@ -268,29 +267,20 @@
                 variantText: design.name,
                 quantity: 1
             });
-
-            pixel_content_ids.push(variantId);
-            pixel_value += price;
         });
 
-        if (typeof fbq === 'function') {
-            try {
-                fbq('track', 'AddToCart', {
-                    content_ids: pixel_content_ids,
-                    content_name: product.name || 'Mask Product',
-                    content_category: 'Apparel & Accessories > Clothing Accessories > Masks',
-                    content_type: selectedDesigns.length > 1 ? 'product_group' : 'product',
-                    value: pixel_value,
-                    currency: 'USD' // CHANGE IF NEEDED
-                });
-            } catch (e) { console.error("FB Pixel AddToCart Error:", e); }
-        }
+        // --- Basic AddToCart Pixel (No Details - As Requested) ---
+         if (typeof fbq === 'function') {
+             fbq('track', 'AddToCart'); // Simple event, no parameters
+         }
+        // --- End Basic AddToCart Pixel ---
 
         if(typeof window.saveState === 'function') window.saveState();
         if(typeof window.renderCart === 'function') window.renderCart();
         showItemAddedPopup({ mediaUrl: selectedDesigns[0]?.image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
         if(typeof window.startCartTimer === 'function') window.startCartTimer();
     }
+    // --- !!! END of REVERTED addToCart Function !!! ---
 
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
@@ -303,15 +293,12 @@
 
     function updateBundleSummary() {
         if (!dom.interactiveBundleSelector || !product || !product.bundlePrices || !product.originalPrice) return;
-
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
         const bundlePrices = product.bundlePrices.map(p => parseFloat(String(p).replace('$', '')));
         const originalSinglePrice = parseFloat(String(product.originalPrice).replace('$', ''));
         let total = 0;
         let originalTotal = 0;
-
         if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
-
         if (selectedInputs.length > 0) {
             if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
             selectedInputs.forEach((input, index) => {
@@ -325,13 +312,10 @@
             });
         } else {
             if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
-            total = 0;
-            originalTotal = 0;
+            total = 0; originalTotal = 0;
         }
-
         if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
         if (dom.productOriginalPrice) dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
-
         if (paymentMessage) {
              const totalInCents = Math.round(total * 100);
              const defaultPriceCents = bundlePrices.length > 0 ? Math.round(bundlePrices[0] * 100) : 1;
@@ -350,7 +334,6 @@
         if (dom.ctaHeadline) dom.ctaHeadline.textContent = product.ctaHeadline;
         if (dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
         if (dom.productBadge) dom.productBadge.textContent = 'Limited Edition Bundle Deal';
-
         const firstVariationImage = product.variations?.['Design']?.[0]?.image || 'https://placehold.co/600x600';
         if (product.mediaType === 'video' && product.mediaUrl) {
            if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
@@ -364,12 +347,10 @@
            if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
            if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage;
         }
-
         if (dom.interactiveBundleSelector) {
             dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
             const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
             const designKey = Object.keys(product.variations || {})[0];
-
             if (designKey && product.variations && product.variations[designKey]) {
                 product.variations[designKey].forEach((variation, index) => {
                     const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
@@ -386,12 +367,10 @@
                         </label>
                     `;
                     gridContainer.appendChild(optionEl);
-
                     if (index === 0) { // Auto-select first item
                         const firstCheckbox = optionEl.querySelector('input');
                         if (firstCheckbox) firstCheckbox.checked = true;
                     }
-
                     const label = optionEl.querySelector('label');
                     if (label) {
                         label.addEventListener('click', () => { // Update image on label click
@@ -403,7 +382,7 @@
                 });
             } else { console.warn("No 'Design' variations found."); }
         } else { console.warn("Bundle selector element not found."); }
-        updateBundleSummary(); // Call after rendering options AND setting default check
+        updateBundleSummary();
     }
 
     function renderReviews() {
@@ -481,57 +460,42 @@
 
     // --- Main Initialization Function ---
     function initializeApp() {
-        // Ensure cart.js has loaded its essentials
         if (typeof window.renderCart !== 'function' || typeof window.saveState !== 'function' || typeof window.cart === 'undefined') {
              console.error("Critical Error: Global cart functions/variables from cart.js are not available! Cannot initialize page.");
-             // Display user-friendly error message
              const body = document.querySelector('body');
              if(body) body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;"><h1>Error</h1><p>Failed to load essential cart features. Please check your connection and refresh the page.</p></div>';
-             return; // Stop initialization
+             return;
         }
-
-        console.log("Initializing index.html..."); // Debug log
-
-        // Initialize Stripe here now that the library is loaded
+        console.log("Initializing index.html...");
         try {
             stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
             elements = stripe.elements();
-        } catch(e) {
-            console.error("Failed to initialize Stripe:", e);
-             // Handle Stripe initialization error if necessary
-        }
-
+        } catch(e) { console.error("Failed to initialize Stripe:", e); }
 
         product = initialProduct;
         reviews = initialReviews;
 
-        renderProduct(); // Renders product, selectors, sets default selection
+        renderProduct();
         renderReviews();
         renderRelatedProducts();
-        initializePaymentMessage(); // Initialize AFTER renderProduct sets initial price context
+        initializePaymentMessage();
         startFlashSaleTimer();
         startSocialProof();
 
-        // Add event listeners specific to this page
         if(dom.addToCartButton) dom.addToCartButton.addEventListener('click', addToCart);
         if(dom.interactiveBundleSelector) dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
-
-        // Popup listeners remain specific to this page's popup element IDs
         if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
         if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); });
         if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
-        // Initial render of the global cart display
-        window.renderCart(); // Assumes window.cart was loaded by cart.js and populated by loadState()
-
-        console.log("index.html initialized successfully."); // Debug log
+        window.renderCart(); // Initial render
+        console.log("index.html initialized successfully.");
     }
 
     // --- Initialize after DOM is ready ---
     if (document.readyState === 'loading') {
          document.addEventListener('DOMContentLoaded', initializeApp);
     } else {
-         // DOM is already ready, assume cart.js has also loaded due to script order
          initializeApp();
     }
 </script>
