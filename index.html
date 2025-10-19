@@ -33,8 +33,8 @@
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
     <style>
         body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
-        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; color: #1f2937; } /* Added default text color */
-        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; background-color: #111827; color: #d1d5db; } /* Added dark mode background and text */
+        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; color: #1f2937; }
+        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; background-color: #111827; color: #d1d5db; }
         .timer-box { background-color: var(--color-urgent); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
         .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
@@ -45,16 +45,16 @@
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
         #cart-overlay.open { display: block; }
         .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; color: #333; margin: 5% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;} /* Adjusted margin for better centering */
+        .modal-content { background-color: #fefefe; color: #333; margin: 5% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; font-family: sans-serif; } /* Added sans-serif */
+        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; font-family: sans-serif; }
         #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .bundle-image-option input:checked + label { border-color: var(--color-accent-border); box-shadow: 0 0 0 3px var(--color-accent-border); } /* Updated border color */
+        .bundle-image-option input:checked + label { border-color: var(--color-accent-border); box-shadow: 0 0 0 3px var(--color-accent-border); }
         .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
-        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; background-color: white; } /* Added background */
+        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; background-color: white; }
         .related-product-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .related-product-card img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
         .related-product-card-info { padding: 0.75rem; text-align: center; }
@@ -64,7 +64,7 @@
         body[data-theme="dark"] #cart-panel .border-b, body[data-theme="dark"] #cart-panel .border-t { border-color: #374151; }
         body[data-theme="dark"] .modal-content { background-color: #374151; color: #d1d5db; border-color: #4b5563;}
         body[data-theme="dark"] .close-modal { color: #9ca3af; }
-        body[data-theme="dark"] .bg-white { background-color: #1f2937; } /* Target specific white backgrounds */
+        body[data-theme="dark"] .bg-white { background-color: #1f2937; }
         body[data-theme="dark"] .text-gray-900 { color: #f9fafb; }
         body[data-theme="dark"] .text-gray-800 { color: #e5e7eb; }
         body[data-theme="dark"] .text-gray-700 { color: #d1d5db; }
@@ -75,8 +75,8 @@
         body[data-theme="dark"] .related-product-card h4 { color: #f9fafb; }
         body[data-theme="dark"] .bundle-image-option label { border-color: #4b5563; }
         body[data-theme="dark"] .bundle-image-option p { color: #e5e7eb; }
-        body[data-theme="dark"] #stock-indicator { background-color: #3730a3; border-color: #4f46e5; color: #c7d2fe;} /* Adjusted dark stock indicator */
-        body[data-theme="dark"] #shipping-section p, body[data-theme="dark"] #reviews-section p { color: #9ca3af; } /* Use sans-serif for paragraphs */
+        body[data-theme="dark"] #stock-indicator { background-color: #3730a3; border-color: #4f46e5; color: #c7d2fe;}
+        body[data-theme="dark"] #shipping-section p, body[data-theme="dark"] #reviews-section p { color: #9ca3af; font-family: sans-serif; } /* Added sans-serif */
         body[data-theme="dark"] #review-container strong { color: #e5e7eb; }
         body[data-theme="dark"] #review-container .text-sm { color: #6b7280; }
         body[data-theme="dark"] #review-container .border-b { border-color: #374151; }
@@ -129,8 +129,7 @@
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
                     <div class="md:flex">
                         <div id="media-container" class="md:w-1/2 p-4">
-                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden">
-                                </div>
+                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
                             <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
                         </div>
                         <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
@@ -142,11 +141,8 @@
                                     <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900">$0.00</span></div>
                                     <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through">$0.00</span></div>
                                 </div>
-
                                 <div id="payment-method-messaging" class="mt-4" style="font-family: sans-serif;"></div>
-
-                                <div id="interactive-bundle-selector" class="mt-6 space-y-3">
-                                    </div>
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
                                 <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
                                     <h4 class="font-bold text-lg text-gray-800">Your Bundle:</h4>
                                     <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
@@ -162,8 +158,7 @@
                     </div>
                     <div id="related-products-section" class="p-8 border-t border-gray-200">
                         <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
-                        <div id="related-products-grid" class="grid grid-cols-3 gap-4">
-                            </div>
+                        <div id="related-products-grid" class="grid grid-cols-3 gap-4"></div>
                     </div>
                 </div>
                 <div class="mt-12 space-y-8">
@@ -173,8 +168,7 @@
                     </div>
                     <div id="reviews-section" class="bg-white p-8 rounded-lg shadow-md">
                         <h3 class="text-2xl font-bold mb-4 text-gray-900">What Our Customers Say</h3>
-                        <div id="review-container" class="space-y-6">
-                             </div>
+                        <div id="review-container" class="space-y-6"></div>
                     </div>
                 </div>
             </div>
@@ -204,7 +198,10 @@
     let reviews = [];
     let paymentMessage = null;
     let flashSaleTimerInterval = null;
-    let socialProofIntervalId = null; // To potentially clear later
+    let socialProofIntervalId = null;
+    let stripe = null; // Declare stripe and elements globally within this script scope
+    let elements = null;
+
 
     const initialProduct = {
         name: 'ATF V1 "TakeOver" Mask [Final Run]',
@@ -238,9 +235,8 @@
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
     function addToCart() {
-        // Ensure required elements and global cart exist
-        if (!dom.interactiveBundleSelector || !window.cart) {
-             console.error("Missing required elements or cart.js failed to load.");
+        if (!dom.interactiveBundleSelector || typeof window.cart === 'undefined') { // Check global cart
+             console.error("Missing elements or cart.js failed to load.");
              alert("Error: Cannot add to cart right now. Please refresh.");
              return;
         }
@@ -257,16 +253,16 @@
 
         let pixel_content_ids = [];
         let pixel_value = 0;
-        const bundlePrices = (product.bundlePrices || []).map(p => parseFloat(String(p).replace('$', ''))); // Safer parsing
+        const bundlePrices = (product.bundlePrices || []).map(p => parseFloat(String(p).replace('$', '')));
 
         selectedDesigns.forEach((design, index) => {
             const variantId = `${design.name}|${Date.now()}`;
-            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)] || 0; // Default price if undefined
+            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)] || 0;
 
-            window.cart.push({
+            window.cart.push({ // Use window.cart
                 productId: 'mainProduct',
                 variantId: variantId,
-                name: product.name || 'Mask Product', // Use default if product name missing
+                name: product.name || 'Mask Product',
                 price: `$${price.toFixed(2)}`,
                 image: design.image,
                 variantText: design.name,
@@ -283,24 +279,23 @@
                     content_ids: pixel_content_ids,
                     content_name: product.name || 'Mask Product',
                     content_category: 'Apparel & Accessories > Clothing Accessories > Masks',
-                    content_type: selectedDesigns.length > 1 ? 'product_group' : 'product', // Adjust based on count
+                    content_type: selectedDesigns.length > 1 ? 'product_group' : 'product',
                     value: pixel_value,
                     currency: 'USD' // CHANGE IF NEEDED
                 });
             } catch (e) { console.error("FB Pixel AddToCart Error:", e); }
         }
 
-        // Call global functions if they exist
         if(typeof window.saveState === 'function') window.saveState();
         if(typeof window.renderCart === 'function') window.renderCart();
-        showItemAddedPopup({ mediaUrl: selectedDesigns[0]?.image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`); // Safer access to image
+        showItemAddedPopup({ mediaUrl: selectedDesigns[0]?.image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
         if(typeof window.startCartTimer === 'function') window.startCartTimer();
     }
 
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
-        clearTimeout(dom.popupTimeout); // Use a property on dom to store timeout ID
-        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct?.mediaUrl || 'https://placehold.co/128x128'; // Safer access
+        clearTimeout(dom.popupTimeout);
+        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct?.mediaUrl || 'https://placehold.co/128x128';
         if(dom.popupMessage) dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
         dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
@@ -330,7 +325,7 @@
             });
         } else {
             if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
-            total = 0; // Price should reflect zero if nothing selected
+            total = 0;
             originalTotal = 0;
         }
 
@@ -339,10 +334,9 @@
 
         if (paymentMessage) {
              const totalInCents = Math.round(total * 100);
-             // Default to first bundle price if total is 0 but might be needed (e.g. page load)
              const defaultPriceCents = bundlePrices.length > 0 ? Math.round(bundlePrices[0] * 100) : 1;
              const displayAmount = totalInCents > 0 ? totalInCents : defaultPriceCents;
-             try { paymentMessage.update({ amount: Math.max(displayAmount, 1), currency: 'USD' }); }
+             try { paymentMessage.update({ amount: Math.max(displayAmount, 1), currency: 'USD' }); } // CHANGE CURRENCY IF NEEDED
              catch(e) { console.error("Error updating payment message:", e); }
         }
     }
@@ -357,22 +351,20 @@
         if (dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
         if (dom.productBadge) dom.productBadge.textContent = 'Limited Edition Bundle Deal';
 
-        // Media display logic
         const firstVariationImage = product.variations?.['Design']?.[0]?.image || 'https://placehold.co/600x600';
         if (product.mediaType === 'video' && product.mediaUrl) {
-            if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
-            if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage; // Preload first image anyway
-            if(dom.mainProductVideoContainer) {
+           if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
+           if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage;
+           if(dom.mainProductVideoContainer) {
                 dom.mainProductVideoContainer.style.display = 'block';
                 dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             }
         } else {
-            if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
-            if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
-            if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage;
+           if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
+           if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
+           if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage;
         }
 
-        // Render bundle selector
         if (dom.interactiveBundleSelector) {
             dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
             const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
@@ -386,7 +378,7 @@
                     optionEl.innerHTML = `
                         <input type="checkbox" id="${optionId}" data-name="${variation.option}" data-image="${variation.image}" class="sr-only">
                         <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
-                            <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
+                            <img src="${variation.image}" alt="${variation.option}" class="w-full h-24 object-cover rounded-md">
                             <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
                             <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75 transition-all">
                                 <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
@@ -409,10 +401,8 @@
                         });
                     }
                 });
-            } else {
-                 console.warn("No 'Design' variations found for bundle selector.");
-             }
-        }
+            } else { console.warn("No 'Design' variations found."); }
+        } else { console.warn("Bundle selector element not found."); }
         updateBundleSummary(); // Call after rendering options AND setting default check
     }
 
@@ -448,7 +438,7 @@
                 if(dom.addToCartButton) {
                     dom.addToCartButton.disabled = true;
                     dom.addToCartButton.textContent = "Sale Ended";
-                    dom.addToCartButton.style.backgroundColor = '#9ca3af'; // Grey out button
+                    dom.addToCartButton.style.backgroundColor = '#9ca3af';
                 }
                 return;
             }
@@ -461,12 +451,9 @@
     }
 
     function startSocialProof() {
-        clearInterval(socialProofIntervalId); // Clear previous interval if any
+        clearInterval(socialProofIntervalId);
         socialProofIntervalId = setInterval(() => {
-             if (!product || !product.name || !dom.socialProofPopup) {
-                  console.warn("Cannot show social proof yet.");
-                  return; // Don't run if product name or popup isn't ready
-             }
+             if (!product || !product.name || !dom.socialProofPopup) { return; }
             const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
             const productNameRef = product.name;
             const name = productNameRef.split(' ').slice(0, 2).join(' ');
@@ -481,44 +468,39 @@
 
     function initializePaymentMessage() {
         if (!product || !product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging || !stripe || !elements) return;
-
-        // Ensure at least one item is selected for initial price
-        const initialSelectedInput = dom.interactiveBundleSelector?.querySelector('input:checked');
-        let initialPriceInCents = 0;
-        if(initialSelectedInput) {
-             initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
-        } else if (product.bundlePrices.length > 0) {
-             // Fallback if somehow nothing is checked initially
-             initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
-        }
-
-        if (initialPriceInCents <= 0) {
-            console.warn("Initial price for payment message is zero or invalid.");
-            return;
-        }
-
+        const initialPriceInCents = Math.round(parseFloat(String(product.bundlePrices[0]).replace('$', '')) * 100);
+        if (initialPriceInCents <= 0) { console.warn("Initial price invalid."); return; }
         const options = { amount: initialPriceInCents, currency: 'USD' }; // CHANGE CURRENCY IF NEEDED
-
         try {
-            // Check if element already exists before creating
              if (!paymentMessage) {
                  paymentMessage = elements.create('paymentMethodMessaging', options);
                  paymentMessage.mount(dom.paymentMethodMessaging);
-             } else {
-                 // If it exists, just update it
-                 paymentMessage.update(options);
-             }
+             } else { paymentMessage.update(options); }
         } catch (e) { console.error("Error creating/mounting payment message:", e); }
     }
 
     // --- Main Initialization Function ---
     function initializeApp() {
-        // Ensure global functions are ready
-        if (typeof window.renderCart !== 'function' || typeof window.saveState !== 'function') {
-             console.error("Critical Error: Global cart functions from cart.js are not available!");
-             // Optionally display an error message to the user
+        // Ensure cart.js has loaded its essentials
+        if (typeof window.renderCart !== 'function' || typeof window.saveState !== 'function' || typeof window.cart === 'undefined') {
+             console.error("Critical Error: Global cart functions/variables from cart.js are not available! Cannot initialize page.");
+             // Display user-friendly error message
+             const body = document.querySelector('body');
+             if(body) body.innerHTML = '<div style="padding: 20px; text-align: center; color: red; font-family: sans-serif;"><h1>Error</h1><p>Failed to load essential cart features. Please check your connection and refresh the page.</p></div>';
              return; // Stop initialization
         }
+
+        console.log("Initializing index.html..."); // Debug log
+
+        // Initialize Stripe here now that the library is loaded
+        try {
+            stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+            elements = stripe.elements();
+        } catch(e) {
+            console.error("Failed to initialize Stripe:", e);
+             // Handle Stripe initialization error if necessary
+        }
+
 
         product = initialProduct;
         reviews = initialReviews;
@@ -526,31 +508,33 @@
         renderProduct(); // Renders product, selectors, sets default selection
         renderReviews();
         renderRelatedProducts();
-        initializePaymentMessage(); // Initialize after renderProduct sets initial price context
+        initializePaymentMessage(); // Initialize AFTER renderProduct sets initial price context
         startFlashSaleTimer();
         startSocialProof();
 
         // Add event listeners specific to this page
         if(dom.addToCartButton) dom.addToCartButton.addEventListener('click', addToCart);
-        if(dom.interactiveBundleSelector) dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary); // Listen for changes on checkboxes
+        if(dom.interactiveBundleSelector) dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
 
         // Popup listeners remain specific to this page's popup element IDs
         if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
-        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global openCart
+        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); });
         if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
         // Initial render of the global cart display
-        window.renderCart(); // Assumes window.cart was loaded by cart.js
+        window.renderCart(); // Assumes window.cart was loaded by cart.js and populated by loadState()
+
+        console.log("index.html initialized successfully."); // Debug log
     }
 
     // --- Initialize after DOM is ready ---
     if (document.readyState === 'loading') {
          document.addEventListener('DOMContentLoaded', initializeApp);
     } else {
-         // DOM is already ready
+         // DOM is already ready, assume cart.js has also loaded due to script order
          initializeApp();
     }
-
 </script>
+
 </body>
 </html>
