@@ -6,10 +6,11 @@
     <title>ATF Signature Hoodie</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Links Updated -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -17,7 +18,6 @@
       gtag('js', new Date());
       gtag('config', 'GA_MEASUREMENT_ID');
     </script>
-
     <script>
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -27,15 +27,16 @@
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '757946737591863');
+      fbq('init', '757946737591863'); 
       fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
+    
     <style>
         /* Font Family Updated */
         body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
-        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; color: #1f2937; } /* Added default text color */
-        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; background-color: #111827; color: #d1d5db; } /* Added dark mode background and text */
+        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
+        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
         .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
         .add-to-cart-button:hover { background-color: var(--color-accent-hover); }
         .text-highlight { color: var(--color-accent); }
@@ -44,61 +45,55 @@
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
         #cart-overlay.open { display: block; }
         .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; color: #333; margin: 5% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;} /* Adjusted margin */
+        .modal-content { background-color: #fefefe; color: #333; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; font-family: sans-serif;} /* Added sans-serif */
+        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
         #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
-
+        
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-
-        /* Style for selected design radio */
-        .bundle-image-option input[type="radio"].peer:checked + label {
-            border-color: var(--color-accent-border);
-            box-shadow: 0 0 0 3px var(--color-accent-border);
-        }
-        .bundle-image-option input[type="radio"].peer:checked + label .bundle-checkmark {
-            opacity: 1; transform: scale(1);
-        }
-
+        
+        .bundle-image-option input:checked + label { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent); }
+        .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
+        
         .image-thumb-nav { display: flex; gap: 0.5rem; margin-top: 1rem; justify-content: center; }
         .image-thumb { width: 60px; height: 60px; object-cover; border-radius: 0.25rem; cursor: pointer; border: 2px solid transparent; opacity: 0.7; transition: all 0.2s; }
         .image-thumb:hover { opacity: 1; }
-        .image-thumb.active { opacity: 1; border-color: var(--color-accent-border); } /* Updated border */
-
+        .image-thumb.active { opacity: 1; border-color: var(--color-accent); }
+        
         #size-selector label { display: inline-block; }
         #size-selector input[type="radio"].peer:checked + label {
             background-color: var(--color-accent);
             color: white;
-            border-color: var(--color-accent-border); /* Updated border */
+            border-color: var(--color-accent);
         }
-
-        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; background-color: white; } /* Added background */
-        .related-product-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .related-product-card img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
-        .related-product-card-info { padding: 0.75rem; text-align: center; }
-        /* Style adjustments for dark mode */
-        body[data-theme="dark"] #cart-panel { background-color: #1f2937; color: #d1d5db; border-left: 1px solid #374151;}
-        body[data-theme="dark"] #cart-panel .border-b, body[data-theme="dark"] #cart-panel .border-t { border-color: #374151; }
-        body[data-theme="dark"] .modal-content { background-color: #374151; color: #d1d5db; border-color: #4b5563;}
-        body[data-theme="dark"] .close-modal { color: #9ca3af; }
-        body[data-theme="dark"] .bg-white { background-color: #1f2937; }
-        body[data-theme="dark"] .text-gray-900 { color: #f9fafb; }
-        body[data-theme="dark"] .text-gray-800 { color: #e5e7eb; }
-        body[data-theme="dark"] .text-gray-700 { color: #d1d5db; }
-        body[data-theme="dark"] .text-gray-600 { color: #9ca3af; }
-        body[data-theme="dark"] .text-gray-500 { color: #6b7280; }
-        body[data-theme="dark"] .border-gray-200 { border-color: #374151; }
-        body[data-theme="dark"] .related-product-card { background-color: #374151; border-color: #4b5563; }
-        body[data-theme="dark"] .related-product-card h4 { color: #f9fafb; }
-        body[data-theme="dark"] .bundle-image-option label { border-color: #4b5563; }
-        body[data-theme="dark"] .bundle-image-option p { color: #e5e7eb; }
-        body[data-theme="dark"] #size-selector label { border-color: #4b5563; color: #9ca3af; }
-        body[data-theme="dark"] #shipping-section p { color: #9ca3af; } /* Use sans-serif for paragraphs */
+        
+        .related-product-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .related-product-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .related-product-card img {
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            width: 100%;
+        }
+        .related-product-card-info {
+            padding: 0.75rem;
+            text-align: center;
+        }
     </style>
 </head>
-<body data-theme="dark"> <div id="public-cart-button">
+<body data-theme="dark">
+
+    <!-- Cart HTML -->
+    <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
     </div>
@@ -111,17 +106,15 @@
             <button id="close-cart-btn" class="text-2xl">&times;</button>
         </div>
         <div class="p-4 bg-yellow-100 text-center">
-            <p class="font-semibold text-yellow-800" style="font-family: sans-serif;">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
+            <p class="font-semibold text-yellow-800">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
         </div>
-        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto">
-             <p class="text-center text-gray-500">Loading cart...</p>
-        </div>
+        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
         <div class="p-4 border-t space-y-4">
             <div class="flex justify-between font-bold text-lg">
                 <span>Subtotal</span>
                 <span id="cart-subtotal">$0.00</span>
             </div>
-            <p class="text-sm text-gray-500 text-center" style="font-family: sans-serif;">Free Shipping on all orders!</p>
+            <p class="text-sm text-gray-500 text-center">Free Shipping on all orders!</p>
             <button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button>
         </div>
     </div>
@@ -130,29 +123,29 @@
         <div id="page-container">
             <header class="py-4 absolute top-0 left-0 w-full z-10">
                 <div class="container mx-auto px-4 flex justify-center">
-                    <a href="/home.html"><img id="header-logo" alt="Brand Logo" class="h-10"></a>
+                    <img id="header-logo" alt="Brand Logo" class="h-10">
                 </div>
             </header>
             <div class="container mx-auto p-4 max-w-5xl pt-20">
-
+                
                 <div id="urgent-cta" class="text-center mb-6 pt-12">
                     <h3 id="cta-headline" class="text-2xl font-bold text-highlight"></h3>
-                    <p id="cta-subheadline" class="text-gray-500" style="font-family: sans-serif;"></p>
+                    <p id="cta-subheadline" class="text-gray-500"></p>
                 </div>
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
                     <div class="md:flex">
                         <div id="media-container" class="md:w-1/2 p-4">
                             <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
-                            <div id="image-thumb-nav" class="image-thumb-nav">
-                                </div>
+                            <div id="image-thumb-nav" class="image-thumb-nav"></div>
                         </div>
                         <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
                             <div>
                                 <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
-                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2">Product Name Loading...</h2>
+                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2>
                                 <div class="mt-6 flex items-baseline gap-4">
-                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900">$0.00</span></div>
-                                    <span id="product-original-price" class="hidden"></span> </div>
+                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
+                                    <span id="product-original-price" class="hidden"></span>
+                                </div>
                                 <div class="mt-2 text-sm text-green-600 font-semibold flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -160,13 +153,11 @@
                                     <span>+ Free Shipping</span>
                                 </div>
 
-                                <div id="interactive-bundle-selector" class="mt-6 space-y-3">
-                                    </div>
-                                <div id="size-selector" class="mt-6">
-                                     </div>
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
+                                <div id="size-selector" class="mt-6"></div>
                                 <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
                                     <h4 class="font-bold text-lg text-gray-800">Your Selection:</h4>
-                                    <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
+                                    <div id="bundle-summary-items" class="text-gray-600"></div>
                                 </div>
                             </div>
                             <div class="mt-8">
@@ -177,19 +168,19 @@
                     <div id="related-products-section" class="p-8 border-t border-gray-200">
                         <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
                         <div id="related-products-grid" class="grid grid-cols-3 gap-4">
-                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-12 space-y-8">
                     <div id="shipping-section" class="bg-white p-8 rounded-lg shadow-md">
                         <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
-                        <p class="text-gray-700" style="font-family: sans-serif;">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
+                        <p class="text-gray-700">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
-
+    
     <div id="add-to-cart-popup" class="modal">
         <div class="modal-content text-center max-w-md">
             <span class="close-modal" id="close-popup-btn">&times;</span>
@@ -203,25 +194,28 @@
         </div>
     </div>
 
-<script src="/cart.js"></script> <script>
-    // --- Define ALL page-specific functions first ---
+<script>
+document.addEventListener('DOMContentLoaded', () => {
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-
+    const CHECKOUT_SESSION_URL = 'https://alltheseflows.shop/api/server'; 
+    
     let product = {};
-    let socialProofIntervalId = null; // To potentially clear later
+    let cart = [];
+    const appStateKey = 'singleProductPageState_v2'; 
+    let cartTimerInterval = null;
 
     const initialProduct = {
         name: 'ATFV12 HOODIE',
         ctaHeadline: 'The New Standard.',
         ctaSubheadline: 'Comfort and design, unified.',
         theme: 'dark',
-        bundlePrices: ['$59.95'], // Price for a single hoodie
+        bundlePrices: ['$59.95'], 
         variations: {
             'Design': [
-                { option: 'ICE', images: { front: 'https://i.imgur.com/TZw6FIE.png', back: 'https://i.imgur.com/CIpigzw.png' } },
-                { option: 'OOTER', images: { front: 'https://i.imgur.com/eaGeEEL.png', back: 'https://i.imgur.com/lwbTzZP.png' } },
-                { option: 'PREE', images: { front: 'https://i.imgur.com/tUMU6TR.png', back: 'https://i.imgur.com/d5rcFj6.png' } }
+                { option: 'ICE', images: { front: 'https://i.imgur.com/TZw6FIE.png', back: 'https://i.imgur.com/CIpigzw.png' } }, 
+                { option: 'OOTER', images: { front: 'https://i.imgur.com/eaGeEEL.png', back: 'https://i.imgur.com/lwbTzZP.png' } },  
+                { option: 'PREE', images: { front: 'https://i.imgur.com/tUMU6TR.png', back: 'https://i.imgur.com/d5rcFj6.png' } }  
             ],
             'Size': [
                 { option: 'S' }, { option: 'M' }, { option: 'L' }, { option: 'XL' }, { option: '2XL' }
@@ -229,206 +223,234 @@
         }
     };
     const relatedProductsData = [
-        { name: 'V1 - Turbo Edition Mask', image: 'https://i.imgur.com/ghpj3Nm.png', url: '/index.html' },
-        { name: 'V1 - Burble Edition Mask', image: 'https://i.imgur.com/9QcKSwf.png', url: '/index.html' },
-        { name: 'V1 - Burnout Edition Mask', image: 'https://i.imgur.com/lLIgQjD.png', url: '/index.html' }
+        { name: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png', url: '/index.html' },
+        { name: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png', url: '/index.html' },
+        { name: 'V1 - Burnout Edition', image: 'https://i.imgur.com/lLIgQjD.png', url: '/index.html' }
     ];
+
+    function saveState() {
+        localStorage.setItem(appStateKey, JSON.stringify({ cart }));
+    }
+
+    function loadState() {
+        product = initialProduct;
+        const savedState = localStorage.getItem(appStateKey);
+        cart = savedState ? JSON.parse(savedState).cart || [] : [];
+    }
 
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
-    function updateImages(designVariation) {
-        // Add safety checks for elements
-        if (!designVariation || !designVariation.images || !dom.mainProductImage || !dom.imageThumbNav) {
-            console.warn("Missing elements or data for updateImages");
-            return;
-        }
+    function updateCartIcon() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        dom.publicCartBadge.textContent = totalItems;
+    }
+    
+    function renderCart() {
+        if (!dom.cartItemsContainer) return;
+        dom.cartItemsContainer.innerHTML = '';
+        let subtotal = 0;
+        
+        const productPrices = {
+            'mainProduct': ['$29.95', '$24.95', '$14.95'],
+            'hoodieProduct': ['$59.95']
+        };
 
+        const bundleGroups = {};
+        cart.forEach(item => {
+            const productId = item.productId || 'mainProduct'; 
+            if (!bundleGroups[productId]) bundleGroups[productId] = [];
+            bundleGroups[productId].push(item);
+        });
+
+        for (const productId in bundleGroups) {
+            const items = bundleGroups[productId];
+            const prices = productPrices[productId] || ['$99.99'];
+            const bundlePrices = prices.map(p => parseFloat(p.replace('$', '')));
+            
+            items.forEach((item, index) => {
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+                item.price = `$${price.toFixed(2)}`;
+            });
+        }
+        
+        if (cart.length === 0) {
+            dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
+        } else {
+            cart.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center space-x-4 py-3 border-b';
+                itemEl.dataset.variantId = item.variantId;
+                const price = parseFloat(item.price.replace('$', ''));
+                subtotal += price * item.quantity;
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-sm text-gray-500">${item.variantText}</p> 
+                        <p class="font-bold text-sm">${item.price}</p>
+                    </div>
+                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2" data-variant-id="${item.variantId}">&times;</button>
+                `;
+                dom.cartItemsContainer.appendChild(itemEl);
+            });
+        }
+        dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        updateCartIcon();
+    }
+
+    function updateImages(designVariation) {
+        if (!designVariation || !designVariation.images) return;
+        
         dom.mainProductImage.src = designVariation.images.front;
-        dom.mainProductImage.alt = `${product.name || 'Product'} - ${designVariation.option} - Front`;
+        dom.mainProductImage.alt = `${product.name} - ${designVariation.option} - Front`;
 
         const thumbNav = dom.imageThumbNav;
-        thumbNav.innerHTML = ''; // Clear previous thumbs
+        thumbNav.innerHTML = ''; 
 
-        // --- Create Front Thumbnail ---
         const frontThumb = document.createElement('img');
         frontThumb.src = designVariation.images.front;
         frontThumb.alt = `Front View`;
-        frontThumb.className = 'image-thumb active'; // Start with front active
+        frontThumb.className = 'image-thumb active';
         frontThumb.addEventListener('click', () => {
-           if (dom.mainProductImage) dom.mainProductImage.src = designVariation.images.front;
-           thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
-           frontThumb.classList.add('active');
+            dom.mainProductImage.src = designVariation.images.front;
+            thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
+            frontThumb.classList.add('active');
         });
         thumbNav.appendChild(frontThumb);
 
-        // --- Create Back Thumbnail ---
         const backThumb = document.createElement('img');
         backThumb.src = designVariation.images.back;
         backThumb.alt = `Back View`;
         backThumb.className = 'image-thumb';
         backThumb.addEventListener('click', () => {
-           if (dom.mainProductImage) dom.mainProductImage.src = designVariation.images.back;
-           thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
-           backThumb.classList.add('active');
+            dom.mainProductImage.src = designVariation.images.back;
+            thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
+            backThumb.classList.add('active');
         });
         thumbNav.appendChild(backThumb);
     }
 
-
-    // --- !!! UPDATED addToCart Function for Hoodie Page !!! ---
     function addToCart() {
-        // Ensure required elements and global cart exist
-        if (!dom.interactiveBundleSelector || !dom.sizeSelector || !window.cart) {
-             console.error("Missing required elements or cart.js failed to load.");
-             alert("Error: Cannot add to cart right now. Please refresh.");
-             return;
-        }
-
-        // Get selected design (radio button)
-        const selectedDesignInput = dom.interactiveBundleSelector.querySelector('input[name="designSelection"]:checked');
-        // Get selected size (radio button)
-        const selectedSizeInput = dom.sizeSelector.querySelector('input[name="sizeSelection"]:checked');
-
-        // --- VALIDATION ---
-        if (!selectedDesignInput) {
-            alert("Please select a design.");
+        const selectedDesignInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
+        const selectedSizeInput = document.querySelector('#size-selector input[name="sizeSelection"]:checked');
+        
+        if (selectedDesignInputs.length === 0) {
+            alert("Please select at least one design.");
             return;
         }
         if (!selectedSizeInput) {
-            alert("Please select a size.");
-            return;
+             alert("Please select a size.");
+             return;
         }
-
-        // --- GET PRODUCT DETAILS ---
-        const selectedDesignName = selectedDesignInput.dataset.name;
         const selectedSize = selectedSizeInput.value;
-        const designData = (product.variations?.['Design'] || []).find(d => d.option === selectedDesignName); // Safer find
-        const frontImage = designData?.images?.front || 'https://placehold.co/100x100'; // Safer access
-        const price = parseFloat(String(product.bundlePrices?.[0] || '0').replace('$', '')); // Safer price access
-        const variantId = `${selectedDesignName}|${selectedSize}|${Date.now()}`; // Unique ID
 
-        if (price <= 0) {
-            console.error("Invalid product price detected.");
-            alert("Error: Product price is invalid.");
-            return;
-        }
+        selectedDesignInputs.forEach(input => {
+            const designName = input.dataset.name;
+            const designData = product.variations['Design'].find(d => d.option === designName);
+            const frontImage = designData ? designData.images.front : 'https://placehold.co/100x100';
 
-        // --- ADD ITEM TO GLOBAL CART ARRAY ---
-        window.cart.push({ // Use window.cart
-            productId: 'hoodieProduct', // Consistent ID for hoodies
-            variantId: variantId,
-            name: product.name || 'Hoodie Product', // Default name
-            price: `$${price.toFixed(2)}`,
-            image: frontImage,
-            variantText: `${selectedDesignName} / ${selectedSize}`,
-            quantity: 1
+            cart.push({
+                productId: 'hoodieProduct',
+                variantId: `${designName}|${selectedSize}|${Date.now()}`, 
+                name: product.name,
+                price: product.bundlePrices[0],
+                image: frontImage,
+                variantText: `${designName} / ${selectedSize}`,
+                quantity: 1
+            });
         });
 
-        // --- ENHANCED FB PIXEL CODE for Hoodie ---
-        if (typeof fbq === 'function') { // Check if fbq is loaded
-            try {
-                fbq('track', 'AddToCart', {
-                    content_ids: [variantId], // Use the unique variant ID created above
-                    content_name: `${product.name || 'Hoodie'} - ${selectedDesignName} / ${selectedSize}`, // More specific name
-                    content_category: 'Apparel & Accessories > Clothing > Outerwear > Hoodies & Sweatshirts', // Optional: Add category
-                    content_type: 'product', // Use 'product' as only one is added at a time
-                    value: price, // Use the numeric price variable
-                    currency: 'USD' // IMPORTANT: Change 'USD' if needed
-                });
-            } catch (e) {
-                console.error("FB Pixel AddToCart Error:", e);
-            }
-        }
-        // --- END OF ENHANCED FB PIXEL CODE ---
-
-        // Use global functions if they exist
-        if (typeof window.saveState === 'function') window.saveState();
-        if (typeof window.renderCart === 'function') window.renderCart();
-
-        showItemAddedPopup({ mediaUrl: frontImage }, `Added <strong>1 item</strong> to your cart!`);
-
-        if (typeof window.startCartTimer === 'function') window.startCartTimer();
+        saveState();
+        renderCart();
+        
+        const firstSelectedDesignName = selectedDesignInputs[0].dataset.name;
+        const firstDesignData = product.variations['Design'].find(d => d.option === firstSelectedDesignName);
+        const popupImage = firstDesignData ? firstDesignData.images.front : 'https://placehold.co/128x128';
+        showItemAddedPopup({ mediaUrl: popupImage }, `Added <strong>${selectedDesignInputs.length} item(s)</strong> to your cart!`);
+        
+        startCartTimer(); 
+        fbq('track', 'AddToCart'); 
     }
-    // --- !!! END of UPDATED addToCart Function !!! ---
-
-
+    
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
-        clearTimeout(dom.popupTimeout); // Use property on dom
-        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct?.mediaUrl || 'https://placehold.co/128x128'; // Safer access
-        if(dom.popupMessage) dom.popupMessage.innerHTML = message;
+        clearTimeout(dom.popupTimeout);
+        dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
+        dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
-        dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
+        dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
+    }
+
+    function updateBundleSummary() {
+        const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
+        const singlePrice = parseFloat(product.bundlePrices[0].replace('$', ''));
+        let total = 0;
+        
+        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
+        if (selectedInputs.length > 0) {
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
+            selectedInputs.forEach((input, index) => {
+                total += singlePrice;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex justify-between items-center text-sm';
+                itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name}</span><span class="font-bold">$${singlePrice.toFixed(2)}</span>`;
+                if (dom.bundleSummaryItems) dom.bundleSummaryItems.appendChild(itemEl);
+            });
+        } else {
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
+        }
+        if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
     }
 
     function renderProduct() {
-        product = initialProduct;
         document.body.dataset.theme = product.theme || 'light';
-        if(dom.headerLogo) dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
-        if(dom.productName) dom.productName.textContent = product.name;
-        if(dom.ctaHeadline) dom.ctaHeadline.textContent = product.ctaHeadline;
-        if(dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
-        if(dom.productBadge) dom.productBadge.textContent = 'Signature Collection';
+        dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
+        dom.productName.textContent = product.name;
+        dom.ctaHeadline.textContent = product.ctaHeadline;
+        dom.ctaSubheadline.textContent = product.ctaSubheadline;
+        dom.productBadge.textContent = 'Signature Collection'; 
 
-        // Set initial price display
-        if (dom.productPrice && product.bundlePrices?.[0]) {
-             dom.productPrice.textContent = product.bundlePrices[0];
-        } else if (dom.productPrice) {
-            dom.productPrice.textContent = '$?.??'; // Fallback
+        if(product.variations['Design'] && product.variations['Design'].length > 0) {
+            updateImages(product.variations['Design'][0]);
         }
 
-
-        // Render Design Selector (Radio Buttons for Hoodie)
+        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Choose Your Design:</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
+        const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
         const designKey = 'Design';
-        if (dom.interactiveBundleSelector && product.variations && product.variations[designKey]) {
-             dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Choose Your Design:</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
-             const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
 
-             product.variations[designKey].forEach((variation, index) => {
-                 const optionId = `design-opt-${variation.option.replace(/\s+/g, '-')}`;
-                 const optionEl = document.createElement('div');
-                 optionEl.className = 'bundle-image-option'; // Keep class for styling checkmark
-                 optionEl.innerHTML = `
-                     <input type="radio" name="designSelection" id="${optionId}" data-name="${variation.option}" class="sr-only peer">
-                     <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1 peer-checked:border-indigo-600 peer-checked:ring-2 peer-checked:ring-indigo-600">
-                         <img src="${variation.images.front}" class="w-full h-24 object-cover rounded-md">
-                         <p class="text-center text-sm font-semibold mt-1 text-gray-800">${variation.option}</p>
-                         <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75 transition-all">
+        if (product.variations[designKey]) {
+            product.variations[designKey].forEach(variation => {
+                const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
+                const optionEl = document.createElement('div');
+                optionEl.className = 'bundle-image-option';
+                optionEl.innerHTML = `
+                    <input type="radio" name="designSelection" id="${optionId}" data-name="${variation.option}" class="sr-only">
+                    <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
+                        <img src="${variation.images.front}" class="w-full h-24 object-cover rounded-md">
+                        <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
+                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75">
                             <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-                         </div>
-                     </label>
-                 `;
-                 gridContainer.appendChild(optionEl);
-
-                 // Add event listener to update images when a design radio is selected
-                 const inputElement = optionEl.querySelector('input');
-                 if (inputElement) {
-                     inputElement.addEventListener('change', () => {
-                         if(inputElement.checked) { // Only update if this one is checked
-                             updateImages(variation);
-                         }
-                     });
-                 }
-
-                 // Set the first design as default checked and update images
-                 if (index === 0) {
-                     if (inputElement) inputElement.checked = true;
-                     updateImages(variation); // Initial image load based on first design
-                 }
-             });
-        } else if (dom.interactiveBundleSelector) {
-            dom.interactiveBundleSelector.innerHTML = '<p class="text-red-500">Design options not available.</p>'; // Error message
+                        </div>
+                    </label>
+                `;
+                gridContainer.appendChild(optionEl);
+                
+                optionEl.querySelector('label').addEventListener('click', () => {
+                   updateImages(variation);
+                });
+            });
+            
+            const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="radio"]');
+            if (firstBundleOption) firstBundleOption.checked = true;
         }
 
-
-        // Render Size Selector
         const sizeKey = 'Size';
         const sizeSelectorContainer = dom.sizeSelector;
-        if (sizeSelectorContainer && product.variations && product.variations[sizeKey]) {
+        if (product.variations[sizeKey]) {
             sizeSelectorContainer.innerHTML = `<h4 class="font-bold text-lg text-gray-800 mb-2">Select Size:</h4><div class="flex flex-wrap gap-3"></div>`;
             const sizeGrid = sizeSelectorContainer.querySelector('.flex');
 
-            product.variations[sizeKey].forEach((sizeVar) => {
+            product.variations[sizeKey].forEach((sizeVar, index) => {
                 const sizeId = `size-opt-${sizeVar.option}`;
                 const sizeLabel = document.createElement('label');
                 sizeLabel.htmlFor = sizeId;
@@ -437,25 +459,23 @@
 
                 const sizeInput = document.createElement('input');
                 sizeInput.type = 'radio';
-                sizeInput.name = 'sizeSelection';
+                sizeInput.name = 'sizeSelection'; 
                 sizeInput.id = sizeId;
                 sizeInput.value = sizeVar.option;
-                sizeInput.className = 'sr-only peer';
+                sizeInput.className = 'sr-only peer'; 
 
-                // Set default size (e.g., Medium)
                 if (sizeVar.option === 'M') {
                     sizeInput.checked = true;
                 }
-
+                
                 sizeGrid.appendChild(sizeInput);
                 sizeGrid.appendChild(sizeLabel);
             });
-        } else if (sizeSelectorContainer) {
-            sizeSelectorContainer.innerHTML = '<p class="text-red-500">Size options not available.</p>'; // Error message
         }
+        
+        updateBundleSummary();
     }
-
-
+    
     function renderRelatedProducts() {
         const grid = dom.relatedProductsGrid;
         if (!grid) return;
@@ -470,61 +490,98 @@
         `).join('');
     }
 
-    function startSocialProof() {
-        clearInterval(socialProofIntervalId); // Clear previous interval
-        socialProofIntervalId = setInterval(() => {
-             if (!product || !product.name || !dom.socialProofPopup) {
-                 console.warn("Cannot show social proof yet.");
-                 return;
-             }
-            const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-            const productNameRef = product.name;
-            const name = productNameRef.split(' ').slice(0, 2).join(' '); // Use first two words
-            const loc = locations[Math.floor(Math.random() * locations.length)];
-
-            dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
-            dom.socialProofPopup.classList.add('show');
-            setTimeout(() => {
-                if(dom.socialProofPopup) dom.socialProofPopup.classList.remove('show');
-             }, 5000); // Hide after 5 seconds
-        }, 20000); // Adjusted interval to 20 seconds
+    function startCartTimer() {
+        let duration = 10 * 60;
+        clearInterval(cartTimerInterval); 
+        cartTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(cartTimerInterval);
+                if(dom.cartTimer) dom.cartTimer.textContent = "00:00";
+                return;
+            }
+            duration--;
+            const m = String(Math.floor(duration / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            if(dom.cartTimer) dom.cartTimer.textContent = `${m}:${s}`;
+        }, 1000);
     }
-
-    // --- Main Initialization Function ---
+    
+    function startSocialProof() {
+        const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
+        setInterval(() => {
+            const name = product.name.split(' ').slice(0, 2).join(' ');
+            const loc = locations[Math.floor(Math.random() * locations.length)];
+            if (dom.socialProofPopup) {
+                dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
+                dom.socialProofPopup.classList.add('show');
+                setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
+            }
+        }, 15000);
+    }
+    
     function initializeApp() {
-        // Ensure global functions are ready
-        if (typeof window.renderCart !== 'function' || typeof window.saveState !== 'function') {
-             console.error("Critical Error: Global cart functions from cart.js are not available!");
-             // Optionally display an error message to the user
-             return; // Stop initialization
-        }
-
-        product = initialProduct;
-
-        renderProduct(); // Renders product, selectors, sets defaults
+        loadState();
+        renderProduct();
+        renderCart(); 
         renderRelatedProducts();
         startSocialProof();
 
-        // Add event listeners specific to this page
-        if(dom.addToCartButton) dom.addToCartButton.addEventListener('click', addToCart);
+        dom.addToCartButton.addEventListener('click', addToCart);
+        dom.interactiveBundleSelector.addEventListener('click', updateBundleSummary);
+        
+        const openCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); }};
+        if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
+        
+        const closeCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); }};
+        if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', closeCart);
+        if(dom.cartOverlay) dom.cartOverlay.addEventListener('click', closeCart);
 
-        // Popup listeners remain specific to this page's popup element IDs
-        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
-        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global
-        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
+        if(dom.cartItemsContainer) {
+            dom.cartItemsContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.remove-item-btn')) {
+                    const variantIdToRemove = e.target.dataset.variantId;
+                    cart = cart.filter(item => item.variantId !== variantIdToRemove);
+                    saveState();
+                    renderCart();
+                }
+            });
+        }
 
-        // Initial render of the global cart display
-        window.renderCart(); // Assumes window.cart was loaded by cart.js
+        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
+        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+
+        if(dom.checkoutBtn) {
+            dom.checkoutBtn.addEventListener('click', async () => {
+                if (cart.length === 0) return;
+                dom.checkoutBtn.textContent = 'Connecting...';
+                dom.checkoutBtn.disabled = true;
+                
+                fbq('track', 'InitiateCheckout'); 
+                
+                const line_items = cart.map(item => ({
+                    price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
+                    quantity: item.quantity,
+                }));
+
+                try {
+                    const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
+                    if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+                    const { url } = await response.json();
+                    if (url) window.location.href = url;
+                } catch (error) {
+                    console.error('Checkout error:', error);
+                     alert('Could not connect to checkout. Please try again.');
+                } finally {
+                    dom.checkoutBtn.textContent = 'Pay with Card';
+                    dom.checkoutBtn.disabled = false;
+                }
+            });
+        }
     }
 
-    // --- Initialize after DOM is ready ---
-    if (document.readyState === 'loading') {
-         document.addEventListener('DOMContentLoaded', initializeApp);
-    } else {
-         // DOM is already ready
-         initializeApp();
-    }
-
+    initializeApp();
+});
 </script>
 </body>
 </html>
