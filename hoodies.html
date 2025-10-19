@@ -150,7 +150,8 @@
                                     <span>+ Free Shipping</span>
                                 </div>
 
-                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div> <div id="size-selector" class="mt-6"></div> <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;"> <h4 class="font-bold text-lg text-gray-800">Your Selection:</h4>
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div> <div id="size-selector" class="mt-6"></div> <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
+                                    <h4 class="font-bold text-lg text-gray-800">Your Selection:</h4>
                                     <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
                                 </div>
                             </div>
@@ -188,18 +189,18 @@
         </div>
     </div>
 
-<script>
+<script src="/cart.js"></script> <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-    const CHECKOUT_SESSION_URL = '/api/server'; // Updated URL
+    // CHECKOUT_SESSION_URL defined globally in cart.js if needed there
 
     // --- STATE MANAGEMENT ---
     let product = {};
-    // Removed local cart - rely on global window.cart from cart.js
+    // Relies on global window.cart from cart.js
     const appStateKey = 'atfCart_v1'; // Use global key
-    let cartTimerInterval = null; // Local interval
+    // cartTimerInterval managed globally by cart.js
 
     // --- DATA ---
     const initialProduct = {
@@ -226,11 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // --- CORE FUNCTIONS ---
-    // Removed saveState and loadState - rely on global ones from cart.js
-
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
-
-    // Removed updateCartIcon and renderCart - rely on global ones from cart.js
 
     function updateImages(designVariation) {
         if (!designVariation || !designVariation.images || !dom.mainProductImage || !dom.imageThumbNav) return;
@@ -247,9 +244,9 @@ document.addEventListener('DOMContentLoaded', () => {
         frontThumb.alt = `Front View`;
         frontThumb.className = 'image-thumb active'; // Start with front active
         frontThumb.addEventListener('click', () => {
-            dom.mainProductImage.src = designVariation.images.front;
-            thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
-            frontThumb.classList.add('active');
+           if (dom.mainProductImage) dom.mainProductImage.src = designVariation.images.front;
+           if (thumbNav) thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
+           frontThumb.classList.add('active');
         });
         thumbNav.appendChild(frontThumb);
 
@@ -259,15 +256,15 @@ document.addEventListener('DOMContentLoaded', () => {
         backThumb.alt = `Back View`;
         backThumb.className = 'image-thumb';
         backThumb.addEventListener('click', () => {
-            dom.mainProductImage.src = designVariation.images.back;
-            thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
-            backThumb.classList.add('active');
+           if (dom.mainProductImage) dom.mainProductImage.src = designVariation.images.back;
+           if (thumbNav) thumbNav.querySelectorAll('.image-thumb').forEach(t => t.classList.remove('active'));
+           backThumb.classList.add('active');
         });
         thumbNav.appendChild(backThumb);
     }
 
 
-    // --- !!! UPDATED addToCart Function for Hoodie !!! ---
+    // --- !!! UPDATED addToCart Function for Hoodie Page !!! ---
     function addToCart() {
         // Get selected design (radio button)
         const selectedDesignInput = document.querySelector('#interactive-bundle-selector input[name="designSelection"]:checked');
@@ -310,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     content_ids: [variantId], // Use the unique variant ID created above
                     content_name: `${product.name} - ${selectedDesignName} / ${selectedSize}`, // More specific name
                     content_category: 'Apparel & Accessories > Clothing > Outerwear > Hoodies & Sweatshirts', // Optional: Add category
-                    content_type: 'product',
+                    content_type: 'product', // Use 'product' as only one is added at a time
                     value: price, // Use the numeric price variable
                     currency: 'USD' // IMPORTANT: Change 'USD' if needed
                 });
@@ -320,13 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // --- END OF ENHANCED FB PIXEL CODE ---
 
-        window.saveState(); // Use global saveState
-        window.renderCart(); // Use global renderCart
+        // Use global functions if they exist
+        if (window.saveState) window.saveState();
+        if (window.renderCart) window.renderCart();
 
         showItemAddedPopup({ mediaUrl: frontImage }, `Added <strong>1 item</strong> to your cart!`);
 
-        window.startCartTimer(); // Use global startCartTimer
-        // REMOVED old basic fbq('track', 'AddToCart'); line if it existed
+        if (window.startCartTimer) window.startCartTimer();
     }
     // --- !!! END of UPDATED addToCart Function !!! ---
 
@@ -334,22 +331,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
         clearTimeout(dom.popupTimeout);
-        dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
-        dom.popupMessage.innerHTML = message;
+        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
+        if(dom.popupMessage) dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
-        dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
+        // Auto close after 5 seconds
+        dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
     }
-
-    // Removed updateBundleSummary as hoodies don't use multi-item bundles this way
 
     function renderProduct() {
         product = initialProduct; // Load initial product data
         document.body.dataset.theme = product.theme || 'light';
-        dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
-        dom.productName.textContent = product.name;
-        dom.ctaHeadline.textContent = product.ctaHeadline;
-        dom.ctaSubheadline.textContent = product.ctaSubheadline;
-        dom.productBadge.textContent = 'Signature Collection';
+       if(dom.headerLogo) dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
+       if(dom.productName) dom.productName.textContent = product.name;
+       if(dom.ctaHeadline) dom.ctaHeadline.textContent = product.ctaHeadline;
+       if(dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
+       if(dom.productBadge) dom.productBadge.textContent = 'Signature Collection';
 
         // Set initial price display
         if (dom.productPrice) dom.productPrice.textContent = product.bundlePrices[0]; // Display the single hoodie price
@@ -360,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
              const designKey = 'Design';
 
-             if (product.variations[designKey]) {
+             if (product.variations && product.variations[designKey]) {
                  product.variations[designKey].forEach((variation, index) => {
                      const optionId = `design-opt-${variation.option.replace(/\s+/g, '-')}`;
                      const optionEl = document.createElement('div');
@@ -378,13 +374,17 @@ document.addEventListener('DOMContentLoaded', () => {
                      gridContainer.appendChild(optionEl);
 
                      // Add event listener to update images when a design is selected
-                     optionEl.querySelector('input').addEventListener('change', () => {
-                         updateImages(variation);
-                     });
+                     const inputElement = optionEl.querySelector('input');
+                     if (inputElement) {
+                         inputElement.addEventListener('change', () => {
+                             updateImages(variation);
+                         });
+                     }
+
 
                      // Set the first design as default checked and update images
                      if (index === 0) {
-                         optionEl.querySelector('input').checked = true;
+                         if (inputElement) inputElement.checked = true;
                          updateImages(variation); // Initial image load
                      }
                  });
@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render Size Selector
         const sizeKey = 'Size';
         const sizeSelectorContainer = dom.sizeSelector;
-        if (sizeSelectorContainer && product.variations[sizeKey]) {
+        if (sizeSelectorContainer && product.variations && product.variations[sizeKey]) {
             sizeSelectorContainer.innerHTML = `<h4 class="font-bold text-lg text-gray-800 mb-2">Select Size:</h4><div class="flex flex-wrap gap-3"></div>`;
             const sizeGrid = sizeSelectorContainer.querySelector('.flex');
 
@@ -421,7 +421,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 sizeGrid.appendChild(sizeInput);
                 sizeGrid.appendChild(sizeLabel);
             });
-        }
+        } else if (sizeSelectorContainer) {
+             sizeSelectorContainer.innerHTML = ''; // Clear if no sizes
+         }
     }
 
 
@@ -439,57 +441,73 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    // Removed startCartTimer - rely on global one from cart.js
-
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-        setInterval(() => {
-            const name = product.name.split(' ').slice(0, 2).join(' ');
+        const intervalId = setInterval(() => { // Store interval ID
+            // Check if product data is loaded before accessing name
+             if (!product || !product.name) return;
+
+            const productNameRef = product.name;
+            const name = productNameRef.split(' ').slice(0, 2).join(' '); // Use first two words
             const loc = locations[Math.floor(Math.random() * locations.length)];
             if (dom.socialProofPopup) {
                 dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
                 dom.socialProofPopup.classList.add('show');
-                setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
-            }
-        }, 15000); // Increased interval slightly
+                setTimeout(() => {
+                    if(dom.socialProofPopup) dom.socialProofPopup.classList.remove('show');
+                 }, 5000); // Hide after 5 seconds
+            } else {
+                 // If popup element doesn't exist, stop trying
+                 clearInterval(intervalId);
+             }
+        }, 20000); // Adjusted interval to 20 seconds
     }
 
-    function initializeApp() {
-        // Removed loadState - rely on global one from cart.js
-        renderProduct();
-        // Removed renderCart - rely on global one from cart.js
+    // Main initialization function for THIS page's specific logic
+    function initializeThisPage() {
+        // Load initial data (local to this page)
+        product = initialProduct;
+
+        // Render page elements specific to this page
+        renderProduct(); // This now renders selectors and sets defaults
         renderRelatedProducts();
         startSocialProof();
 
+        // Add event listeners specific to this page
         if(dom.addToCartButton) dom.addToCartButton.addEventListener('click', addToCart);
-        // Removed bundle selector listener for change, using click on radio label instead
-        // dom.interactiveBundleSelector.addEventListener('click', updateBundleSummary); // Not needed for hoodie
 
-        // --- Event Listeners from cart.js (Ensure elements exist or rely on global) ---
-        // These should be handled globally by cart.js if elements have consistent IDs
+        // Popup listeners remain specific to this page's popup element IDs
+        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
+        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global
+        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
-        // Ensure popup listeners are relevant
-        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; window.openCart(); }); // Use global
-        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-
+        // Initial render of the global cart display AFTER cart.js has loaded
+        if (window.renderCart) {
+            window.renderCart();
+        } else {
+            console.warn("Global renderCart function not found after loading cart.js");
+        }
     }
 
-     // --- Load global cart script AFTER this page's specific logic ---
-    const cartScript = document.createElement('script');
-    cartScript.src = '/cart.js'; // Make sure this path is correct
-    cartScript.onload = () => {
-        console.log("Global cart.js loaded.");
-        initializeApp(); // Initialize this page's specific logic AFTER global cart is ready
-    };
-    cartScript.onerror = () => {
-        console.error("Failed to load global cart.js!");
-        // Fallback or error handling if cart.js doesn't load
-         initializeApp(); // Still try to init page, but cart might not work fully
-    };
-    document.body.appendChild(cartScript);
+    // Wait for the DOM and ensure cart.js is loaded before initializing page logic
+    if (document.readyState === 'loading') {
+        // We might need to wait for cart.js script tag to load first
+        // The call is now handled by the onload handler of the script tag below
+    } else {
+        // DOM is ready, maybe cart.js loaded first or simultaneously
+        // Still better to wait for onload or ensure cart.js is defined
+        if (window.renderCart) { // Check if cart functions exist
+            initializeThisPage();
+        } else {
+            console.warn("DOM ready but cart.js functions not found yet.");
+            // Wait a fraction longer just in case
+            setTimeout(initializeThisPage, 50);
+        }
+    }
 
-});
+
+}); // End of main DOMContentLoaded wrapper
+
 </script>
 </body>
 </html>
