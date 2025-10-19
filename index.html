@@ -33,8 +33,8 @@
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
     <style>
         body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
-        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
-        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
+        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; color: #1f2937; } /* Added default text color */
+        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; background-color: #111827; color: #d1d5db; } /* Added dark mode background and text */
         .timer-box { background-color: var(--color-urgent); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
         .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
@@ -45,25 +45,44 @@
         #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
         #cart-overlay.open { display: block; }
         .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; color: #333; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
+        .modal-content { background-color: #fefefe; color: #333; margin: 5% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;} /* Adjusted margin for better centering */
         .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; font-family: sans-serif; } /* Added sans-serif */
         #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
         #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
         #public-cart-button:hover { transform: scale(1.1); }
         #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .bundle-image-option input:checked + label { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent); }
+        .bundle-image-option input:checked + label { border-color: var(--color-accent-border); box-shadow: 0 0 0 3px var(--color-accent-border); } /* Updated border color */
         .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
-        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; }
+        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; background-color: white; } /* Added background */
         .related-product-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .related-product-card img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
         .related-product-card-info { padding: 0.75rem; text-align: center; }
         #payment-method-messaging { min-height: 20px; }
+        /* Style adjustments for dark mode */
+        body[data-theme="dark"] #cart-panel { background-color: #1f2937; color: #d1d5db; border-left: 1px solid #374151;}
+        body[data-theme="dark"] #cart-panel .border-b, body[data-theme="dark"] #cart-panel .border-t { border-color: #374151; }
+        body[data-theme="dark"] .modal-content { background-color: #374151; color: #d1d5db; border-color: #4b5563;}
+        body[data-theme="dark"] .close-modal { color: #9ca3af; }
+        body[data-theme="dark"] .bg-white { background-color: #1f2937; } /* Target specific white backgrounds */
+        body[data-theme="dark"] .text-gray-900 { color: #f9fafb; }
+        body[data-theme="dark"] .text-gray-800 { color: #e5e7eb; }
+        body[data-theme="dark"] .text-gray-700 { color: #d1d5db; }
+        body[data-theme="dark"] .text-gray-600 { color: #9ca3af; }
+        body[data-theme="dark"] .text-gray-500 { color: #6b7280; }
+        body[data-theme="dark"] .border-gray-200 { border-color: #374151; }
+        body[data-theme="dark"] .related-product-card { background-color: #374151; border-color: #4b5563; }
+        body[data-theme="dark"] .related-product-card h4 { color: #f9fafb; }
+        body[data-theme="dark"] .bundle-image-option label { border-color: #4b5563; }
+        body[data-theme="dark"] .bundle-image-option p { color: #e5e7eb; }
+        body[data-theme="dark"] #stock-indicator { background-color: #3730a3; border-color: #4f46e5; color: #c7d2fe;} /* Adjusted dark stock indicator */
+        body[data-theme="dark"] #shipping-section p, body[data-theme="dark"] #reviews-section p { color: #9ca3af; } /* Use sans-serif for paragraphs */
+        body[data-theme="dark"] #review-container strong { color: #e5e7eb; }
+        body[data-theme="dark"] #review-container .text-sm { color: #6b7280; }
+        body[data-theme="dark"] #review-container .border-b { border-color: #374151; }
     </style>
 </head>
-<body data-theme="dark">
-
-    <div id="public-cart-button">
+<body data-theme="dark"> <div id="public-cart-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="public-cart-badge">0</span>
     </div>
@@ -78,7 +97,9 @@
         <div class="p-4 bg-yellow-100 text-center">
             <p class="font-semibold text-yellow-800" style="font-family: sans-serif;">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
         </div>
-        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
+        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto">
+            <p class="text-center text-gray-500">Loading cart...</p>
+        </div>
         <div class="p-4 border-t space-y-4">
             <div class="flex justify-between font-bold text-lg">
                 <span>Subtotal</span>
@@ -108,21 +129,24 @@
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
                     <div class="md:flex">
                         <div id="media-container" class="md:w-1/2 p-4">
-                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
+                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden">
+                                </div>
                             <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
                         </div>
                         <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
                             <div>
                                 <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
-                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2> <p id="product-description" class="mt-4 text-gray-600" style="font-family: sans-serif;"></p>
+                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2">Product Name Loading...</h2>
+                                <p id="product-description" class="mt-4 text-gray-600" style="font-family: sans-serif;"></p>
                                 <div class="mt-6 flex items-baseline gap-4">
-                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
-                                    <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through"></span></div>
+                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900">$0.00</span></div>
+                                    <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through">$0.00</span></div>
                                 </div>
 
                                 <div id="payment-method-messaging" class="mt-4" style="font-family: sans-serif;"></div>
 
-                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3">
+                                    </div>
                                 <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
                                     <h4 class="font-bold text-lg text-gray-800">Your Bundle:</h4>
                                     <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
@@ -139,7 +163,7 @@
                     <div id="related-products-section" class="p-8 border-t border-gray-200">
                         <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
                         <div id="related-products-grid" class="grid grid-cols-3 gap-4">
-                        </div>
+                            </div>
                     </div>
                 </div>
                 <div class="mt-12 space-y-8">
@@ -149,7 +173,8 @@
                     </div>
                     <div id="reviews-section" class="bg-white p-8 rounded-lg shadow-md">
                         <h3 class="text-2xl font-bold mb-4 text-gray-900">What Our Customers Say</h3>
-                        <div id="review-container" class="space-y-6"></div>
+                        <div id="review-container" class="space-y-6">
+                             </div>
                     </div>
                 </div>
             </div>
@@ -170,31 +195,19 @@
     </div>
 
 <script src="/cart.js"></script> <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // --- STRIPE INITIALIZATION ---
+    // --- Define ALL page-specific functions first ---
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj';
-    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-    const elements = stripe.elements();
-    let paymentMessage = null;
-
-    // --- CONFIGURATION ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-    // CHECKOUT_SESSION_URL is now defined globally in cart.js if needed there, or keep local if only used here
-    // const CHECKOUT_SESSION_URL = '/api/server';
 
-    // --- STATE MANAGEMENT ---
     let product = {};
     let reviews = [];
-    // Relies on global window.cart from cart.js
-    const appStateKey = 'atfCart_v1'; // Use the global key defined in cart.js
-
-    // Local interval variables for this page
+    let paymentMessage = null;
     let flashSaleTimerInterval = null;
+    let socialProofIntervalId = null; // To potentially clear later
 
-    // --- DATA ---
     const initialProduct = {
-        name: 'ATF V1 "TakeOver" Mask [Final Run]', // Renamed from Balaclava
+        name: 'ATF V1 "TakeOver" Mask [Final Run]',
         description: 'The original ATF V1 "TakeOver" design. This is the final production run of this iconic piece. One size fits all. It\'s more than an accessory, it\'s a statement.',
         ctaHeadline: 'It\'s Time For a TakeOver.',
         ctaSubheadline: 'Designs so unique, they\'re not just accessories—they\'re walking masterpieces.',
@@ -222,12 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'ATFV12 HOODIE - PREE', image: 'https://i.imgur.com/tUMU6TR.png', url: '/hoodies.html' }
     ];
 
-    // --- CORE FUNCTIONS ---
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
-    // --- !!! UPDATED addToCart Function for Mask Page !!! ---
     function addToCart() {
-        if (!dom.interactiveBundleSelector) return; // Add check
+        // Ensure required elements and global cart exist
+        if (!dom.interactiveBundleSelector || !window.cart) {
+             console.error("Missing required elements or cart.js failed to load.");
+             alert("Error: Cannot add to cart right now. Please refresh.");
+             return;
+        }
 
         const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
             name: input.dataset.name,
@@ -239,150 +255,131 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Prepare data for FB Pixel *before* looping and adding to cart
         let pixel_content_ids = [];
         let pixel_value = 0;
-        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
+        const bundlePrices = (product.bundlePrices || []).map(p => parseFloat(String(p).replace('$', ''))); // Safer parsing
 
         selectedDesigns.forEach((design, index) => {
-            const variantId = `${design.name}|${Date.now()}`; // Generate unique ID
-            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)]; // Get correct bundle price
+            const variantId = `${design.name}|${Date.now()}`;
+            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)] || 0; // Default price if undefined
 
-            // Add item to the GLOBAL cart array
-            window.cart.push({ // Use window.cart
-                productId: 'mainProduct', // Use a consistent ID for the base product (masks)
-                variantId: variantId,     // Unique ID for this specific added item
-                name: product.name,
-                price: `$${price.toFixed(2)}`, // Store formatted price
+            window.cart.push({
+                productId: 'mainProduct',
+                variantId: variantId,
+                name: product.name || 'Mask Product', // Use default if product name missing
+                price: `$${price.toFixed(2)}`,
                 image: design.image,
                 variantText: design.name,
                 quantity: 1
             });
 
-            // Aggregate data for the Pixel event
-            pixel_content_ids.push(variantId); // Use the unique variant ID
+            pixel_content_ids.push(variantId);
             pixel_value += price;
         });
 
-        // --- ENHANCED FB PIXEL CODE ---
-        if (typeof fbq === 'function') { // Check if fbq is loaded
+        if (typeof fbq === 'function') {
             try {
                 fbq('track', 'AddToCart', {
-                    content_ids: pixel_content_ids,    // Array of variant IDs added
-                    content_name: product.name,        // Base product name (e.g., "ATF V1 'TakeOver' Mask")
-                    content_category: 'Apparel & Accessories > Clothing Accessories > Masks', // Optional: Add category
-                    content_type: 'product_group',     // Use 'product_group' if multiple variants added, 'product' if only one possible
-                    value: pixel_value,                // Total value of items added in this click
-                    currency: 'USD'                    // IMPORTANT: Change 'USD' if needed
+                    content_ids: pixel_content_ids,
+                    content_name: product.name || 'Mask Product',
+                    content_category: 'Apparel & Accessories > Clothing Accessories > Masks',
+                    content_type: selectedDesigns.length > 1 ? 'product_group' : 'product', // Adjust based on count
+                    value: pixel_value,
+                    currency: 'USD' // CHANGE IF NEEDED
                 });
-            } catch (e) {
-                console.error("FB Pixel AddToCart Error:", e);
-            }
+            } catch (e) { console.error("FB Pixel AddToCart Error:", e); }
         }
-        // --- END OF ENHANCED FB PIXEL CODE ---
 
-        // Use global functions if they exist
-        if(window.saveState) window.saveState();
-        if(window.renderCart) window.renderCart();
-        showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
-        if(window.startCartTimer) window.startCartTimer();
-
+        // Call global functions if they exist
+        if(typeof window.saveState === 'function') window.saveState();
+        if(typeof window.renderCart === 'function') window.renderCart();
+        showItemAddedPopup({ mediaUrl: selectedDesigns[0]?.image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`); // Safer access to image
+        if(typeof window.startCartTimer === 'function') window.startCartTimer();
     }
-    // --- !!! END of UPDATED addToCart Function !!! ---
 
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
-        clearTimeout(dom.popupTimeout);
-        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
+        clearTimeout(dom.popupTimeout); // Use a property on dom to store timeout ID
+        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct?.mediaUrl || 'https://placehold.co/128x128'; // Safer access
         if(dom.popupMessage) dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
-        // Auto close after 5 seconds
         dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
-    }
+     }
 
     function updateBundleSummary() {
-        if (!dom.interactiveBundleSelector || !product || !product.bundlePrices) return; // Add checks
+        if (!dom.interactiveBundleSelector || !product || !product.bundlePrices || !product.originalPrice) return;
 
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
-        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
+        const bundlePrices = product.bundlePrices.map(p => parseFloat(String(p).replace('$', '')));
+        const originalSinglePrice = parseFloat(String(product.originalPrice).replace('$', ''));
         let total = 0;
         let originalTotal = 0;
 
-        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = ''; // Clear previous items
+        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
 
         if (selectedInputs.length > 0) {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block'; // Show summary area
-
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
             selectedInputs.forEach((input, index) => {
-                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)]; // Apply tiered pricing
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)] || 0;
                 total += price;
-                originalTotal += parseFloat(product.originalPrice.replace('$', '')); // Calculate original total based on non-sale price
-
+                originalTotal += originalSinglePrice || 0;
                 const itemEl = document.createElement('div');
                 itemEl.className = 'flex justify-between items-center text-sm';
-                itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name}</span><span class="font-bold">$${price.toFixed(2)}</span>`;
+                itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name || 'Unknown'}</span><span class="font-bold">$${price.toFixed(2)}</span>`;
                 if (dom.bundleSummaryItems) dom.bundleSummaryItems.appendChild(itemEl);
             });
         } else {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none'; // Hide summary if nothing selected
-            // If nothing selected, set price based on potentially pre-selected item or default
-            total = 0; // Or calculate based on a default if needed
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
+            total = 0; // Price should reflect zero if nothing selected
             originalTotal = 0;
         }
 
-        // Update main price displays
         if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
         if (dom.productOriginalPrice) dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
 
-        // Update Stripe Payment Messaging if initialized
-        if (paymentMessage) { // Check if paymentMessage exists
+        if (paymentMessage) {
              const totalInCents = Math.round(total * 100);
-             // Ensure amount is at least 1 cent for Stripe if total is 0, default to first item price if needed
-             const displayAmount = totalInCents > 0 ? totalInCents : (bundlePrices.length > 0 ? Math.round(bundlePrices[0] * 100) : 1);
-             try {
-                paymentMessage.update({ amount: Math.max(displayAmount, 1), currency: 'USD' }); // Use the calculated total or a minimum of 1 cent
-             } catch(e) {
-                 console.error("Error updating payment message:", e);
-             }
+             // Default to first bundle price if total is 0 but might be needed (e.g. page load)
+             const defaultPriceCents = bundlePrices.length > 0 ? Math.round(bundlePrices[0] * 100) : 1;
+             const displayAmount = totalInCents > 0 ? totalInCents : defaultPriceCents;
+             try { paymentMessage.update({ amount: Math.max(displayAmount, 1), currency: 'USD' }); }
+             catch(e) { console.error("Error updating payment message:", e); }
         }
     }
 
-
-    // --- !!! UPDATED renderProduct Function for Mask Page with Auto-Select !!! ---
     function renderProduct() {
-        product = initialProduct; // Load initial product data
+        product = initialProduct;
         document.body.dataset.theme = product.theme || 'light';
         if (dom.headerLogo) dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
-        if (dom.productName) dom.productName.textContent = product.name; // Updated Name
+        if (dom.productName) dom.productName.textContent = product.name;
         if (dom.productDescription) dom.productDescription.textContent = product.description;
         if (dom.ctaHeadline) dom.ctaHeadline.textContent = product.ctaHeadline;
         if (dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
         if (dom.productBadge) dom.productBadge.textContent = 'Limited Edition Bundle Deal';
 
+        // Media display logic
+        const firstVariationImage = product.variations?.['Design']?.[0]?.image || 'https://placehold.co/600x600';
         if (product.mediaType === 'video' && product.mediaUrl) {
-           if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
-           if(dom.mainProductVideoContainer) {
+            if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
+            if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage; // Preload first image anyway
+            if(dom.mainProductVideoContainer) {
                 dom.mainProductVideoContainer.style.display = 'block';
                 dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             }
         } else {
-           if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
-           if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
-            // Set initial image from first variation if media is not video
-             if(product.variations && product.variations['Design'] && product.variations['Design'][0]){
-               if(dom.mainProductImage) dom.mainProductImage.src = product.variations['Design'][0].image;
-             } else {
-               if(dom.mainProductImage) dom.mainProductImage.src = 'https://placehold.co/600x600'; // Fallback
-             }
+            if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
+            if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
+            if(dom.mainProductImage) dom.mainProductImage.src = firstVariationImage;
         }
 
+        // Render bundle selector
         if (dom.interactiveBundleSelector) {
             dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
             const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
-            const designKey = Object.keys(product.variations || {})[0]; // Safer access
+            const designKey = Object.keys(product.variations || {})[0];
 
             if (designKey && product.variations && product.variations[designKey]) {
-                product.variations[designKey].forEach((variation, index) => { // Added index
+                product.variations[designKey].forEach((variation, index) => {
                     const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
                     const optionEl = document.createElement('div');
                     optionEl.className = 'bundle-image-option';
@@ -398,38 +395,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     gridContainer.appendChild(optionEl);
 
-                    // --- AUTO SELECT FIRST ITEM ---
-                    if (index === 0) {
+                    if (index === 0) { // Auto-select first item
                         const firstCheckbox = optionEl.querySelector('input');
                         if (firstCheckbox) firstCheckbox.checked = true;
-                         // Also update the main image to the first item if it's not a video
-                         if (product.mediaType !== 'video' && dom.mainProductImage) {
-                             dom.mainProductImage.src = variation.image;
-                         }
                     }
-                    // --- END AUTO SELECT ---
 
                     const label = optionEl.querySelector('label');
                     if (label) {
-                        label.addEventListener('click', (e) => {
-                            // Update main image display when label is clicked
-                           if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
-                           if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
-                           if(dom.mainProductImage) dom.mainProductImage.src = variation.image;
-                            // updateBundleSummary will be called by the 'change' event
+                        label.addEventListener('click', () => { // Update image on label click
+                            if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
+                            if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
+                            if(dom.mainProductImage) dom.mainProductImage.src = variation.image;
                         });
                     }
                 });
-            }
+            } else {
+                 console.warn("No 'Design' variations found for bundle selector.");
+             }
         }
         updateBundleSummary(); // Call after rendering options AND setting default check
     }
-    // --- !!! END of UPDATED renderProduct Function !!! ---
-
 
     function renderReviews() {
         if (!dom.reviewContainer) return;
-        reviews = initialReviews; // Load initial reviews
+        reviews = initialReviews;
         dom.reviewContainer.innerHTML = reviews.map(review => {
             const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
             return `<div class="border-b pb-4 last:border-b-0"><div class="flex items-center mb-2"><span class="text-yellow-500">${stars}</span><strong class="ml-2 text-gray-800">${review.title}</strong></div><p class="text-gray-700" style="font-family: sans-serif;">"${review.text}"</p><p class="text-sm text-gray-500 mt-2">- ${review.author}</p></div>`;
@@ -439,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderRelatedProducts() {
         const grid = dom.relatedProductsGrid;
         if (!grid) return;
-
         grid.innerHTML = relatedProductsData.map(product => `
             <a href="${product.url}" class="related-product-card text-gray-900 no-underline">
                 <img src="${product.image}" alt="${product.name}">
@@ -451,15 +439,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startFlashSaleTimer() {
-        let duration = 20 * 60; // 20 minutes
+        let duration = 20 * 60;
         clearInterval(flashSaleTimerInterval);
         flashSaleTimerInterval = setInterval(() => {
             if (duration <= 0) {
                 clearInterval(flashSaleTimerInterval);
                 if(dom.countdownTimer) dom.countdownTimer.textContent = "00:00:00";
-                // Optionally disable add to cart or change sale message here
-                if(dom.addToCartButton) dom.addToCartButton.disabled = true; // Example: Disable button
-                if(dom.addToCartButton) dom.addToCartButton.textContent = "Sale Ended";
+                if(dom.addToCartButton) {
+                    dom.addToCartButton.disabled = true;
+                    dom.addToCartButton.textContent = "Sale Ended";
+                    dom.addToCartButton.style.backgroundColor = '#9ca3af'; // Grey out button
+                }
                 return;
             }
             duration--;
@@ -470,64 +460,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-
     function startSocialProof() {
-        const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-         const intervalId = setInterval(() => { // Store interval ID
-            // Check if product data is loaded before accessing name
-             if (!product || !product.name) return;
-
+        clearInterval(socialProofIntervalId); // Clear previous interval if any
+        socialProofIntervalId = setInterval(() => {
+             if (!product || !product.name || !dom.socialProofPopup) {
+                  console.warn("Cannot show social proof yet.");
+                  return; // Don't run if product name or popup isn't ready
+             }
+            const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
             const productNameRef = product.name;
             const name = productNameRef.split(' ').slice(0, 2).join(' ');
             const loc = locations[Math.floor(Math.random() * locations.length)];
-            if (dom.socialProofPopup) {
-                dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
-                dom.socialProofPopup.classList.add('show');
-                setTimeout(() => {
-                     if(dom.socialProofPopup) dom.socialProofPopup.classList.remove('show');
-                 }, 5000); // Hide after 5 seconds
-            } else {
-                 // If popup element doesn't exist, stop trying
-                 clearInterval(intervalId);
-             }
-        }, 20000); // Adjusted interval to 20 seconds
+            dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
+            dom.socialProofPopup.classList.add('show');
+            setTimeout(() => {
+                 if(dom.socialProofPopup) dom.socialProofPopup.classList.remove('show');
+             }, 5000);
+        }, 20000);
     }
 
     function initializePaymentMessage() {
-        if (!product || !product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging) return;
+        if (!product || !product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging || !stripe || !elements) return;
 
-        // Use the price of the first item (assuming one is pre-selected)
-        const initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
+        // Ensure at least one item is selected for initial price
+        const initialSelectedInput = dom.interactiveBundleSelector?.querySelector('input:checked');
+        let initialPriceInCents = 0;
+        if(initialSelectedInput) {
+             initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
+        } else if (product.bundlePrices.length > 0) {
+             // Fallback if somehow nothing is checked initially
+             initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
+        }
+
         if (initialPriceInCents <= 0) {
             console.warn("Initial price for payment message is zero or invalid.");
-            return; // Don't initialize if price is invalid
+            return;
         }
 
-
-        const options = {
-            amount: initialPriceInCents,
-            currency: 'USD', // Ensure this matches your currency
-        };
+        const options = { amount: initialPriceInCents, currency: 'USD' }; // CHANGE CURRENCY IF NEEDED
 
         try {
-            paymentMessage = elements.create('paymentMethodMessaging', options);
-            paymentMessage.mount(dom.paymentMethodMessaging);
-        } catch (e) {
-            console.error("Error creating/mounting payment message element:", e);
-        }
+            // Check if element already exists before creating
+             if (!paymentMessage) {
+                 paymentMessage = elements.create('paymentMethodMessaging', options);
+                 paymentMessage.mount(dom.paymentMethodMessaging);
+             } else {
+                 // If it exists, just update it
+                 paymentMessage.update(options);
+             }
+        } catch (e) { console.error("Error creating/mounting payment message:", e); }
     }
 
-    // Main initialization function for THIS page's specific logic
-    function initializeThisPage() {
-        // Load initial data (local to this page)
+    // --- Main Initialization Function ---
+    function initializeApp() {
+        // Ensure global functions are ready
+        if (typeof window.renderCart !== 'function' || typeof window.saveState !== 'function') {
+             console.error("Critical Error: Global cart functions from cart.js are not available!");
+             // Optionally display an error message to the user
+             return; // Stop initialization
+        }
+
         product = initialProduct;
         reviews = initialReviews;
 
-        // Render page elements specific to this page
-        renderProduct(); // This now auto-selects the first item
+        renderProduct(); // Renders product, selectors, sets default selection
         renderReviews();
         renderRelatedProducts();
-        initializePaymentMessage();
+        initializePaymentMessage(); // Initialize after renderProduct sets initial price context
         startFlashSaleTimer();
         startSocialProof();
 
@@ -540,23 +539,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global openCart
         if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
-        // Initial render of the global cart display AFTER cart.js has loaded and potentially populated window.cart
-        if (window.renderCart) {
-            window.renderCart();
-        } else {
-            console.warn("Global renderCart function not found after loading cart.js");
-        }
+        // Initial render of the global cart display
+        window.renderCart(); // Assumes window.cart was loaded by cart.js
     }
 
-    // Wait for the DOM and ensure cart.js is loaded before initializing page logic
+    // --- Initialize after DOM is ready ---
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeThisPage);
+         document.addEventListener('DOMContentLoaded', initializeApp);
     } else {
-        // DOM is already ready, maybe cart.js loaded first or simultaneously
-        initializeThisPage();
+         // DOM is already ready
+         initializeApp();
     }
 
-}); // End of main DOMContentLoaded wrapper
 </script>
 </body>
 </html>
