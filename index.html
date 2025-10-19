@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limited Time Offer! - Mask</title> <script src="https://js.stripe.com/v3/"></script>
+    <title>Limited Time Offer! - Mask</title>
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -184,10 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- STATE MANAGEMENT ---
     let product = {};
     let reviews = [];
-    let cart = []; // Note: cart is now local to this page's script scope
+    // Relies on global window.cart from cart.js
     const appStateKey = 'atfCart_v1'; // Use the global key defined in cart.js
 
-    let cartTimerInterval = null; // Local interval variable
+    // Local interval variables for this page
     let flashSaleTimerInterval = null;
 
     // --- DATA ---
@@ -221,14 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // --- CORE FUNCTIONS ---
-    // Removed saveState and loadState - rely on global ones from cart.js
-    // Removed cart variable - rely on global window.cart from cart.js
-
     const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
-    // Removed updateCartIcon and renderCart - rely on global ones from cart.js
-
-    // --- !!! UPDATED addToCart Function !!! ---
+    // --- !!! UPDATED addToCart Function for Mask Page !!! ---
     function addToCart() {
         const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
             name: input.dataset.name,
@@ -251,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add item to the GLOBAL cart array
             window.cart.push({ // Use window.cart
-                productId: 'mainProduct', // Use a consistent ID for the base product
+                productId: 'mainProduct', // Use a consistent ID for the base product (masks)
                 variantId: variantId,     // Unique ID for this specific added item
                 name: product.name,
                 price: `$${price.toFixed(2)}`, // Store formatted price
@@ -270,8 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 fbq('track', 'AddToCart', {
                     content_ids: pixel_content_ids,    // Array of variant IDs added
-                    content_name: product.name,        // Base product name
-                    content_type: 'product',
+                    content_name: product.name,        // Base product name (e.g., "ATF V1 'TakeOver' Mask")
+                    content_category: 'Apparel & Accessories > Clothing Accessories > Masks', // Optional: Add category
+                    content_type: 'product_group',     // Use 'product_group' if multiple variants added, 'product' if only one
                     value: pixel_value,                // Total value of items added in this click
                     currency: 'USD'                    // IMPORTANT: Change 'USD' if needed
                 });
@@ -286,7 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
 
         window.startCartTimer(); // Use global startCartTimer
-        // REMOVED old basic fbq('track', 'AddToCart'); line
     }
     // --- !!! END of UPDATED addToCart Function !!! ---
 
@@ -296,45 +292,59 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
         dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
-        dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
+        // Auto close after 5 seconds
+        dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
     }
 
     function updateBundleSummary() {
+        if (!dom.interactiveBundleSelector) return; // Ensure element exists
+
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
         const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
         let total = 0;
         let originalTotal = 0;
 
-        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
+        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = ''; // Clear previous items
+
         if (selectedInputs.length > 0) {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block'; // Show summary area
+
             selectedInputs.forEach((input, index) => {
-                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)]; // Apply tiered pricing
                 total += price;
-                originalTotal += parseFloat(product.originalPrice.replace('$', ''));
+                originalTotal += parseFloat(product.originalPrice.replace('$', '')); // Calculate original total based on non-sale price
+
                 const itemEl = document.createElement('div');
                 itemEl.className = 'flex justify-between items-center text-sm';
                 itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name}</span><span class="font-bold">$${price.toFixed(2)}</span>`;
                 if (dom.bundleSummaryItems) dom.bundleSummaryItems.appendChild(itemEl);
             });
         } else {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none'; // Hide summary if nothing selected
+            // If nothing selected, maybe show the price for ONE item by default?
+             total = bundlePrices[0] || 0; // Default to first price if available
+             originalTotal = parseFloat(product.originalPrice.replace('$', '')) || 0;
         }
+
+        // Update main price displays
         if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
         if (dom.productOriginalPrice) dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
 
-        if (paymentMessage && total > 0) {
-            const totalInCents = Math.round(total * 100);
-            paymentMessage.update({ amount: totalInCents, currency: 'USD' });
-        } else if (paymentMessage && total <= 0) {
-            // Update payment message for zero total if needed, or handle appropriately
-             const singlePriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
-             if(singlePriceInCents > 0) {
-                 paymentMessage.update({ amount: singlePriceInCents, currency: 'USD' });
+        // Update Stripe Payment Messaging if initialized
+        if (paymentMessage) { // Check if paymentMessage exists
+             const totalInCents = Math.round(total * 100);
+             // Ensure amount is at least 1 cent for Stripe if total is 0 but maybe shouldn't be
+             const displayAmount = Math.max(totalInCents, 1);
+             try {
+                paymentMessage.update({ amount: displayAmount, currency: 'USD' }); // Use the calculated total or a minimum
+             } catch(e) {
+                 console.error("Error updating payment message:", e);
              }
         }
     }
 
+
+    // --- !!! UPDATED renderProduct Function for Mask Page !!! ---
     function renderProduct() {
         product = initialProduct; // Load initial product data
         document.body.dataset.theme = product.theme || 'light';
@@ -362,10 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
         const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
-        const designKey = Object.keys(product.variations)[0];
+        const designKey = Object.keys(product.variations)[0]; // Assumes first key is 'Design'
 
         if (designKey && product.variations[designKey]) {
-            product.variations[designKey].forEach(variation => {
+            product.variations[designKey].forEach((variation, index) => { // Added index
                 const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
                 const optionEl = document.createElement('div');
                 optionEl.className = 'bundle-image-option';
@@ -374,29 +384,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
                         <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
                         <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
-                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-content-center opacity-0 transform scale-75 transition-all">
+                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75 transition-all">
                             <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
                         </div>
                     </label>
                 `;
                 gridContainer.appendChild(optionEl);
+
+                // --- AUTO SELECT FIRST ITEM ---
+                if (index === 0) {
+                    const firstCheckbox = optionEl.querySelector('input');
+                    firstCheckbox.checked = true;
+                     // Also update the main image to the first item if it's not a video
+                     if (product.mediaType !== 'video') {
+                         dom.mainProductImage.src = variation.image;
+                     }
+                }
+                // --- END AUTO SELECT ---
+
                 optionEl.querySelector('label').addEventListener('click', (e) => {
-                    // Prevent checkbox default behavior to allow image update first
-                    // e.preventDefault(); // Might not be needed depending on browser
+                    // Update main image display when label is clicked
                     dom.mainProductImage.style.display = 'block';
                     dom.mainProductVideoContainer.style.display = 'none';
                     dom.mainProductImage.src = variation.image;
+                    // Note: updateBundleSummary is called by the 'change' event on the selector div
                 });
             });
-
-            // Set default checked state if needed (e.g., first item)
-             const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]');
-             if (firstBundleOption) {
-                  //firstBundleOption.checked = true; // Decide if you want one pre-checked
-             }
         }
-        updateBundleSummary(); // Call after rendering options
+        updateBundleSummary(); // Call after rendering options AND setting default check
     }
+    // --- !!! END of UPDATED renderProduct Function !!! ---
+
 
     function renderReviews() {
         if (!dom.reviewContainer) return;
@@ -427,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         flashSaleTimerInterval = setInterval(() => {
             if (duration <= 0) {
                 clearInterval(flashSaleTimerInterval);
-                dom.countdownTimer.textContent = "00:00:00";
+                if(dom.countdownTimer) dom.countdownTimer.textContent = "00:00:00";
                 // Optionally disable add to cart or change sale message here
                 return;
             }
@@ -435,30 +453,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const h = String(Math.floor(duration / 3600)).padStart(2, '0');
             const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
             const s = String(duration % 60).padStart(2, '0');
-            dom.countdownTimer.textContent = `${h}:${m}:${s}`;
+            if(dom.countdownTimer) dom.countdownTimer.textContent = `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    // Removed startCartTimer - rely on global one from cart.js
 
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-        setInterval(() => {
-            const productNameRef = product.name || 'Mask'; // Use updated name
+         const intervalId = setInterval(() => { // Store interval ID
+            // Check if product data is loaded before accessing name
+             if (!product || !product.name) return;
+
+            const productNameRef = product.name;
             const name = productNameRef.split(' ').slice(0, 2).join(' ');
             const loc = locations[Math.floor(Math.random() * locations.length)];
             if (dom.socialProofPopup) {
                 dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
                 dom.socialProofPopup.classList.add('show');
-                setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
-            }
-        }, 15000); // Increased interval slightly
+                setTimeout(() => {
+                     if(dom.socialProofPopup) dom.socialProofPopup.classList.remove('show');
+                 }, 5000); // Hide after 5 seconds
+            } else {
+                 // If popup element doesn't exist, stop trying
+                 clearInterval(intervalId);
+             }
+        }, 15000);
     }
 
     function initializePaymentMessage() {
-        if (!product.bundlePrices || product.bundlePrices.length === 0) return;
+        if (!product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging) return;
 
-        // Use the price of the first item in the bundle as the initial amount shown
+        // Use the price of the first item (assuming one is pre-selected)
         const initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
         if (initialPriceInCents <= 0) return;
 
@@ -469,53 +494,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             paymentMessage = elements.create('paymentMethodMessaging', options);
+            paymentMessage.mount(dom.paymentMethodMessaging);
         } catch (e) {
-            console.error("Error creating payment message element:", e);
-            return; // Don't proceed if element creation fails
-        }
-
-        const mountPoint = dom.paymentMethodMessaging;
-        if (mountPoint && paymentMessage) { // Check if paymentMessage was created
-             paymentMessage.mount(mountPoint);
-        } else if (!mountPoint) {
-            console.error("Payment messaging mount point not found.");
+            console.error("Error creating/mounting payment message element:", e);
         }
     }
 
     function initializeApp() {
-        // Removed loadState - rely on global one from cart.js
+        // Load initial data (local to this page)
+        product = initialProduct;
+        reviews = initialReviews;
+
+        // Render page elements specific to this page
         renderProduct();
         renderReviews();
-        // Removed renderCart - rely on global one from cart.js
         renderRelatedProducts();
         initializePaymentMessage();
         startFlashSaleTimer();
         startSocialProof();
 
-        dom.addToCartButton.addEventListener('click', addToCart);
-        dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
+        // Add event listeners specific to this page
+        if(dom.addToCartButton) dom.addToCartButton.addEventListener('click', addToCart);
+        if(dom.interactiveBundleSelector) dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary); // Listen for changes on checkboxes
 
-        // --- Event Listeners from cart.js (Ensure elements exist or remove listener) ---
-        // These are mostly handled globally by cart.js now if elements have same IDs
-        // Redundant listeners removed or commented out if handled globally
+        // Popup listeners remain specific to this page's popup element IDs
+        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
+        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global openCart
+        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
-        // Ensure popup listeners are still relevant if elements are unique to this page
-        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; window.openCart(); }); // Use global openCart
-        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-
+        // Global cart interactions (opening/closing panel, removing items, checkout)
+        // should be handled by cart.js listeners if the element IDs are consistent.
+        // Make sure IDs like 'public-cart-button', 'close-cart-btn', 'cart-overlay',
+        // 'cart-items-container', 'checkout-btn' are present and consistent if cart.js uses them.
     }
 
     // --- Load global cart script AFTER this page's specific logic ---
     const cartScript = document.createElement('script');
     cartScript.src = '/cart.js'; // Make sure this path is correct
     cartScript.onload = () => {
-        console.log("Global cart.js loaded.");
+        console.log("Global cart.js loaded for index.html.");
         initializeApp(); // Initialize this page's specific logic AFTER global cart is ready
+        // Manually call renderCart from global script to populate cart panel initially
+        if (window.renderCart) {
+            window.renderCart();
+        }
     };
     cartScript.onerror = () => {
         console.error("Failed to load global cart.js!");
-        // Fallback or error handling if cart.js doesn't load
          initializeApp(); // Still try to init page, but cart might not work fully
     };
     document.body.appendChild(cartScript);
