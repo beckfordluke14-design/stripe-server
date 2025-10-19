@@ -1,575 +1,593 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limited Time Offer! - Balaclava</title>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '757946737591863'); 
-      fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
-    
-    <style>
-        body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
-        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
-        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
-        .timer-box { background-color: var(--color-urgent); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-        .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
-        .add-to-cart-button:hover { background-color: var(--color-accent-hover); }
-        .text-highlight { color: var(--color-accent); }
-        #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; color: #333; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
-        #cart-panel.open { right: 0; }
-        #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
-        #cart-overlay.open { display: block; }
-        .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fefefe; color: #333; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
-        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
-        #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
-        #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
-        #public-cart-button:hover { transform: scale(1.1); }
-        #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .bundle-image-option input:checked + label { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent); }
-        .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
-        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; }
-        .related-product-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .related-product-card img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
-        .related-product-card-info { padding: 0.75rem; text-align: center; }
-        #payment-method-messaging { min-height: 20px; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limited Time Offer! - Balaclava</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '757946737591863'); 
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=757946737591863&ev=PageView&noscript=1"/></noscript>
+    
+    <style>
+        body { font-family: "Bebas Neue", sans-serif; transition: background-color 0.3s ease; background-size: cover; background-position: center; background-attachment: fixed; }
+        body[data-theme="light"], body { --color-urgent: #ef4444; --color-accent: #4f46e5; --color-accent-hover: #4338ca; --color-accent-border: #4f46e5; }
+        body[data-theme="dark"] { --color-urgent: #d946ef; --color-accent: #ec4899; --color-accent-hover: #db2777; --color-accent-border: #ec4899; }
+        .timer-box { background-color: var(--color-urgent); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .add-to-cart-button { background-color: var(--color-accent); transition: background-color 0.3s; }
+        .add-to-cart-button:hover { background-color: var(--color-accent-hover); }
+        .text-highlight { color: var(--color-accent); }
+        #cart-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background-color: white; color: #333; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 110; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
+        #cart-panel.open { right: 0; }
+        #cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 105; }
+        #cart-overlay.open { display: block; }
+        .modal { display: none; position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fefefe; color: #333; margin: 2% auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto;}
+        .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        #social-proof-popup { display: none; position: fixed; bottom: 20px; left: 20px; background-color: white; color: #333; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 200; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+        #social-proof-popup.show { display: block; opacity: 1; transform: translateY(0); }
+        #public-cart-button { position: fixed; bottom: 20px; right: 20px; background-color: var(--color-accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 100; transition: transform 0.2s; }
+        #public-cart-button:hover { transform: scale(1.1); }
+        #public-cart-badge { position: absolute; top: -5px; right: -5px; background-color: var(--color-urgent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .bundle-image-option input:checked + label { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent); }
+        .bundle-image-option input:checked + label .bundle-checkmark { opacity: 1; transform: scale(1); }
+        .related-product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; transition: box-shadow 0.2s; text-decoration: none; }
+        .related-product-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .related-product-card img { aspect-ratio: 1 / 1; object-fit: cover; width: 100%; }
+        .related-product-card-info { padding: 0.75rem; text-align: center; }
+        #payment-method-messaging { min-height: 20px; }
+    </style>
 </head>
 <body data-theme="dark">
 
-    <div id="public-cart-button">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-        <span id="public-cart-badge">0</span>
-    </div>
-    <div id="social-proof-popup"></div>
-    <div id="cart-overlay"></div>
+    <div id="public-cart-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        <span id="public-cart-badge">0</span>
+    </div>
+    <div id="social-proof-popup"></div>
+    <div id="cart-overlay"></div>
 
-    <div id="cart-panel">
-        <div class="flex justify-between items-center p-4 border-b">
-            <h2 class="text-xl font-bold">Your Cart</h2>
-            <button id="close-cart-btn" class="text-2xl">&times;</button>
-        </div>
-        <div class="p-4 bg-yellow-100 text-center">
-            <p class="font-semibold text-yellow-800" style="font-family: sans-serif;">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
-        </div>
-        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
-        <div class="p-4 border-t space-y-4">
-            <div class="flex justify-between font-bold text-lg">
-                <span>Subtotal</span>
-                <span id="cart-subtotal">$0.00</span>
-            </div>
-            <p class="text-sm text-gray-500 text-center" style="font-family: sans-serif;">Free Shipping on all orders!</p>
-            <button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button>
-        </div>
-    </div>
+    <div id="cart-panel">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-bold">Your Cart</h2>
+            <button id="close-cart-btn" class="text-2xl">&times;</button>
+        </div>
+        <div class="p-4 bg-yellow-100 text-center">
+            <p class="font-semibold text-yellow-800" style="font-family: sans-serif;">Your items are reserved for <span id="cart-timer" class="font-bold">10:00</span>!</p>
+        </div>
+        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto"></div>
+        <div class="p-4 border-t space-y-4">
+            <div class="flex justify-between font-bold text-lg">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">$0.00</span>
+            </div>
+            <p class="text-sm text-gray-500 text-center" style="font-family: sans-serif;">Free Shipping on all orders!</p>
+            <button id="checkout-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-lg">Pay with Card</button>
+        </div>
+    </div>
 
-    <div id="theme-wrapper">
-        <div id="page-container">
-            <header class="py-4 absolute top-0 left-0 w-full z-10">
-                <div class="container mx-auto px-4 flex justify-center">
-                    <a href="/home.html"><img id="header-logo" alt="Brand Logo" class="h-10"></a>
-                </div>
-            </header>
-            <div class="container mx-auto p-4 max-w-5xl pt-20">
-                <div class="bg-red-600 text-white text-center p-3 rounded-lg shadow-lg timer-box mb-6">
-                    <h1 class="text-2xl font-bold">FLASH SALE! Ends In:</h1>
-                    <div id="countdown-timer" class="text-4xl" style="font-family: monospace;">00:00:00</div>
-                </div>
-                <div id="urgent-cta" class="text-center mb-6">
-                    <h3 id="cta-headline" class="text-2xl font-bold text-highlight animate-pulse"></h3>
-                    <p id="cta-subheadline" class="text-gray-500" style="font-family: sans-serif;"></p>
-                </div>
-                <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
-                    <div class="md:flex">
-                        <div id="media-container" class="md:w-1/2 p-4">
-                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
-                            <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
-                        </div>
-                        <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
-                            <div>
-                                <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
-                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2>
-                                <p id="product-description" class="mt-4 text-gray-600" style="font-family: sans-serif;"></p>
-                                <div class="mt-6 flex items-baseline gap-4">
-                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
-                                    <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through"></span></div>
-                                </div>
-                                
-                                <div id="payment-method-messaging" class="mt-4" style="font-family: sans-serif;"></div>
+    <div id="theme-wrapper">
+        <div id="page-container">
+            <header class="py-4 absolute top-0 left-0 w-full z-10">
+                <div class="container mx-auto px-4 flex justify-center">
+                    <a href="/home.html"><img id="header-logo" alt="Brand Logo" class="h-10"></a>
+                </div>
+            </header>
+            <div class="container mx-auto p-4 max-w-5xl pt-20">
+                <div class="bg-red-600 text-white text-center p-3 rounded-lg shadow-lg timer-box mb-6">
+                    <h1 class="text-2xl font-bold">FLASH SALE! Ends In:</h1>
+                    <div id="countdown-timer" class="text-4xl" style="font-family: monospace;">00:00:00</div>
+                </div>
+                <div id="urgent-cta" class="text-center mb-6">
+                    <h3 id="cta-headline" class="text-2xl font-bold text-highlight animate-pulse"></h3>
+                    <p id="cta-subheadline" class="text-gray-500" style="font-family: sans-serif;"></p>
+Â               </div>
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+                    <div class="md:flex">
+                        <div id="media-container" class="md:w-1/2 p-4">
+                            <div id="main-product-video-container" class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden hidden"></div>
+                            <img id="main-product-image" class="w-full aspect-square object-cover rounded-lg shadow-md" src="" alt="Main Product Image">
+Â                       </div>
+                        <div id="product-details-container" class="p-8 md:w-1/2 flex flex-col justify-between">
+                            <div>
+                                <div id="product-badge" class="uppercase tracking-wide text-sm text-highlight font-semibold"></div>
+                                <h2 id="product-name" class="text-3xl font-bold text-gray-900 mt-2"></h2>
+                                <p id="product-description" class="mt-4 text-gray-600" style="font-family: sans-serif;"></p>
+                                <div class="mt-6 flex items-baseline gap-4">
+                                    <div><span class="text-gray-500 text-sm">Total Price</span><span id="product-price" class="text-4xl font-bold text-gray-900"></span></div>
+                                    <div><span class="text-gray-500 text-sm">Was</span><span id="product-original-price" class="text-xl text-gray-500 line-through"></span></div>
+                                </div>
+                                
+                                <div id="payment-method-messaging" class="mt-4" style="font-family: sans-serif;"></div>
 
-                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
-                                <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
-                                    <h4 class="font-bold text-lg text-gray-800">Your Bundle:</h4>
-                                    <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
-                                </div>
-                                <div id="stock-indicator" class="mt-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
-                                    <p class="font-bold">Hurry! Only <span id="stock-count">12</span> left in stock!</p>
-                                </div>
-                            </div>
-                            <div class="mt-8">
-                                <button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="related-products-section" class="p-8 border-t border-gray-200">
-                        <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
-                        <div id="related-products-grid" class="grid grid-cols-3 gap-4">
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-12 space-y-8">
-                    <div id="shipping-section" class="bg-white p-8 rounded-lg shadow-md">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
-                        <p class="text-gray-700" style="font-family: sans-serif;">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
-                    </div>
-                    <div id="reviews-section" class="bg-white p-8 rounded-lg shadow-md">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-900">What Our Customers Say</h3>
-                        <div id="review-container" class="space-y-6"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="add-to-cart-popup" class="modal">
-        <div class="modal-content text-center max-w-md">
-            <span class="close-modal" id="close-popup-btn">&times;</span>
-            <h3 class="text-2xl font-bold text-green-600 mb-4">Successfully Added!</h3>
-            <img id="popup-product-image" src="" alt="Product Image" class="w-32 h-32 object-cover mx-auto rounded-lg mb-4">
-            <p id="popup-message" class="text-gray-700 mb-6"></p>
-            <div class="space-y-3">
-                <button id="popup-view-cart" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg">View Cart & Checkout</button>
-                <button id="popup-continue-shopping" class="w-full text-gray-600 hover:text-indigo-600 font-semibold py-2">Continue Shopping</button>
-            </div>
-        </div>
-    </div>
+                                <div id="interactive-bundle-selector" class="mt-6 space-y-3"></div>
+                                <div id="bundle-summary" class="mt-4 space-y-2" style="display: none;">
+                                    <h4 class="font-bold text-lg text-gray-800">Your Bundle:</h4>
+                                    <div id="bundle-summary-items" class="text-gray-600" style="font-family: sans-serif;"></div>
+                                </div>
+                                <div id="stock-indicator" class="mt-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
+                                    <p class="font-bold">Hurry! Only <span id="stock-count">12</span> left in stock!</p>
+                              _ </div>
+                            </div>
+Â                           <div class="mt-8">
+                                <button id="add-to-cart-button" class="add-to-cart-button w-full text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">Add to Cart</button>
+                            </div>
+                        </div>
+Â                   </div>
+                    <div id="related-products-section" class="p-8 border-t border-gray-200">
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">You May Also Like</h3>
+                        <div id="related-products-grid" class="grid grid-cols-3 gap-4">
+                Â         </div>
+                    </div>
+                </div>
+                <div class="mt-12 space-y-8">
+                    <div id="shipping-section" class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
+                        <p class="text-gray-700" style="font-family: sans-serif;">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
+                    </div>
+                                    </div>
+                
+                                <footer class="text-center py-8 mt-12">
+                    <p class="text-gray-500" style="font-family: sans-serif;">Contact us: <a href="mailto:atfstoragexx@gmail.com" class="hover:underline">atfstoragexx@gmail.com</a></p>
+Â               </footer>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div id="add-to-cart-popup" class="modal">
+        <div class="modal-content text-center max-w-md">
+            <span class="close-modal" id="close-popup-btn">&times;</span>
+            <h3 class="text-2xl font-bold text-green-600 mb-4">Successfully Added!</h3>
+            <img id="popup-product-image" src="" alt="Product Image" class="w-32 h-32 object-cover mx-auto rounded-lg mb-4">
+            <p id="popup-message" class="text-gray-700 mb-6"></p>
+            <div class="space-y-3">
+                <button id="popup-view-cart" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg">View Cart & Checkout</button>
+                <button id="popup-continue-shopping" class="w-full text-gray-600 hover:text-indigo-600 font-semibold py-2">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj';
-    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-    const elements = stripe.elements();
-    let paymentMessage = null;
+    const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj';
+    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+    const elements = stripe.elements();
+    let paymentMessage = null;
 
-    const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
-    const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-    const CHECKOUT_SESSION_URL = '/api/server'; 
-    
-    let product = {};
-    let reviews = [];
-    let cart = [];
-    const appStateKey = 'singleProductPageState_v2'; 
-    
-    let cartTimerInterval = null;
-    let flashSaleTimerInterval = null;
+    const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
+    const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
+    const CHECKOUT_SESSION_URL = '/api/server'; 
+    
+    let product = {};
+    let cart = [];
+    const appStateKey = 'singleProductPageState_v2'; 
+    
+    let cartTimerInterval = null;
+    let flashSaleTimerInterval = null;
 
-    const initialProduct = {
-        name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
-        description: 'The original ATF V1 "TakeOver" design. This is the final production run of this iconic piece. One size fits all. It\'s more than an accessory, it\'s a statement.',
-        ctaHeadline: 'It\'s Time For a TakeOver.',
-        ctaSubheadline: 'Designs so unique, they\'re not just accessories—they\'re walking masterpieces.',
-        originalPrice: '$45.00',
-        theme: 'dark',
-        mediaType: 'video',
-        mediaUrl: 'https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0',
-        bundlePrices: ['$29.95', '$24.95', '$14.95'],
-        variations: {
-            'Design': [
-                { option: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png' },
-                { option: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png' },
-                { option: 'V1 - Burnout Edition', image: 'https://i.imgur.com/lLIgQjD.png' }
-            ]
-        }
-    };
-    const initialReviews = [
-        { rating: 5, title: "Essential for the TakeOver!", text: "This is the new standard for meetups. So many people asked where I got it at the last event. The quality is next level.", author: "Chris G." },
-        { rating: 5, title: "Finally, a design that GETS IT.", text: "Pristine quality, and a design that actually stands out. If you want to break necks, this is it.", author: "Jayden R." },
-        { rating: 5, title: "The Burble Edition is insane", text: "Looks even better in person. This is the perfect final touch for my fit when I take my car out.", author: "Leo S." }
-    ];
-    const relatedProductsData = [
-        { name: 'ATFV12 HOODIE - ICE', image: 'https://i.imgur.com/TZw6FIE.png', url: '/hoodies.html' },
-        { name: 'ATFV12 HOODIE - OOTER', image: 'https://i.imgur.com/eaGeEEL.png', url: '/hoodies.html' },
-        { name: 'ATFV12 HOODIE - PREE', image: 'https://i.imgur.com/tUMU6TR.png', url: '/hoodies.html' }
-    ];
+    const initialProduct = {
+        name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
+        description: 'The original ATF V1 "TakeOver" design. This is the final production run of this iconic piece. One size fits all. It\'s more than an accessory, it\'s a statement.',
+        ctaHeadline: 'It\'s Time For a TakeOver.',
+        ctaSubheadline: 'Designs so unique, they\'re not just accessories—they\'re walking masterpieces.',
+        originalPrice: '$45.00',
+        theme: 'dark',
+        mediaType: 'video',
+        mediaUrl: 'https://www.youtube.com/embed/r6BjqteH-c8?autoplay=1&loop=1&playlist=r6BjqteH-c8&controls=0',
+        bundlePrices: ['$29.95', '$24.95', '$14.95'],
+  _       variations: {
+            'Design': [
+                { option: 'V1 - Turbo Edition', image: 'https://i.imgur.com/ghpj3Nm.png' },
+                { option: 'V1 - Burble Edition', image: 'https://i.imgur.com/9QcKSwf.png' },
+                { option: 'V1 - Burnout Edition', image: 'https://i.imgur.com/lLIgQjD.png' }
+            ]
+        }
+    };
+    // REVIEWS DATA REMOVED
+    const relatedProductsData = [
+        { name: 'ATFV12 HOODIE - ICE', image: 'https://i.imgur.com/TZw6FIE.png', url: '/hoodies.html' },
+        { name: 'ATFV12 HOODIE - OOTER', image: 'https://i.imgur.com/eaGeEEL.png', url: '/hoodies.html' },
+        { name: 'ATFV12 HOODIE - PREE', image: 'https://i.imgur.com/tUMU6TR.png', url: '/hoodies.html' }
+    ];
 
-    function saveState() {
-        localStorage.setItem(appStateKey, JSON.stringify({ cart }));
-    }
+    function saveState() {
+        localStorage.setItem(appStateKey, JSON.stringify({ cart }));
+    }
 
-    function loadState() {
-        product = initialProduct;
-        reviews = initialReviews;
-        const savedState = localStorage.getItem(appStateKey);
-        cart = savedState ? JSON.parse(savedState).cart || [] : [];
-    }
+    function loadState() {
+        product = initialProduct;
+        // reviews = initialReviews; // <-- REMOVED
+        const savedState = localStorage.getItem(appStateKey);
+        cart = savedState ? JSON.parse(savedState).cart || [] : [];
+    }
 
-    const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
+    const dom = new Proxy({}, { get: (_, id) => document.getElementById(id.replace(/([A-Z])/g, "-$1").toLowerCase()) });
 
-    function updateCartIcon() {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        dom.publicCartBadge.textContent = totalItems;
-    }
-    
-    function renderCart() {
-        if (!dom.cartItemsContainer) return;
-        dom.cartItemsContainer.innerHTML = '';
-        let subtotal = 0;
-        
-        const productPrices = {
-            'mainProduct': ['$29.95', '$24.95', '$14.95'],
-            'hoodieProduct': ['$59.95']
-        };
+    function updateCartIcon() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        dom.publicCartBadge.textContent = totalItems;
+    }
+    
+    function renderCart() {
+        if (!dom.cartItemsContainer) return;
+        dom.cartItemsContainer.innerHTML = '';
+        let subtotal = 0;
+        
+        const productPrices = {
+            'mainProduct': ['$29.95', '$24.95', '$14.95'],
+            'hoodieProduct': ['$59.95']
+        };
 
-        const bundleGroups = {};
-        cart.forEach(item => {
-            const productId = item.productId || 'mainProduct'; 
-            if (!bundleGroups[productId]) bundleGroups[productId] = [];
-            bundleGroups[productId].push(item);
-        });
+        const bundleGroups = {};
+        cart.forEach(item => {
+            const productId = item.productId || 'mainProduct'; 
+            if (!bundleGroups[productId]) bundleGroups[productId] = [];
+            bundleGroups[productId].push(item);
+        });
 
-        for (const productId in bundleGroups) {
-            const items = bundleGroups[productId];
-            const prices = productPrices[productId] || ['$99.99'];
-            const bundlePrices = prices.map(p => parseFloat(p.replace('$', '')));
-            
-            items.forEach((item, index) => {
-                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
-                item.price = `$${price.toFixed(2)}`;
-            });
-        }
-        
-        if (cart.length === 0) {
-            dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
-        } else {
-            cart.forEach(item => {
-                const itemEl = document.createElement('div');
-                itemEl.className = 'flex items-center space-x-4 py-3 border-b';
-                itemEl.dataset.variantId = item.variantId;
-                const price = parseFloat(item.price.replace('$', ''));
-                subtotal += price * item.quantity;
-                itemEl.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
-                    <div class="flex-grow">
-                        <p class="font-semibold">${item.name}</p>
-                        <p class="text-sm text-gray-500">${item.variantText}</p> 
-                        <p class="font-bold text-sm">${item.price}</p>
-                    </div>
-                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2" data-variant-id="${item.variantId}">&times;</button>
-                `;
-                dom.cartItemsContainer.appendChild(itemEl);
-            });
-        }
-        if (dom.cartSubtotal) dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-        updateCartIcon();
-    }
+        for (const productId in bundleGroups) {
+            const items = bundleGroups[productId];
+            const prices = productPrices[productId] || ['$99.99'];
+            const bundlePrices = prices.map(p => parseFloat(p.replace('$', '')));
+            
+            items.forEach((item, index) => {
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+                item.price = `$${price.toFixed(2)}`;
+            });
+        }
+        
+        if (cart.length === 0) {
+            dom.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
+        } else {
+            cart.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center space-x-4 py-3 border-b';
+                itemEl.dataset.variantId = item.variantId;
+                const price = parseFloat(item.price.replace('$', ''));
+                subtotal += price * item.quantity;
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                    <div class="flex-grow">
+                        <p class="font-semibold">${item.name}</p>
+Â                       <p class="text-sm text-gray-500">${item.variantText}</p> 
+                        <p class="font-bold text-sm">${item.price}</p>
+                    </div>
+                    <button class="remove-item-btn text-red-500 hover:text-red-700 font-bold text-xl px-2" data-variant-id="${item.variantId}">&times;</button>
+                `;
+                dom.cartItemsContainer.appendChild(itemEl);
+            });
+        }
+        if (dom.cartSubtotal) dom.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        updateCartIcon();
+    }
 
-    function addToCart() {
-        const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
-            name: input.dataset.name,
-            image: input.dataset.image
-        }));
-        
-        if (selectedDesigns.length === 0) {
-            alert("Please select at least one design.");
-            return;
-        }
+    function addToCart() {
+        const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
+            name: input.dataset.name,
+            image: input.dataset.image
+        }));
+        
+        if (selectedDesigns.length === 0) {
+            alert("Please select at least one design.");
+            return;
+        }
 
-        selectedDesigns.forEach(design => {
-            cart.push({
-                productId: 'mainProduct',
-                variantId: `${design.name}|${Date.now()}`,
-                name: product.name,
-                price: product.bundlePrices[0],
-                image: design.image,
-                variantText: design.name,
-                quantity: 1
-            });
-        });
+        // --- New variables for tracking ---
+        let itemsForGtag = [];
+        let totalValue = 0;
+        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
+        // --- End new variables ---
 
-        saveState();
-        renderCart();
-        showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
-        
-        startCartTimer(); 
-        fbq('track', 'AddToCart'); 
-    }
-    
-    function showItemAddedPopup(popupProduct, message) {
-        if (!dom.addToCartPopup) return;
-        clearTimeout(dom.popupTimeout);
-        dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
-        dom.popupMessage.innerHTML = message;
-        dom.addToCartPopup.style.display = 'block';
-        dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
-    }
+        selectedDesigns.forEach((design, index) => {
+            const variantId = `${design.name}|${Date.now()}`;
+            let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+            
+            cart.push({
+                productId: 'mainProduct',
+                variantId: variantId,
+                name: product.name,
+                price: `$${price.toFixed(2)}`, // Use calculated price
+                image: design.image,
+                variantText: design.name,
+                quantity: 1
+            });
 
-    function updateBundleSummary() {
-        const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
-        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
-        let total = 0;
-        let originalTotal = 0;
-        
-        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
-        if (selectedInputs.length > 0) {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
-            selectedInputs.forEach((input, index) => {
-                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
-                total += price;
-                originalTotal += parseFloat(product.originalPrice.replace('$', ''));
-                const itemEl = document.createElement('div');
-                itemEl.className = 'flex justify-between items-center text-sm';
-                itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name}</span><span class="font-bold">$${price.toFixed(2)}</span>`;
-                if (dom.bundleSummaryItems) dom.bundleSummaryItems.appendChild(itemEl);
-            });
-        } else {
-            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
-        }
-        if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
-        if (dom.productOriginalPrice) dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
-        
-        if (paymentMessage && total > 0) {
-            const totalInCents = Math.round(total * 100);
-            paymentMessage.update({ amount: totalInCents, currency: 'USD' });
-        }
-    }
+            // --- Build the item for Google Analytics ---
+            itemsForGtag.push({
+                item_id: variantId,
+                item_name: product.name,
+                item_variant: design.name,
+                price: price,
+                quantity: 1
+            });
+            totalValue += price;
+            // --- End gtag item build ---
+        });
 
-    function renderProduct() {
-        document.body.dataset.theme = product.theme || 'light';
-        dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
-        dom.productName.textContent = product.name;
-        dom.productDescription.textContent = product.description;
-        dom.ctaHeadline.textContent = product.ctaHeadline;
-        dom.ctaSubheadline.textContent = product.ctaSubheadline;
-        dom.productBadge.textContent = 'Limited Edition Bundle Deal';
+        saveState();
+        renderCart();
+        showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
+        
+        startCartTimer(); 
+        
+        // --- PIXEL TRACKING ---
+        fbq('track', 'AddToCart'); 
+        
+        gtag('event', 'add_to_cart', {
+            currency: 'USD',
+            value: totalValue,
+            items: itemsForGtag
+        });
+    }
+    
+    function showItemAddedPopup(popupProduct, message) {
+Read     if (!dom.addToCartPopup) return;
+        clearTimeout(dom.popupTimeout);
+        dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
+        dom.popupMessage.innerHTML = message;
+        dom.addToCartPopup.style.display = 'block';
+        dom.popupTimeout = setTimeout(() => { dom.addToCartPopup.style.display = 'none'; }, 5000);
+D   }
 
-        if (product.mediaType === 'video' && product.mediaUrl) {
-            dom.mainProductImage.style.display = 'none';
-            dom.mainProductVideoContainer.style.display = 'block';
-            dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        } else {
-            dom.mainProductImage.style.display = 'block';
-            dom.mainProductVideoContainer.style.display = 'none';
-            dom.mainProductImage.src = product.mediaUrl || 'https://placehold.co/600x600';
-        }
+    function updateBundleSummary() {
+        const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
+        const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
+        let total = 0;
+        let originalTotal = 0;
+        
+        if (dom.bundleSummaryItems) dom.bundleSummaryItems.innerHTML = '';
+        if (selectedInputs.length > 0) {
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'block';
+            selectedInputs.forEach((input, index) => {
+                let price = bundlePrices[Math.min(index, bundlePrices.length - 1)];
+                total += price;
+                originalTotal += parseFloat(product.originalPrice.replace('$', ''));
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex justify-between items-center text-sm';
+                itemEl.innerHTML = `<span>Item ${index + 1}: ${input.dataset.name}</span><span class="font-bold">$${price.toFixed(2)}</span>`;
+                if (dom.bundleSummaryItems) dom.bundleSummaryItems.appendChild(itemEl);
+            });
+        } else {
+            if (dom.bundleSummary) dom.bundleSummary.style.display = 'none';
+        }
+        if (dom.productPrice) dom.productPrice.textContent = `$${total.toFixed(2)}`;
+        if (dom.productOriginalPrice) dom.productOriginalPrice.textContent = `$${originalTotal.toFixed(2)}`;
+        
+        if (paymentMessage && total > 0) {
+            const totalInCents = Math.round(total * 100);
+            paymentMessage.update({ amount: totalInCents, currency: 'USD' });
+        }
+    }
 
-        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
-        const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
-        const designKey = Object.keys(product.variations)[0];
+    function renderProduct() {
+        document.body.dataset.theme = product.theme || 'light';
+        dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
+        dom.productName.textContent = product.name;
+        dom.productDescription.textContent = product.description;
+        dom.ctaHeadline.textContent = product.ctaHeadline;
+        dom.ctaSubheadline.textContent = product.ctaSubheadline;
+        dom.productBadge.textContent = 'Limited Edition Bundle Deal';
 
-        if (designKey) {
-            product.variations[designKey].forEach(variation => {
-                const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
-                const optionEl = document.createElement('div');
-                optionEl.className = 'bundle-image-option';
-                optionEl.innerHTML = `
-                    <input type="checkbox" id="${optionId}" data-name="${variation.option}" data-image="${variation.image}" class="sr-only">
-                    <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
-                        <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
-                        <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
-                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75">
-                            <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-                        </div>
-                    </label>
-                `;
-                gridContainer.appendChild(optionEl);
-                optionEl.querySelector('label').addEventListener('click', () => {
-                    dom.mainProductImage.style.display = 'block';
-                    dom.mainProductVideoContainer.style.display = 'none';
-                    dom.mainProductImage.src = variation.image;
-                });
-            });
-            
-            const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]');
-            if (firstBundleOption) {
-                firstBundleOption.checked = true;
-            }
-        }
-        updateBundleSummary();
-    }
-    
-    function renderReviews() {
-        if (!dom.reviewContainer) return;
-        dom.reviewContainer.innerHTML = reviews.map(review => {
-            const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-            return `<div class="border-b pb-4 last:border-b-0"><div class="flex items-center mb-2"><span class="text-yellow-500">${stars}</span><strong class="ml-2 text-gray-800">${review.title}</strong></div><p class="text-gray-700" style="font-family: sans-serif;">"${review.text}"</p><p class="text-sm text-gray-500 mt-2">- ${review.author}</p></div>`;
-        }).join('');
-    }
-    
-    function renderRelatedProducts() {
-        const grid = dom.relatedProductsGrid;
-        if (!grid) return;
+        if (product.mediaType === 'video' && product.mediaUrl) {
+            dom.mainProductImage.style.display = 'none';
+            dom.mainProductVideoContainer.style.display = 'block';
+            dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        } else {
+            dom.mainProductImage.style.display = 'block';
+            dom.mainProductVideoContainer.style.display = 'none';
+            dom.mainProductImage.src = product.mediaUrl || 'https://placehold.co/600x600';
+        }
 
-        grid.innerHTML = relatedProductsData.map(product => `
-            <a href="${product.url}" class="related-product-card text-gray-900 no-underline">
-                <img src="${product.image}" alt="${product.name}">
-                <div class="related-product-card-info">
-                    <h4 class="text-sm font-semibold">${product.name}</h4>
-                </div>
-            </a>
-        `).join('');
-    }
+        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
+A       const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
+        const designKey = Object.keys(product.variations)[0];
 
-    function startFlashSaleTimer() {
-        let duration = 20 * 60;
-        clearInterval(flashSaleTimerInterval);
-        flashSaleTimerInterval = setInterval(() => {
-            if (duration <= 0) {
-                clearInterval(flashSaleTimerInterval);
-                dom.countdownTimer.textContent = "00:00:00";
-                return;
-            }
-            duration--;
-            const h = String(Math.floor(duration / 3600)).padStart(2, '0');
-            const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
-            const s = String(duration % 60).padStart(2, '0');
-            dom.countdownTimer.textContent = `${h}:${m}:${s}`;
-        }, 1000);
-    }
-    
-    function startCartTimer() {
-        let duration = 10 * 60;
-        clearInterval(cartTimerInterval); 
-        cartTimerInterval = setInterval(() => {
-            if (duration <= 0) {
-                clearInterval(cartTimerInterval);
-                if(dom.cartTimer) dom.cartTimer.textContent = "00:00";
-                return;
-            }
-            duration--;
-            const m = String(Math.floor(duration / 60)).padStart(2, '0');
-            const s = String(duration % 60).padStart(2, '0');
-            if(dom.cartTimer) dom.cartTimer.textContent = `${m}:${s}`;
-        }, 1000);
-    }
-    
-    function startSocialProof() {
-        const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
-        setInterval(() => {
-            const name = product.name.split(' ').slice(0, 2).join(' ');
-            const loc = locations[Math.floor(Math.random() * locations.length)];
-            if (dom.socialProofPopup) {
-                dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
-                dom.socialProofPopup.classList.add('show');
-                setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
-            }
-        }, 15000);
-    }
-    
-    function initializePaymentMessage() {
-        if (!product.bundlePrices || product.bundlePrices.length === 0) return;
-        
-        const initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
-        if (initialPriceInCents <= 0) return;
+        if (designKey) {
+            product.variations[designKey].forEach(variation => {
+                const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
+                const optionEl = document.createElement('div');
+                optionEl.className = 'bundle-image-option';
+                optionEl.innerHTML = `
+                    <input type="checkbox" id="${optionId}" data-name="${variation.option}" data-image="${variation.image}" class="sr-only">
+                    <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
+                        <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
+                        <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
+                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75">
+                            <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                        </div>
+                    </label>
+                `;
+                gridContainer.appendChild(optionEl);
+                optionEl.querySelector('label').addEventListener('click', () => {
+                    dom.mainProductImage.style.display = 'block';
+                    dom.mainProductVideoContainer.style.display = 'none';
+                    dom.mainProductImage.src = variation.image;
+                });
+          t });
+            
+            const firstBundleOption = dom.interactiveBundleSelector.querySelector('input[type="checkbox"]');
+s           if (firstBundleOption) {
+                firstBundleOption.checked = true;
+            }
+        }
+        updateBundleSummary();
+    }
+    
+    // FUNCTION renderReviews() REMOVED
+    
+    function renderRelatedProducts() {
+        const grid = dom.relatedProductsGrid;
+        if (!grid) return;
 
-        const options = {
-            amount: initialPriceInCents,
-            currency: 'USD',
-        };
+        grid.innerHTML = relatedProductsData.map(product => `
+            <a href="${product.url}" class="related-product-card text-gray-900 no-underline">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="related-product-card-info">
+                    <h4 class="text-sm font-semibold">${product.name}</h4>
+Â               </div>
+            </a>
+        `).join('');
+    }
 
-        try {
-            paymentMessage = elements.create('paymentMethodMessaging', options);
-        } catch (e) {
-            console.error("Error creating payment message element:", e);
-            return;
-        }
+    function startFlashSaleTimer() {
+        let duration = 20 * 60;
+        clearInterval(flashSaleTimerInterval);
+        flashSaleTimerInterval = setInterval(() => {
+    Â       if (duration <= 0) {
+                clearInterval(flashSaleTimerInterval);
+                dom.countdownTimer.textContent = "00:00:00";
+                return;
+            }
+            duration--;
+            const h = String(Math.floor(duration / 3600)).padStart(2, '0');
+D           const m = String(Math.floor((duration % 3600) / 60)).padStart(2, '0');
+            const s = String(duration % 60).padStart(2, '0');
+            dom.countdownTimer.textContent = `${h}:${m}:${s}`;
+        }, 1000);
+    }
+    
+    function startCartTimer() {
+      s   let duration = 10 * 60;
+        clearInterval(cartTimerInterval); 
+        cartTimerInterval = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(cartTimerInterval);
+                if(dom.cartTimer) dom.cartTimer.textContent = "00:00";
+                return;
+    Â       }
+            duration--;
+            const m = String(Math.floor(duration / 60)).padStart(2, '0');
+Â           const s = String(duration % 60).padStart(2, '0');
+            if(dom.cartTimer) dom.cartTimer.textContent = `${m}:${s}`;
+        }, 1000);
+    }
+    
+    function startSocialProof() {
+        const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
+Â       setInterval(() => {
+            const name = product.name.split(' ').slice(0, 2).join(' ');
+            const loc = locations[Math.floor(Math.random() * locations.length)];
+            if (dom.socialProofPopup) {
+                dom.socialProofPopup.innerHTML = `🔥 Someone from <b>${loc}</b> just purchased a ${name}!`;
+Â nbsp;             dom.socialProofPopup.classList.add('show');
+                setTimeout(() => { dom.socialProofPopup.classList.remove('show'); }, 5000);
+            }
+        }, 15000);
+    }
+    
+    function initializePaymentMessage() {
+        if (!product.bundlePrices || product.bundlePrices.length === 0) return;
+        
+        const initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
+        if (initialPriceInCents <= 0) return;
 
-        const mountPoint = dom.paymentMethodMessaging;
-        if (mountPoint) {
-            paymentMessage.mount(mountPoint);
-        }
-    }
+        const options = {
+            amount: initialPriceInCents,
+Â           currency: 'USD',
+        };
 
-    function initializeApp() {
-        loadState();
-        renderProduct(); 
-        renderReviews();
-        renderCart(); 
-        renderRelatedProducts();
-        initializePaymentMessage(); 
-        startFlashSaleTimer(); 
-        startSocialProof();
+        try {
+            paymentMessage = elements.create('paymentMethodMessaging', options);
+        } catch (e) {
+            console.error("Error creating payment message element:", e);
+            return;
+    What   }
 
-        dom.addToCartButton.addEventListener('click', addToCart);
-        dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
-        
-        const openCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); }};
-        if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
-        
-        const closeCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); }};
-        if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', closeCart);
-        if(dom.cartOverlay) dom.cartOverlay.addEventListener('click', closeCart);
+        const mountPoint = dom.paymentMethodMessaging;
+        if (mountPoint) {
+            paymentMessage.mount(mountPoint);
+        }
+    }
 
-        if(dom.cartItemsContainer) {
-            dom.cartItemsContainer.addEventListener('click', (e) => {
-                if (e.target.matches('.remove-item-btn')) {
-                    const variantIdToRemove = e.target.dataset.variantId;
-                    cart = cart.filter(item => item.variantId !== variantIdToRemove);
-                    saveState();
-                    renderCart();
-                }
-            });
-        }
+    function initializeApp() {
+        loadState();
+        renderProduct(); 
+        // renderReviews(); // <-- REMOVED
+        renderCart(); 
+        renderRelatedProducts();
+        initializePaymentMessage(); 
+        startFlashSaleTimer(); 
+        startSocialProof();
 
-        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
-        if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
-        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+        dom.addToCartButton.addEventListener('click', addToCart);
+        dom.interactiveBundleSelector.addEventListener('change', updateBundleSummary);
+        
+        const openCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.add('open'); dom.cartOverlay.classList.add('open'); }};
+A       if(dom.publicCartButton) dom.publicCartButton.addEventListener('click', openCart);
+        
+        const closeCart = () => { if(dom.cartPanel) { dom.cartPanel.classList.remove('open'); dom.cartOverlay.classList.remove('open'); }};
+What     if(dom.closeCartBtn) dom.closeCartBtn.addEventListener('click', closeCart);
+        if(dom.cartOverlay) dom.cartOverlay.addEventListener('click', closeCart);
 
-        if(dom.checkoutBtn) {
-            dom.checkoutBtn.addEventListener('click', async () => {
-                if (cart.length === 0) return;
-                dom.checkoutBtn.textContent = 'Connecting...';
-                dom.checkoutBtn.disabled = true;
-                
-                fbq('track', 'InitiateCheckout'); 
-                
-                const line_items = cart.map(item => ({
-                    price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
-                    quantity: item.quantity,
-                }));
+        if(dom.cartItemsContainer) {
+            dom.cartItemsContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.remove-item-btn')) {
+                    const variantIdToRemove = e.target.dataset.variantId;
+                    cart = cart.filter(item => item.variantId !== variantIdToRemove);
+                    saveState();
+                    renderCart();
+                }
+            });
+        }
 
-                try {
-                    const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
-                    if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
-                    const { url } = await response.json();
-                    if (url) window.location.href = url;
-                } catch (error) {
-                    console.error('Checkout error:', error);
-                     alert('Could not connect to checkout. Please try again.');
-                } finally {
-                    dom.checkoutBtn.textContent = 'Pay with Card';
-                    dom.checkoutBtn.disabled = false;
-                }
-            });
-        }
-    }
+        if(dom.popupContinueShopping) dom.popupContinueShopping.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
+Methods     if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; openCart(); });
+        if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { dom.addToCartPopup.style.display = 'none'; });
 
-    initializeApp();
+        if(dom.checkoutBtn) {
+            dom.checkoutBtn.addEventListener('click', async () => {
+                if (cart.length === 0) return;
+  t             dom.checkoutBtn.textContent = 'Connecting...';
+                dom.checkoutBtn.disabled = true;
+                
+                fbq('track', 'InitiateCheckout');Two
+                
+                const line_items = cart.map(item => ({
+                    price_data: { currency: 'usd', product_data: { name: `${item.name} (${item.variantText})`, images: [item.image] }, unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100) },
+                    quantity: item.quantity,
+                }));
+
+                try {
+                    const response = await fetch(CHECKOUT_SESSION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: line_items }) });
+Methods               if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+                    const { url } = await response.json();
+                    if (url) window.location.href = url;
+What             } catch (error) {
+                    console.error('Checkout error:', error);
+                     alert('Could not connect to checkout. Please try again.');
+                } finally {
+            t       dom.checkoutBtn.textContent = 'Pay with Card';
+                    dom.checkoutBtn.disabled = false;
+                }
+            });
+        }
+    }
+
+    initializeApp();
 });
 </script>
 </body>
