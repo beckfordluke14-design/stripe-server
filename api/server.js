@@ -41,7 +41,7 @@ export default async function handler(req, res) {
           promotions: 'auto',
         },
         customer_creation: 'always',
-        success_url: `https://alltheseflows.shop/success`,
+        success_url: `https://alltheseflows.shop/confirm.html`,
         cancel_url: `https://alltheseflows.shop/`,
       });
 
