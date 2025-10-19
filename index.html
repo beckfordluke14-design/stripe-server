@@ -169,7 +169,7 @@
         </div>
     </div>
 
-<script>
+<script src="/cart.js"></script> <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- STRIPE INITIALIZATION ---
     const STRIPE_PUBLISHABLE_KEY = 'pk_live_51SIdrnHPi9QM97mFMDciuMPOW7GX2mXliZq769HyO6WKs52bIqwXbRg5nK1IDAIQFK8DYexoiZftmPYtx8WG1H2D001i6OPZZj';
@@ -180,7 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
     const LOGO_URL_WHITE = 'https://i.imgur.com/7B5NkbX.png';
     const LOGO_URL_BLACK = 'https://i.imgur.com/mY9JuRX.png';
-    const CHECKOUT_SESSION_URL = '/api/server';
+    // CHECKOUT_SESSION_URL is now defined globally in cart.js if needed there, or keep local if only used here
+    // const CHECKOUT_SESSION_URL = '/api/server';
 
     // --- STATE MANAGEMENT ---
     let product = {};
@@ -226,6 +227,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- !!! UPDATED addToCart Function for Mask Page !!! ---
     function addToCart() {
+        if (!dom.interactiveBundleSelector) return; // Add check
+
         const selectedDesigns = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked')).map(input => ({
             name: input.dataset.name,
             image: input.dataset.image
@@ -268,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     content_ids: pixel_content_ids,    // Array of variant IDs added
                     content_name: product.name,        // Base product name (e.g., "ATF V1 'TakeOver' Mask")
                     content_category: 'Apparel & Accessories > Clothing Accessories > Masks', // Optional: Add category
-                    content_type: 'product_group',     // Use 'product_group' if multiple variants added, 'product' if only one
+                    content_type: 'product_group',     // Use 'product_group' if multiple variants added, 'product' if only one possible
                     value: pixel_value,                // Total value of items added in this click
                     currency: 'USD'                    // IMPORTANT: Change 'USD' if needed
                 });
@@ -278,26 +281,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // --- END OF ENHANCED FB PIXEL CODE ---
 
-        window.saveState(); // Use global saveState
-        window.renderCart(); // Use global renderCart
+        // Use global functions if they exist
+        if(window.saveState) window.saveState();
+        if(window.renderCart) window.renderCart();
         showItemAddedPopup({ mediaUrl: selectedDesigns[0].image, mediaType: 'image' }, `Added <strong>${selectedDesigns.length} items</strong> to your cart!`);
+        if(window.startCartTimer) window.startCartTimer();
 
-        window.startCartTimer(); // Use global startCartTimer
     }
     // --- !!! END of UPDATED addToCart Function !!! ---
 
     function showItemAddedPopup(popupProduct, message) {
         if (!dom.addToCartPopup) return;
         clearTimeout(dom.popupTimeout);
-        dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
-        dom.popupMessage.innerHTML = message;
+        if(dom.popupProductImage) dom.popupProductImage.src = popupProduct.mediaUrl || 'https://placehold.co/128x128';
+        if(dom.popupMessage) dom.popupMessage.innerHTML = message;
         dom.addToCartPopup.style.display = 'block';
         // Auto close after 5 seconds
         dom.popupTimeout = setTimeout(() => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; }, 5000);
     }
 
     function updateBundleSummary() {
-        if (!dom.interactiveBundleSelector) return; // Ensure element exists
+        if (!dom.interactiveBundleSelector || !product || !product.bundlePrices) return; // Add checks
 
         const selectedInputs = Array.from(dom.interactiveBundleSelector.querySelectorAll('input:checked'));
         const bundlePrices = product.bundlePrices.map(p => parseFloat(p.replace('$', '')));
@@ -321,9 +325,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else {
             if (dom.bundleSummary) dom.bundleSummary.style.display = 'none'; // Hide summary if nothing selected
-            // If nothing selected, maybe show the price for ONE item by default?
-             total = bundlePrices[0] || 0; // Default to first price if available
-             originalTotal = parseFloat(product.originalPrice.replace('$', '')) || 0;
+            // If nothing selected, set price based on potentially pre-selected item or default
+            total = 0; // Or calculate based on a default if needed
+            originalTotal = 0;
         }
 
         // Update main price displays
@@ -333,10 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Stripe Payment Messaging if initialized
         if (paymentMessage) { // Check if paymentMessage exists
              const totalInCents = Math.round(total * 100);
-             // Ensure amount is at least 1 cent for Stripe if total is 0 but maybe shouldn't be
-             const displayAmount = Math.max(totalInCents, 1);
+             // Ensure amount is at least 1 cent for Stripe if total is 0, default to first item price if needed
+             const displayAmount = totalInCents > 0 ? totalInCents : (bundlePrices.length > 0 ? Math.round(bundlePrices[0] * 100) : 1);
              try {
-                paymentMessage.update({ amount: displayAmount, currency: 'USD' }); // Use the calculated total or a minimum
+                paymentMessage.update({ amount: Math.max(displayAmount, 1), currency: 'USD' }); // Use the calculated total or a minimum of 1 cent
              } catch(e) {
                  console.error("Error updating payment message:", e);
              }
@@ -344,72 +348,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- !!! UPDATED renderProduct Function for Mask Page !!! ---
+    // --- !!! UPDATED renderProduct Function for Mask Page with Auto-Select !!! ---
     function renderProduct() {
         product = initialProduct; // Load initial product data
         document.body.dataset.theme = product.theme || 'light';
-        dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
-        dom.productName.textContent = product.name; // Updated Name
-        dom.productDescription.textContent = product.description;
-        dom.ctaHeadline.textContent = product.ctaHeadline;
-        dom.ctaSubheadline.textContent = product.ctaSubheadline;
-        dom.productBadge.textContent = 'Limited Edition Bundle Deal';
+        if (dom.headerLogo) dom.headerLogo.src = (product.theme === 'light') ? LOGO_URL_BLACK : LOGO_URL_WHITE;
+        if (dom.productName) dom.productName.textContent = product.name; // Updated Name
+        if (dom.productDescription) dom.productDescription.textContent = product.description;
+        if (dom.ctaHeadline) dom.ctaHeadline.textContent = product.ctaHeadline;
+        if (dom.ctaSubheadline) dom.ctaSubheadline.textContent = product.ctaSubheadline;
+        if (dom.productBadge) dom.productBadge.textContent = 'Limited Edition Bundle Deal';
 
         if (product.mediaType === 'video' && product.mediaUrl) {
-            dom.mainProductImage.style.display = 'none';
-            dom.mainProductVideoContainer.style.display = 'block';
-            dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+           if(dom.mainProductImage) dom.mainProductImage.style.display = 'none';
+           if(dom.mainProductVideoContainer) {
+                dom.mainProductVideoContainer.style.display = 'block';
+                dom.mainProductVideoContainer.innerHTML = `<iframe class="w-full h-full aspect-video" src="${product.mediaUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            }
         } else {
-            dom.mainProductImage.style.display = 'block';
-            dom.mainProductVideoContainer.style.display = 'none';
+           if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
+           if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
             // Set initial image from first variation if media is not video
              if(product.variations && product.variations['Design'] && product.variations['Design'][0]){
-                dom.mainProductImage.src = product.variations['Design'][0].image;
+               if(dom.mainProductImage) dom.mainProductImage.src = product.variations['Design'][0].image;
              } else {
-                dom.mainProductImage.src = 'https://placehold.co/600x600'; // Fallback
+               if(dom.mainProductImage) dom.mainProductImage.src = 'https://placehold.co/600x600'; // Fallback
              }
         }
 
-        dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
-        const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
-        const designKey = Object.keys(product.variations)[0]; // Assumes first key is 'Design'
+        if (dom.interactiveBundleSelector) {
+            dom.interactiveBundleSelector.innerHTML = '<h4 class="font-bold text-lg text-gray-800 mb-2">Build Your Bundle & Save!</h4><div class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>';
+            const gridContainer = dom.interactiveBundleSelector.querySelector('.grid');
+            const designKey = Object.keys(product.variations || {})[0]; // Safer access
 
-        if (designKey && product.variations[designKey]) {
-            product.variations[designKey].forEach((variation, index) => { // Added index
-                const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
-                const optionEl = document.createElement('div');
-                optionEl.className = 'bundle-image-option';
-                optionEl.innerHTML = `
-                    <input type="checkbox" id="${optionId}" data-name="${variation.option}" data-image="${variation.image}" class="sr-only">
-                    <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
-                        <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
-                        <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
-                        <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75 transition-all">
-                            <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-                        </div>
-                    </label>
-                `;
-                gridContainer.appendChild(optionEl);
+            if (designKey && product.variations && product.variations[designKey]) {
+                product.variations[designKey].forEach((variation, index) => { // Added index
+                    const optionId = `bundle-opt-${variation.option.replace(/\s+/g, '-')}`;
+                    const optionEl = document.createElement('div');
+                    optionEl.className = 'bundle-image-option';
+                    optionEl.innerHTML = `
+                        <input type="checkbox" id="${optionId}" data-name="${variation.option}" data-image="${variation.image}" class="sr-only">
+                        <label for="${optionId}" class="block relative border-2 border-gray-200 rounded-lg cursor-pointer transition-all p-1">
+                            <img src="${variation.image}" class="w-full h-24 object-cover rounded-md">
+                            <p class="text-center text-sm font-semibold mt-1">${variation.option}</p>
+                            <div class="bundle-checkmark absolute top-1 right-1 h-6 w-6 bg-white/70 rounded-full flex items-center justify-center opacity-0 transform scale-75 transition-all">
+                                <svg class="h-4 w-4 text-white" style="fill: var(--color-accent);" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                            </div>
+                        </label>
+                    `;
+                    gridContainer.appendChild(optionEl);
 
-                // --- AUTO SELECT FIRST ITEM ---
-                if (index === 0) {
-                    const firstCheckbox = optionEl.querySelector('input');
-                    firstCheckbox.checked = true;
-                     // Also update the main image to the first item if it's not a video
-                     if (product.mediaType !== 'video') {
-                         dom.mainProductImage.src = variation.image;
-                     }
-                }
-                // --- END AUTO SELECT ---
+                    // --- AUTO SELECT FIRST ITEM ---
+                    if (index === 0) {
+                        const firstCheckbox = optionEl.querySelector('input');
+                        if (firstCheckbox) firstCheckbox.checked = true;
+                         // Also update the main image to the first item if it's not a video
+                         if (product.mediaType !== 'video' && dom.mainProductImage) {
+                             dom.mainProductImage.src = variation.image;
+                         }
+                    }
+                    // --- END AUTO SELECT ---
 
-                optionEl.querySelector('label').addEventListener('click', (e) => {
-                    // Update main image display when label is clicked
-                    dom.mainProductImage.style.display = 'block';
-                    dom.mainProductVideoContainer.style.display = 'none';
-                    dom.mainProductImage.src = variation.image;
-                    // Note: updateBundleSummary is called by the 'change' event on the selector div
+                    const label = optionEl.querySelector('label');
+                    if (label) {
+                        label.addEventListener('click', (e) => {
+                            // Update main image display when label is clicked
+                           if(dom.mainProductImage) dom.mainProductImage.style.display = 'block';
+                           if(dom.mainProductVideoContainer) dom.mainProductVideoContainer.style.display = 'none';
+                           if(dom.mainProductImage) dom.mainProductImage.src = variation.image;
+                            // updateBundleSummary will be called by the 'change' event
+                        });
+                    }
                 });
-            });
+            }
         }
         updateBundleSummary(); // Call after rendering options AND setting default check
     }
@@ -447,6 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(flashSaleTimerInterval);
                 if(dom.countdownTimer) dom.countdownTimer.textContent = "00:00:00";
                 // Optionally disable add to cart or change sale message here
+                if(dom.addToCartButton) dom.addToCartButton.disabled = true; // Example: Disable button
+                if(dom.addToCartButton) dom.addToCartButton.textContent = "Sale Ended";
                 return;
             }
             duration--;
@@ -477,15 +490,19 @@ document.addEventListener('DOMContentLoaded', () => {
                  // If popup element doesn't exist, stop trying
                  clearInterval(intervalId);
              }
-        }, 15000);
+        }, 20000); // Adjusted interval to 20 seconds
     }
 
     function initializePaymentMessage() {
-        if (!product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging) return;
+        if (!product || !product.bundlePrices || product.bundlePrices.length === 0 || !dom.paymentMethodMessaging) return;
 
         // Use the price of the first item (assuming one is pre-selected)
         const initialPriceInCents = Math.round(parseFloat(product.bundlePrices[0].replace('$', '')) * 100);
-        if (initialPriceInCents <= 0) return;
+        if (initialPriceInCents <= 0) {
+            console.warn("Initial price for payment message is zero or invalid.");
+            return; // Don't initialize if price is invalid
+        }
+
 
         const options = {
             amount: initialPriceInCents,
@@ -500,13 +517,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function initializeApp() {
+    // Main initialization function for THIS page's specific logic
+    function initializeThisPage() {
         // Load initial data (local to this page)
         product = initialProduct;
         reviews = initialReviews;
 
         // Render page elements specific to this page
-        renderProduct();
+        renderProduct(); // This now auto-selects the first item
         renderReviews();
         renderRelatedProducts();
         initializePaymentMessage();
@@ -522,30 +540,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if(dom.popupViewCart) dom.popupViewCart.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; if(window.openCart) window.openCart(); }); // Use global openCart
         if(dom.closePopupBtn) dom.closePopupBtn.addEventListener('click', () => { if(dom.addToCartPopup) dom.addToCartPopup.style.display = 'none'; });
 
-        // Global cart interactions (opening/closing panel, removing items, checkout)
-        // should be handled by cart.js listeners if the element IDs are consistent.
-        // Make sure IDs like 'public-cart-button', 'close-cart-btn', 'cart-overlay',
-        // 'cart-items-container', 'checkout-btn' are present and consistent if cart.js uses them.
-    }
-
-    // --- Load global cart script AFTER this page's specific logic ---
-    const cartScript = document.createElement('script');
-    cartScript.src = '/cart.js'; // Make sure this path is correct
-    cartScript.onload = () => {
-        console.log("Global cart.js loaded for index.html.");
-        initializeApp(); // Initialize this page's specific logic AFTER global cart is ready
-        // Manually call renderCart from global script to populate cart panel initially
+        // Initial render of the global cart display AFTER cart.js has loaded and potentially populated window.cart
         if (window.renderCart) {
             window.renderCart();
+        } else {
+            console.warn("Global renderCart function not found after loading cart.js");
         }
-    };
-    cartScript.onerror = () => {
-        console.error("Failed to load global cart.js!");
-         initializeApp(); // Still try to init page, but cart might not work fully
-    };
-    document.body.appendChild(cartScript);
+    }
 
-});
+    // Wait for the DOM and ensure cart.js is loaded before initializing page logic
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeThisPage);
+    } else {
+        // DOM is already ready, maybe cart.js loaded first or simultaneously
+        initializeThisPage();
+    }
+
+}); // End of main DOMContentLoaded wrapper
 </script>
 </body>
 </html>
