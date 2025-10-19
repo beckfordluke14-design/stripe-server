@@ -148,11 +148,20 @@
                         <h3 class="text-2xl font-bold mb-4 text-gray-900">Shipping Information</h3>
                         <p class="text-gray-700" style="font-family: sans-serif;">Your order will be processed within 24 hours. **Expected shipping time is 2.5 weeks.** You'll receive a tracking number as soon as it ships.</p>
                     </div>
-                    <div id="reviews-section" class="bg-white p-8 rounded-lg shadow-md">
-                        <h3 class="text-2xl font-bold mb-4 text-gray-900">What Our Customers Say</h3>
-                        <div id="review-container" class="space-y-6"></div>
-                    </div>
                 </div>
+
+                <footer class="text-center py-8 mt-12 border-t border-gray-700">
+                    <div class="container mx-auto px-4">
+                        <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                        <p class="text-gray-400" style="font-family: sans-serif;">
+                            Email: <a href="mailto:ATFSTORAGEXX@GMAIL.COM" class="hover:text-white">ATFSTORAGEXX@GMAIL.COM</a>
+                        </p>
+                        <p class="text-gray-400" style="font-family: sans-serif;">
+                            Phone: <a href="tel:+13106940695" class="hover:text-white">(310) 694-0695</a>
+                        </p>
+                    </div>
+                </footer>
+
             </div>
         </div>
     </div>
@@ -182,12 +191,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const CHECKOUT_SESSION_URL = '/api/server'; 
     
     let product = {};
-    let reviews = [];
     let cart = [];
     const appStateKey = 'singleProductPageState_v2'; 
     
     let cartTimerInterval = null;
     let flashSaleTimerInterval = null;
+    let stockTickerInterval = null;
 
     const initialProduct = {
         name: 'ATF V1 "TakeOver" Balaclava [Final Run]',
@@ -207,11 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         }
     };
-    const initialReviews = [
-        { rating: 5, title: "Essential for the TakeOver!", text: "This is the new standard for meetups. So many people asked where I got it at the last event. The quality is next level.", author: "Chris G." },
-        { rating: 5, title: "Finally, a design that GETS IT.", text: "Pristine quality, and a design that actually stands out. If you want to break necks, this is it.", author: "Jayden R." },
-        { rating: 5, title: "The Burble Edition is insane", text: "Looks even better in person. This is the perfect final touch for my fit when I take my car out.", author: "Leo S." }
-    ];
+
     const relatedProductsData = [
         { name: 'ATFV12 HOODIE - ICE', image: 'https://i.imgur.com/TZw6FIE.png', url: '/hoodies.html' },
         { name: 'ATFV12 HOODIE - OOTER', image: 'https://i.imgur.com/eaGeEEL.png', url: '/hoodies.html' },
@@ -224,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadState() {
         product = initialProduct;
-        reviews = initialReviews;
         const savedState = localStorage.getItem(appStateKey);
         cart = savedState ? JSON.parse(savedState).cart || [] : [];
     }
@@ -296,7 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
         
         if (selectedDesigns.length === 0) {
-            alert("Please select at least one design.");
+            // Using a custom modal instead of alert
+            showCustomAlert("Please select at least one design.");
             return;
         }
 
@@ -413,14 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBundleSummary();
     }
     
-    function renderReviews() {
-        if (!dom.reviewContainer) return;
-        dom.reviewContainer.innerHTML = reviews.map(review => {
-            const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-            return `<div class="border-b pb-4 last:border-b-0"><div class="flex items-center mb-2"><span class="text-yellow-500">${stars}</span><strong class="ml-2 text-gray-800">${review.title}</strong></div><p class="text-gray-700" style="font-family: sans-serif;">"${review.text}"</p><p class="text-sm text-gray-500 mt-2">- ${review.author}</p></div>`;
-        }).join('');
-    }
-    
     function renderRelatedProducts() {
         const grid = dom.relatedProductsGrid;
         if (!grid) return;
@@ -467,6 +464,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if(dom.cartTimer) dom.cartTimer.textContent = `${m}:${s}`;
         }, 1000);
     }
+
+    function startStockTicker() {
+        let stockCount = parseInt(dom.stockCount.textContent);
+        clearInterval(stockTickerInterval);
+
+        const updateStock = () => {
+            if (stockCount > 2) { 
+                stockCount--;
+                dom.stockCount.textContent = stockCount;
+            }
+            const randomInterval = Math.floor(Math.random() * (15000 - 5000 + 1)) + 5000;
+            stockTickerInterval = setTimeout(updateStock, randomInterval);
+        };
+        
+        const initialRandomInterval = Math.floor(Math.random() * (10000 - 4000 + 1)) + 4000;
+        stockTickerInterval = setTimeout(updateStock, initialRandomInterval);
+    }
     
     function startSocialProof() {
         const locations = ["Miami, FL", "Los Angeles, CA", "London, UK", "Houston, TX"];
@@ -505,14 +519,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function showCustomAlert(message) {
+        // A simple, non-blocking alert substitute
+        const alertBox = document.createElement('div');
+        alertBox.style.cssText = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); background-color:var(--color-urgent); color:white; padding:1rem 2rem; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2); z-index:1000; font-family:sans-serif;';
+        alertBox.textContent = message;
+        document.body.appendChild(alertBox);
+        setTimeout(() => {
+            alertBox.remove();
+        }, 3000);
+    }
+
     function initializeApp() {
         loadState();
         renderProduct(); 
-        renderReviews();
         renderCart(); 
         renderRelatedProducts();
         initializePaymentMessage(); 
         startFlashSaleTimer(); 
+        startStockTicker();
         startSocialProof();
 
         dom.addToCartButton.addEventListener('click', addToCart);
@@ -560,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (url) window.location.href = url;
                 } catch (error) {
                     console.error('Checkout error:', error);
-                     alert('Could not connect to checkout. Please try again.');
+                    showCustomAlert('Could not connect to checkout. Please try again.');
                 } finally {
                     dom.checkoutBtn.textContent = 'Pay with Card';
                     dom.checkoutBtn.disabled = false;
